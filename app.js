@@ -228,28 +228,31 @@ function onChoiceSelected(selected, q) {
 function renderExplanation(exp) {
   document.getElementById('exp-focus').textContent = exp.focus || '';
 
-  // 解法アプローチ
-  const approachDiv = document.getElementById('exp-approach');
-  if (exp.approach && exp.approach.length) {
-    const lines = exp.approach.map(item => {
-      const cls = item.type === 'key' ? ' approach-key'
-               : item.type === 'trap' ? ' approach-trap'
-               : '';
-      return `<div class="approach-line${cls}">${item.text}</div>`;
-    }).join('');
-    approachDiv.innerHTML = `<p><strong>解法アプローチ:</strong></p><div class="approach-lines">${lines}</div>`;
-  } else { approachDiv.innerHTML = ''; }
+  // 核心
+  const keyInsightDiv = document.getElementById('exp-key-insight');
+  if (exp.keyInsight) {
+    keyInsightDiv.innerHTML = `<p class="key-insight"><strong>核心:</strong> ${exp.keyInsight}</p>`;
+  } else { keyInsightDiv.innerHTML = ''; }
 
-  // 選択肢分析テーブル
+  // 選択肢分析テーブル（type に応じた色分け）
   const analysisDiv = document.getElementById('exp-analysis');
   if (exp.analysis && exp.analysis.length) {
-    const rows = exp.analysis.map(a => `
-      <tr class="${a.correct ? 'is-correct' : 'is-incorrect'}">
+    const rows = exp.analysis.map(a => {
+      const rowClass = a.correct ? 'is-correct' : 'is-incorrect';
+      const typeClass = a.type === 'key' ? ' reason-key'
+                      : a.type === 'trap' ? ' reason-trap'
+                      : '';
+      const prefix = a.type === 'key' ? '<span class="type-badge type-key">KEY</span> '
+                   : a.type === 'trap' ? '<span class="type-badge type-trap">TRAP</span> '
+                   : '';
+      return `
+      <tr class="${rowClass}">
         <td><strong>${a.choice}</strong></td>
         <td>${a.summary}</td>
         <td>${a.correct ? '✓' : '✗'}</td>
-        <td>${a.reason}</td>
-      </tr>`).join('');
+        <td class="${typeClass.trim()}">${prefix}${a.reason}</td>
+      </tr>`;
+    }).join('');
     analysisDiv.innerHTML = `
       <table class="analysis-table">
         <thead><tr><th>選択肢</th><th>内容</th><th>判定</th><th>理由</th></tr></thead>

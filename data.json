@@ -1,7 +1,7 @@
 {
   "title": "Google Cloud Network Engineer 問題集",
   "total": 236,
-  "version": "20260228190931",
+  "version": "20260228191739",
   "questions": [
     {
       "id": 1,
@@ -22,15 +22,15 @@
           },
           {
             "text": "VPC Service Controls はデータ流出防止のための論理境界であり、ロードバランサーのトラフィック制御には使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ファイアウォール ルールのターゲットにはネットワーク タグを使用できるが、ラベルは使用できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "バックエンド インスタンスにネットワーク タグを付与し、タグベースのファイアウォール ルールで IP 制限するのが適切",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -81,11 +81,11 @@
           },
           {
             "text": "Google Cloud の VPC はグローバル リソースであり、1 つの VPC 内に複数リージョンのサブネットを作成できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "同一 VPC 内のインスタンスはプライベート IP で直接通信できるため、VPN やロードバランサーは不要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -140,7 +140,7 @@
           },
           {
             "text": "VPC ピアリングは設定が簡単で運用オーバーヘッドが少なく、必要な 2 つの VPC だけを選択的に接続できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -191,7 +191,7 @@
           },
           {
             "text": "BIND ゾーン ファイル形式であることを明示するために `--zone-file-format` フラグが必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -242,11 +242,11 @@
           },
           {
             "text": "VPC ピアリングではサブネット範囲の重複が許可されないため、Distribution VPC はカスタムモードで作成する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "`10.0.0.0/9`（10.0.0.0 〜 10.127.255.255）は自動モードの範囲（10.128.0.0 〜 10.255.255.255）と重複しない",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -298,11 +298,11 @@
           },
           {
             "text": "パブリック IP なしの VM が Google API にアクセスするには Private Google Access をサブネット単位で有効化する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "さらに、Google API の外部 IP へのルートをデフォルト インターネット ゲートウェイ経由にするカスタム静的ルートが必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -359,11 +359,11 @@
           },
           {
             "text": "`gcloud compute ssh` は自動的に SSH キーペアを生成し、インスタンスのメタデータ（インスタンス レベル）に公開キーを追加する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "インスタンス レベルのメタデータへの追加はプロジェクト全体の SSH キーブロックに影響されないため、手動でのキー管理なしに接続できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -414,7 +414,7 @@
           },
           {
             "text": "共有 VPC のホスト プロジェクトに Interconnect と VLAN アタッチメントを集約することで、複数のサービス プロジェクトが同じ物理接続を共有でき、コスト効率が最大化される",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -465,7 +465,7 @@
           },
           {
             "text": "「両方のサービスにわたって」固定するには、プロトコルやポートに依存しないクライアント IP のみに基づくアフィニティが必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -528,7 +528,7 @@
           },
           {
             "text": "ファイアウォール ルールの管理にはセキュリティ管理者権限（compute.securityAdmin）が必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "最小権限の原則に従い、必要最小限の権限のみを要求する",
@@ -583,11 +583,11 @@
           },
           {
             "text": "グローバル外部 Application Load Balancer は IPv6 フロントエンド IP アドレスをサポートしており、外部サービスの公開に適している",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "個々のインスタンスに IPv6 を直接割り当てるのではなく、ロードバランサーを通じて提供するのが推奨",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -634,7 +634,7 @@
         "approach": [
           {
             "text": "BGP 非対応のため動的ルーティングは使えず、静的ルーティング（ポリシーベースまたはルートベース）を使用する必要がある",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "「ネットワーク拡大時のダウンタイムと運用オーバーヘッド最小化」が選択の鍵",
@@ -642,11 +642,11 @@
           },
           {
             "text": "ポリシーベースはサブネットごとに設定が必要であるが、サブネットごとにトンネルを作成する選択肢 A より、単一トンネルにまとめる選択肢 B の方が運用オーバーヘッドが小さい",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "選択肢 C はルートベースと記述しながら「適切なトラフィック セレクター」としており矛盾している（ルートベースは 0.0.0.0/0 固定）",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -698,11 +698,11 @@
           },
           {
             "text": "異なる組織間では VPC ピアリングが使えないため、Cloud VPN + Cloud Router で接続する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "各組織はカスタム DNS ソリューションを持つため、転送とゾーン転送で DNS を統合する必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -763,7 +763,7 @@
           },
           {
             "text": "Cloud Router の ECMP は同じルートが同じ ASN から広告される場合に機能するため、異なる ASN からのルートは同等とみなされず BGP ベストパス選択で 1 つだけが選ばれる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -815,15 +815,15 @@
           },
           {
             "text": "LOA-CFA は GCP コンソールのハイブリッド接続セクションからダウンロードできる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "また、注文時に指定した NOC 連絡先にもメールで送信される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "LOA-CFA はユーザー自身がプロバイダに提出するものであり、Google がプロバイダに直接送信するわけではない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -884,7 +884,7 @@
           },
           {
             "text": "Cloud Armor のプレビュー モードはルールを実際に適用せずログに記録するため、正当なユーザーへの影響なしに調査できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -935,11 +935,11 @@
           },
           {
             "text": "マネージド インスタンス グループは同一テンプレートから作成されるため、異なる構成のサーバーには使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ターゲット プールは異機種のインスタンスを個別に直接追加できるため、この要件に適している",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -990,7 +990,7 @@
           },
           {
             "text": "インスタンスに外部 IP アドレスが割り当てられている場合、Cloud NAT は使用されず Google Cloud が 1:1 NAT を自動適用する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1041,11 +1041,11 @@
           },
           {
             "text": "MED（Multi-Exit Discriminator）は外部 BGP ピアに対してルートの優先度を通知する属性で、低い MED 値が優先されるためアクティブ/スタンバイ制御に適している",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Local Preference は iBGP 内部でのみ使用される属性であり、外部ピアには広告されないため不適",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -1096,11 +1096,11 @@
           },
           {
             "text": "Cloud VPN では同じゲートウェイ IP ペアへの複数トンネルを作成できないため、別の外部 IP を持つオンプレミス ゲートウェイが必要",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "異なる外部 IP を持つ 2 つ目のオンプレミス ゲートウェイを追加して ECMP 負荷分散を実現することで、帯域幅を増やせる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1151,11 +1151,11 @@
           },
           {
             "text": "ゾーンファイルから DS レコードを削除しただけでは不十分で、ドメイン レジストラ側でも DNSSEC を無効にする必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "レジストラに DS レコードが残っていると、リゾルバが DNSSEC 検証を試みて SERVFAIL を返してしまう",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -1210,7 +1210,7 @@
           },
           {
             "text": "暗黙の拒否ルール（暗黙の Ingress deny）はログに記録されないため、トラフィックが入力ルールに一致せず暗黙の拒否で破棄されていると判断できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1265,7 +1265,7 @@
           },
           {
             "text": "多くの Web サーバーは Via ヘッダーが存在するリクエストに対してデフォルトで圧縮を無効化するため、Via ヘッダーがある場合でも圧縮するよう Web サーバーを設定する必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1316,11 +1316,11 @@
           },
           {
             "text": "ネットワーク ロードバランサーはリージョナルであり、グローバルなトラフィック最適化はできない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "HTTP(S) ロードバランサーはグローバルで Google のエッジ ネットワーク（Anycast）を活用し、ユーザーに最も近いポイントでトラフィックを受信するためレイテンシを削減できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1372,11 +1372,11 @@
           },
           {
             "text": "Private Google Access はサブネット単位で有効化することで、外部 IP なしの VM が Google API に直接アクセスできるようになる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud NAT も外部 IP なしのインスタンスが外部サービス（Google API を含む）にアクセスする手段として有効",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1433,7 +1433,7 @@
           },
           {
             "text": "Google 推奨プラクティスでは、共有 VPC で個々のサブネットを特定のサービス プロジェクトと選択的に共有することでルーティングの公開範囲を制御する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1484,7 +1484,7 @@
           },
           {
             "text": "最小権限の原則に従い、必要な操作（読み取り）に必要な権限のみを、適切な主体（サービス アカウント）に付与する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1535,11 +1535,11 @@
           },
           {
             "text": "自動モードではサブネットが自動作成されるためテンプレートで暗黙的に使用できたが、カスタムモードでは明示的な参照が必要",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "テンプレートでカスタムモード ネットワークとサブネット名を明示的に指定するよう修正する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1587,15 +1587,15 @@
         "approach": [
           {
             "text": "プロジェクトレベルで IAM ロールを付与する方法として REST API の setIamPolicy()、gcloud コマンド、GCP コンソールの3通りがある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "GetIamPolicy() はポリシーの取得のみであり、ロールの付与（設定）はできない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "gcloud コマンドのサブコマンドが正しいリソースタイプ（project）を指しているかを確認する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -1652,7 +1652,7 @@
           },
           {
             "text": "BDP（帯域幅遅延積）の概念から、TCP パラメータ（特にウィンドウサイズ）の調整が最適解となる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1699,11 +1699,11 @@
         "approach": [
           {
             "text": "インライン セキュリティ アプライアンスには、トラフィックの入口と出口のために2つの NIC が必要で、それぞれ異なる VPC に接続する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "共有 VPC のホストプロジェクトに VPC を作成し、アプライアンスインスタンス自体もホストプロジェクトに配置する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "一元管理とセキュリティの観点から、ホストプロジェクトでの管理が適切",
@@ -1758,11 +1758,11 @@
           },
           {
             "text": "ノード100台には /25（128アドレス）で対応可能であり、ポッドは100ノード × 200ポッド = 20,000ポッドに対して /17（131,072アドレス）が必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "サービス1,500件には /21（2,048アドレス）が適切",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "アドレス消費を最小限にしつつ将来のスケールに対応する設計が求められる",
@@ -1813,15 +1813,15 @@
         "approach": [
           {
             "text": "SMTP（ポート25/587）と IMAP（ポート143/993）は HTTP ではないため HTTPS ロードバランサは不適",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "SSL 証明書にアクセスできないため SSL プロキシも使用不可",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "TCP プロキシロードバランサはグローバルに展開でき、TCP ベースのプロトコルに対応し、SSL 終端なしで利用可能",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1869,19 +1869,19 @@
         "approach": [
           {
             "text": "共有 VPC は同一組織内のプロジェクト間でのみ使用可能であり、異なる組織間には使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "専用相互接続はオンプレミスと GCP の接続用であり、GCP の VPC 間接続には不適",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud NAT は外部アクセス用であり VPC 間接続ではない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC ピアリングと Cloud VPN は異なる組織間でも利用可能",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -1934,11 +1934,11 @@
         "approach": [
           {
             "text": "Cloud CDN でキャッシュされたオブジェクトを特定のプレフィックスで削除するには、キャッシュ無効化コマンドを使用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ライフサイクルルールはストレージオブジェクト自体の管理であり CDN キャッシュとは無関係",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "最小限のコマンド数という条件から、パターン指定の無効化が最適",
@@ -1994,11 +1994,11 @@
           },
           {
             "text": "VPC フローログはネットワークフロー（送受信 IP、ポート、バイト数等）を記録する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールログはファイアウォールルールに基づく許可/拒否を記録する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "両方を組み合わせることでトラフィックの全体像を把握できる",
@@ -2059,11 +2059,11 @@
           },
           {
             "text": "GKE では Ingress リソースが HTTP(S) ロードバランサを作成し、そのバックエンドサービスに Cloud Armor ポリシーを適用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ノード、ポッド、クラスタに直接 Cloud Armor を適用することはできない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -2110,7 +2110,7 @@
         "approach": [
           {
             "text": "VPC ピアリングは推移的（トランジティブ）ではない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Sales-Finance 間と Marketing-Finance 間のピアリングがあっても、Sales-Marketing 間は直接通信できない",
@@ -2118,7 +2118,7 @@
           },
           {
             "text": "解決策はフルメッシュピアリング（全ペア間にピアリングを設定すること）",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2169,11 +2169,11 @@
           },
           {
             "text": "HTTP(S) ロードバランサは HTTP/HTTPS のみ、SSL プロキシは TCP+SSL、TCP プロキシは TCP のみに対応",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "UDP をサポートするのはネットワークロードバランサ（L4）のみ",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2228,11 +2228,11 @@
           },
           {
             "text": "内部 TCP/UDP ロードバランサは外部トラフィックには使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ネットワークロードバランサは外部向け L4 で UDP をサポート",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2279,15 +2279,15 @@
         "approach": [
           {
             "text": "Cloud NAT は GCP インスタンスからインターネットへのアウトバウンド NAT であり、オンプレミスとのアドレス変換には使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "iptables の SNAT/DNAT はソース/宛先の一方のみの変換であるため、双方向の変換には不十分",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "IP 転送が有効なインスタンスを使えば、双方向のアドレス変換（ネットワークブロック間）を柔軟に構成できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2338,7 +2338,7 @@
           },
           {
             "text": "プロジェクトメタデータに SSH キーを設定すれば、そのプロジェクト内の全インスタンスに自動的に適用される",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2389,11 +2389,11 @@
           },
           {
             "text": "ネットワークタグでインスタンス A にのみ適用することで、他のインスタンスへの影響を防ぐ",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "タグなしで作成するとすべてのインスタンスに影響が及んでしまう",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -2444,11 +2444,11 @@
           },
           {
             "text": "マスターにアクセスするには、承認済みネットワーク（Authorized Networks）にクライアントの IP 範囲を追加する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールルールやパブリック IP の割り当ては根本的な解決策にならない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -2499,7 +2499,7 @@
           },
           {
             "text": "compute.networkAdmin ロールはネットワークリソースの管理権限を持ち、ファイアウォールルールの読み取りは含むが、作成・変更・削除の権限は含まない",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールの作成・変更・削除は compute.securityAdmin ロールに属する",
@@ -2554,7 +2554,7 @@
           },
           {
             "text": "request-path で URL を指定し、response フィールドで期待するレスポンス文字列を設定する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "これにより、バックエンドが適切に応答していることを確実に確認できる",
@@ -2613,7 +2613,7 @@
           },
           {
             "text": "compute.networkAdmin ロールはこれらの権限をまとめて提供する定義済みロール",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2664,7 +2664,7 @@
           },
           {
             "text": "GCP のマネージドインスタンスグループは、ターゲットサイズを指定したカナリアローリングアップデートをネイティブにサポートしている",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "一部のインスタンスのみを新テンプレートに更新して検証してから、残りに展開できる",
@@ -2723,7 +2723,7 @@
           },
           {
             "text": "リージョナル MIG を使用すれば、単一の設定でリージョン内の複数ゾーンにインスタンスを自動分散でき、自動スケーリングも利用可能",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2770,7 +2770,7 @@
         "approach": [
           {
             "text": "特定のオブジェクトだけキャッシュされないようにするには、そのオブジェクトの Cache-Control メタデータを private に設定する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "これにより CDN はそのオブジェクトをキャッシュしなくなる",
@@ -2825,7 +2825,7 @@
         "approach": [
           {
             "text": "グローバルロードバランサの前段にトラフィックスクラビングサービスを配置した場合、スクラビングサービスからの接続のみを許可するには Cloud Armor セキュリティポリシーを使用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud Armor はロードバランサのバックエンドサービスに関連付けられ、IP ベースのアクセス制御が可能",
@@ -2833,7 +2833,7 @@
           },
           {
             "text": "VPC ファイアウォールはロードバランサへの接続元 IP を制御できないため不適",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -2884,15 +2884,15 @@
           },
           {
             "text": "VPN は500 Mbps に制限されパケット損失があり、今回の要件（1.5 Gbps）を満たせない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "専用相互接続は10 Gbps 単位で過剰かつ高コスト",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ISP が Partner Interconnect プロバイダであることを活かし、パートナー相互接続が最適",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -2944,19 +2944,19 @@
           },
           {
             "text": "Cloud Armor で攻撃者 IP をブロックし、正常なトラフィックのみを通過させる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "自動スケーリングの最大数を増やして正常トラフィックを処理できるキャパシティを確保する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "HTTP(S) ロードバランサへの移行は時間がかかり迅速な対応ではない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "アプリケーションのシャットダウンはユーザーアクセスを完全に遮断してしまう",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -3014,11 +3014,11 @@
           },
           {
             "text": "これには Service Networking API の有効化が必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "さらに VPC とGoogle管理のサービスプロデューサーネットワーク間のプライベート接続の作成が必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -3071,11 +3071,11 @@
         "approach": [
           {
             "text": "2つの制約がある: Google POP に直接接続できないため専用相互接続は不可、BGP 構成ができないため L2 パートナー（自分で BGP を構成する必要がある）も不可",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "L3 パートナーであれば、パートナーが BGP セッションを管理してくれるため、顧客側での BGP 構成が不要になり両方の制約を満たせる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -3126,7 +3126,7 @@
           },
           {
             "text": "既存のインスタンスでこのルートを使用するには、そのインスタンスに no-ip タグを追加する必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -3177,7 +3177,7 @@
           },
           {
             "text": "VPN ゲートウェイの IP アドレスではなく、トンネルの名前とリージョンを使用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "これにより特定のトンネルにトラフィックをルーティングできる",
@@ -3228,7 +3228,7 @@
         "approach": [
           {
             "text": "Cloud CDN をストレージバケットで使用するには、HTTP(S) ロードバランサのバックエンドバケットとして設定し、CDN を有効にする必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "さらに CDN 経由で配信するには、オブジェクトがパブリックに共有されている必要がある",
@@ -3236,7 +3236,7 @@
           },
           {
             "text": "TCP や SSL プロキシロードバランサはストレージバケットをバックエンドとして使用できない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -3287,11 +3287,11 @@
           },
           {
             "text": "現在の構造 `/<lang>/video` は言語コードが先頭にあるため、`/*/video` のような中間ワイルドカードは URL マップでサポートされない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ディレクトリ構造を `/video/<lang>` と `/audio/<lang>` に再配置すれば、`/video/*` と `/audio/*` というシンプルなパスルールで対応可能",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "運用オーバーヘッドを最小限にするには、ディレクトリ再配置と URL マップの標準パスルールの組み合わせが最適",
@@ -3346,19 +3346,19 @@
           },
           {
             "text": "Carrier Peering はサードパーティ（キャリア）が必要なため除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Partner Interconnect もパートナーが必要なため除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Dedicated Interconnect は Google のコロケーション施設に物理接続が必要で、かつプライベート IP 用のため要件に合わない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Direct Peering は Google のエッジ PoP で直接ピアリングでき、パブリック IP でのアクセスが可能かつサードパーティ不要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -3409,11 +3409,11 @@
           },
           {
             "text": "Cloud Router と Dedicated Interconnect の VLAN アタッチメントは、VPC ネットワークが存在するホストプロジェクトに作成する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "サービスプロジェクトはネットワークリソースを持たないため、そこに Cloud Router を作成しても共有 VPC と連携できない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -3464,15 +3464,15 @@
           },
           {
             "text": "SSH は TCP ポート 22 であり、RDP（ポート 3389）と混同しないこと",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "暗黙の deny ingress ルールが既にすべての受信トラフィックをブロックしているため、SSH（ポート 22）を許可するルールを1つ作成するだけで十分",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールの優先度は数値が小さいほど高く、優先度 0 は最高優先度であることに注意",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -3523,15 +3523,15 @@
           },
           {
             "text": "「no-proposal-chosen」は IKE（Internet Key Exchange）ネゴシエーション中に暗号化アルゴリズムや認証方式などのプロポーザルが一致しなかった場合に発生するエラー",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "これは VPN トンネル自体のセッション設定（暗号化パラメータ等）が正しく構成されていないことを示す",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPN トンネルが確立されなければ、その上で動作する BGP セッションも当然確立されない（BGP は VPN トンネル上で動作するため）",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -3586,11 +3586,11 @@
           },
           {
             "text": "/23 は 512 アドレスで不足し、/22 は 1024 アドレスで 768 を収容できる最小のサブネット",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "最大ノード数（3ノード）で計算する必要があり、最初の1ノードで計算してはいけない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -3637,7 +3637,7 @@
         "approach": [
           {
             "text": "VPC のデフォルトの暗黙的な deny ルール（implied deny ingress）はログ記録がデフォルトで無効であり、編集自体ができない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "暗黙のルールのログ記録を有効にすることは不可能であるため、別のアプローチが必要",
@@ -3645,7 +3645,7 @@
           },
           {
             "text": "拒否された接続のログを取得するには、明示的な「Deny Any」ルールを新たに作成し、そのルールでログ記録を有効にする",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -3697,15 +3697,15 @@
           },
           {
             "text": "共有 VPC は一方をホスト、他方をサービスプロジェクトにするため「各部門がネットワークを完全に制御」の要件に反する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud VPN はコストがかかるため、VPC ピアリング（コスト無料）の方が適切",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC ピアリングはルートを自動的に交換するが、ファイアウォールルールは自動的に許可しないため、両方の設定が必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -3762,11 +3762,11 @@
           },
           {
             "text": "インターネットからアクセス不可にするには privateEndpoint を有効化し、マスターにパブリック IP がない状態にする必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "privateEndpoint を有効化するとオンプレミスからアクセスできなくなるため、VPC 内にネットワークプロキシが必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "マスター承認済みネットワーク（Master Authorized Networks）でアクセス元 IP を制限する",
@@ -3822,11 +3822,11 @@
         "approach": [
           {
             "text": "HTTP(S) ロードバランシングには「ヘルスチェック」を使用し、「レガシーヘルスチェック」は使用しない",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "レガシーヘルスチェックはネットワークロードバランサ用であり、HTTP(S) ロードバランサには適さない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "作成方法は gcloud コマンドラインツール（`gcloud compute health-checks create`）、または GCP コンソールのロードバランサのバックエンド構成時の2通りがある",
@@ -3887,11 +3887,11 @@
           },
           {
             "text": "Cloud Interconnect（Dedicated/Partner）はプロビジョニングに時間がかかり、24時間以内のセットアップは困難",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud VPN は即時セットアップ可能で、プライベート IP 通信をサポートし、コストも低い",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -3942,15 +3942,15 @@
           },
           {
             "text": "BGP が使えないため、動的ルーティング（Cloud Router）は除外される",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ルートベースルーティングはデフォルトで 0.0.0.0/0 のトラフィックセレクタを使うため、特定サブネットへの制限ができない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ポリシーベースルーティングのカスタムローカルトラフィックセレクタを使えば、特定のサブネットのみを VPN トンネル経由でルーティング可能",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -4013,11 +4013,11 @@
           },
           {
             "text": "最初のステップは GCP コンソールで VLAN アタッチメントを作成してペアリングキーを取得すること",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ペアリングキーをパートナーに渡す前にプロビジョニングを開始することはできない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4068,7 +4068,7 @@
           },
           {
             "text": "Google グループを作成すれば、グループに IAM ロールを付与することで全メンバーへの一括適用が可能",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "さらにグループのメールアドレスでメール配信も一元化できるため、最も効率的な手段である",
@@ -4127,11 +4127,11 @@
           },
           {
             "text": "resourcemanager.projects.list は組織レベルの権限であり、プロジェクトレベルのカスタムロールには含められない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "該当の権限を削除して再試行すれば問題を解消できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -4182,7 +4182,7 @@
           },
           {
             "text": "GCP ではエフェメラル（一時的）内部 IP を「静的内部 IP」に昇格させることができる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "この昇格操作により、インスタンス削除後も同じ IP アドレスが予約された状態に維持される",
@@ -4241,11 +4241,11 @@
           },
           {
             "text": "10.2.0.0/16（/16）は 10.0.0.0/8（/8）よりもプレフィックスが長く、より具体的なルートであるため優先される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "その結果、10.2.1.25 宛のトラフィックは VPC サブネットルートに一致し、オンプレミスではなく VPC 内にルーティングされてしまう",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4296,11 +4296,11 @@
           },
           {
             "text": "GCP のエイリアス IP 範囲を使えば、プライマリ IP 以外に追加の IP 範囲をインスタンスに直接割り当てることができる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPC ピアリングやロードバランシングは異なるネットワーク間の接続技術であり、1つのインスタンスに複数 IP を持たせるものではない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4351,19 +4351,19 @@
           },
           {
             "text": "ネットワークロードバランサはリージョナルであり、グローバル要件を満たさない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "HTTP(S) ロードバランサは L7 であり、L3 ペイロードの保持とは異なる用途",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "内部ロードバランサは外部トラフィック用ではない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "TCP/SSL プロキシロードバランサはグローバルに展開可能で、Proxy Protocol または X-Forwarded-For を使って元の送信元 IP を保持できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -4414,7 +4414,7 @@
           },
           {
             "text": "VPC Service Controls でサポートされる API にアクセスするには restricted.googleapis.com（199.36.153.4/30）を使用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "オンプレミスからプライベートネットワーク経由で Google API にアクセスするにはプライベート Google アクセスが必要",
@@ -4422,7 +4422,7 @@
           },
           {
             "text": "ダイレクトピアリングには SLA がないため、SLA 要件がある場合は Cloud Interconnect を使用する必要がある",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4473,11 +4473,11 @@
           },
           {
             "text": "ファイアウォールインサイトはルールの最適化推奨を提供するものであり、カスタムダッシュボードでの拒否ヒット数表示には適さない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ファイアウォールログを有効にし、Cloud Logging でログを収集、Cloud Monitoring でカスタムダッシュボードを作成する組み合わせが最もマネージドかつ運用オーバーヘッドが少ない",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -4536,7 +4536,7 @@
           },
           {
             "text": "Cloud Router のルートアドバタイズメントをカスタム設定に変更すると、デフォルトのサブネット自動アドバタイズが無効になるため、すべての表示可能なサブネットを明示的に追加する必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -4587,11 +4587,11 @@
           },
           {
             "text": "アプリケーション層は Web 層とデータ層の間の内部通信であるため、内部ロードバランサが必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "既存の外部 LB を拡張するのではなく、アプリケーション層用に別の内部 HTTP(S) ロードバランサを新規に構成する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4642,15 +4642,15 @@
           },
           {
             "text": "ファイアウォールログや VPC フローログはメタデータのみを記録しペイロードを含まないため、ペイロード監視には使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "パケットミラーリングは完全なパケット（ペイロード含む）をキャプチャできる唯一の手段",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "パケットミラーリングのコレクタには内部 TCP/UDP ロードバランサ（L4）を使用する。内部 HTTP(S) LB（L7）は使用できない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4701,11 +4701,11 @@
           },
           {
             "text": "同一 VPC 内であれば Compute Engine の内部 DNS を使用してインスタンス名で接続するのが最もシンプル",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "外部 IP やロードバランサは同一 VPC 内通信には不要であり、過剰な構成になる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4756,11 +4756,11 @@
           },
           {
             "text": "ダッシュボードで使用状況を「表示」することと、しきい値超過時に「アラート」を設定することは別の概念",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "カスタムアラートを設定するには Cloud Monitoring でモニタリングクエリ言語（MQL）を使用する必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -4811,15 +4811,15 @@
           },
           {
             "text": "グローバル動的ルーティングを有効にすれば、1つのリージョンに配置した VPN ゲートウェイで両リージョンのサブネットにアクセス可能になる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "したがって、各リージョンにそれぞれ VPN を配置するより、1リージョン（us-west1）に1つの Cloud Router と HA VPN ゲートウェイを配置する方が最小構成になる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "OpenVPN は HA VPN の 99.99% SLA を提供しないため除外できる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4870,15 +4870,15 @@
           },
           {
             "text": "Google 推奨は1つの VPC に各リージョンのサブネットを持ち、グローバル HTTP(S) ロードバランサ（単一 Anycast IP）、Cloud CDN、Cloud Armor を組み合わせる構成",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "リージョナル NLB は2つの IP が必要で、NLB では Cloud CDN が使えないため不適",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ネットワーク標準階層はプレミアム階層よりも品質が低く、高可用性にはプレミアム階層が推奨される",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -4929,11 +4929,11 @@
           },
           {
             "text": "デフォルトでは VPC ピアリングのカスタムルートのインポート/エクスポートが無効であるため、オンプレミスから Cloud SQL の IP 範囲が見えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "オンプレミスからアクセスするには2つの設定が必要:（1）VPC ピアリングでカスタムルートのインポート/エクスポートを有効にし、Cloud SQL の IP 範囲をルートとして伝播させる、（2）Cloud Router でカスタムルートアドバタイズメントを作成し、Cloud SQL の IP 範囲をオンプレミスにアドバタイズする",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -4984,15 +4984,15 @@
           },
           {
             "text": "VPC ピアリングでカスタムルートをエクスポート（営業側）/インポート（財務側）し、Cloud Router でピアリングされた VPC のサブネット範囲をオンプレミスにアドバタイズする必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "デフォルトルート（0.0.0.0/0）をアドバタイズすると、オンプレミスのインターネットトラフィックが Google Cloud 経由になってしまうため不適切",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ピアリング VPC 範囲のみをアドバタイズすることで、オンプレミスのインターネットトラフィックはオンプレミス側のルートを使い続けられる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -5043,15 +5043,15 @@
           },
           {
             "text": "VPC フローログはサブネット単位で有効化でき、VM 間のトラフィック量・プロトコル・ポートを記録し BigQuery で分析できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールログはルール単位で allow/deny を記録するだけで、トラフィック量の分析には不向き",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "パケットミラーリングやサードパーティアプライアンスはコスト・管理オーバーヘッドが大きく要件に合わない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5098,15 +5098,15 @@
         "approach": [
           {
             "text": "VPC Service Controls を使用している場合は `restricted.googleapis.com`（199.36.153.4/30）を使う必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "`private.googleapis.com`（199.36.153.8/30）は VPC Service Controls に対応していないサービスにもアクセスでき、データ漏洩リスクがある",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "CNAME で `*.googleapis.com` を `restricted.googleapis.com` に向け、A レコードで 199.36.153.4/30 を設定する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "カスタムルートで 199.36.153.4/30 の範囲をデフォルトインターネットゲートウェイにルーティングする",
@@ -5161,11 +5161,11 @@
           },
           {
             "text": "ポート 80 でのヘルスチェックが失敗しているので、これらの IP 範囲からのインバウンドトラフィックを許可する INGRESS ルールが必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "EGRESS ルールではなく INGRESS ルールを、destination-ranges ではなく source-ranges で設定する点が重要",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5216,15 +5216,15 @@
           },
           {
             "text": "VPC ピアリングは「推移的でない」ため、別のスポーク VPC からハブ VPC を経由してコントロールプレーンに到達することはできない",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "承認済みネットワークに追加しても、推移的ルーティングの問題（ネットワーク到達性）は解決しない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "プロキシを GKE ノードと同じ VPC にデプロイし、他のスポークからプロキシ経由でアクセスする構成が必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -5275,15 +5275,15 @@
           },
           {
             "text": "Network Intelligence Center の接続テストは構成分析ベースで実際のトラフィックを送信しないが、特定エンドポイント間のパス分析に特化している",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ネットワークトポロジはインフラ全体を視覚化し、構成の障害ポイントを視覚的に確認できるツール",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "パケットミラーリングや VPC フローログはテストトラフィックを必要とするため要件に反する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5334,15 +5334,15 @@
           },
           {
             "text": "階層型ファイアウォールポリシーはフォルダレベルで適用でき、配下のすべてのプロジェクト・VPC に一括適用される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "各 VPC やプロジェクトに個別にルールを作成する方法はスケーラブルでなく管理コストが高い",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "共有 VPC の作成は大規模な構成変更を伴いコストと運用オーバーヘッドが大きい",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5393,7 +5393,7 @@
           },
           {
             "text": "2 つの VPC 間の VPN トンネルで BGP セッションを構成する際は、各 Cloud Router に異なるプライベート ASN を割り当てる必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "リンクローカルアドレス（169.254.x.x/30）をピア IP として使用する",
@@ -5401,7 +5401,7 @@
           },
           {
             "text": "router-1 のピア IP と router-2 のインターフェース IP が対応している必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -5448,15 +5448,15 @@
         "approach": [
           {
             "text": "Cloud NAT が動作するには、対象トラフィックがデフォルトインターネットゲートウェイを経由するルートを持っている必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "現在 0.0.0.0/0 が VPN トンネルにルーティングされているため Cloud NAT が機能していない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "デフォルトインターネットゲートウェイをネクストホップとする静的ルートを追加し、VPN トンネルのルートより高い優先度（小さい値）を設定する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ネットワークタグで対象インスタンスを限定することで、Cloud NAT を使うインスタンスのみに適用できる",
@@ -5507,11 +5507,11 @@
         "approach": [
           {
             "text": "Google が推奨する 99.99% 可用性を実現するには、2 つの異なるメトロに接続する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "各メトロで 2 つの異なるゾーン（Edge Availability Domain）に VLAN アタッチメントを配置する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "各リージョンに Cloud Router を配置し、各メトロの 2 つのゾーンに 1 つずつ VLAN アタッチメントを持たせる構成が推奨",
@@ -5566,15 +5566,15 @@
           },
           {
             "text": "共有 VPC はホストプロジェクトでネットワーク（サブネット、ルート、ファイアウォール）を一元管理し、サービスプロジェクトにコンピューティングリソースの管理を委任できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "HA VPN のフルメッシュや VPC ピアリングのフルメッシュは管理が複雑で運用オーバーヘッドが大きい",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "複数のホストプロジェクトを作ると管理が分散するため、1 つのホストプロジェクトで集中管理すべき",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5625,15 +5625,15 @@
           },
           {
             "text": "ハブ VPC にサードパーティアプライアンスを配置し、各プロジェクトの VPC をハブにピアリングで接続する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "カスタムルートをハブからエクスポートして各 VPC にインポートすることで、トラフィックをアプライアンス経由にルーティングできる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "個別の VLAN 対応やインスタンスへの直接 NIC 追加はスケールしないため不適切",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5684,15 +5684,15 @@
           },
           {
             "text": "インバウンドサーバーポリシーはオンプレミスからの DNS クエリを受け入れ、(1) の要件を満たす",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "アウトバウンド DNS 転送ゾーンは特定ドメインのみをオンプレミス DNS へ転送するため、(2) を満たしつつ .internal 解決への影響がない",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "送信サーバーポリシー（代替ネームサーバー）はすべてのクエリを外部に転送するため .internal ゾーンが解決できなくなるリスクがある",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5739,11 +5739,11 @@
         "approach": [
           {
             "text": "ハブ VPC にプライベート DNS ゾーンを設定し、オンプレミスへの DNS 転送を設定することで DNS 管理を集中化できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "スポーク VPC からハブ VPC への DNS ピアリングを設定することで、スポークのクエリがハブの DNS 設定を利用できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "この構成でオンプレミスからの名前解決（インバウンド）とスポークからオンプレミスへの名前解決（転送）の両方が実現できる",
@@ -5751,7 +5751,7 @@
           },
           {
             "text": "プライベートゾーンをスポーク側に置くと集中管理にならない。ハブからスポークへのピアリングは逆方向で非効率",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5802,15 +5802,15 @@
           },
           {
             "text": "VPC Service Controls はプロジェクト周囲にセキュリティ境界を設定し、境界内のリソースへのアクセスを VPC ネットワーク経由に制限できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "プライベート Google アクセスはパブリック IP なしで Google API にアクセスするためのルーティング設定であり、アクセス制御機能ではない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "IAM/ACL はユーザーベースの制御であり、ネットワーク境界制御とは異なる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5861,15 +5861,15 @@
           },
           {
             "text": "接続テストは構成ベースの分析を行い、ファイアウォールルール・ルート・VPC ピアリング設定などの構成ミスを特定できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPC フローログは実際のトラフィックを記録するため接続が確立されていない場合は役に立たない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "監査ログは API 呼び出しの記録であり、ネットワーク接続問題の診断には不向き",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -5920,15 +5920,15 @@
           },
           {
             "text": "グローバル VPC ルーティングモードでは Cloud Router が他リージョンのサブネットルートも学習・アドバタイズするため必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "リージョナルモードでは他リージョンのルートが伝播されないため、他リージョンの VM からはアクセスできない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "us-east1 に追加アタッチメントを置いてもリージョン全体のダウンに対応できないため、別リージョン（us-west2）への配置が必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -5975,11 +5975,11 @@
         "approach": [
           {
             "text": "Google Cloud Armor のルール判定結果は HTTP(S) ロードバランサのリクエストログに記録される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ログのサンプリングレートを 1（100%）に設定することで全リクエストを記録できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud Logging でログを分析することで、どの WAF ルールがトラフィックをブロックしたかを特定できる",
@@ -5987,11 +5987,11 @@
           },
           {
             "text": "ファイアウォールログや VPC フローログは L3/L4 レベルであり、L7 の WAF ルール判定は含まれない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "監査ログはポリシー管理操作の記録であり、個々のリクエスト判定ではない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6042,15 +6042,15 @@
           },
           {
             "text": "Compute Shared VPC Admin ロールをフォルダレベルで設定すると、各フォルダに個別に設定する必要があり手順が増える",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "組織レベルで設定すれば、すべてのフォルダ・プロジェクトに対して 1 回の操作で権限が付与される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Project IAM Admin は共有 VPC の設定に必要な権限ではなく、付与すると過剰な権限になる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6101,15 +6101,15 @@
           },
           {
             "text": "Cloud NAT はパブリック IP なしの VM にアウトバウンドインターネットアクセスを提供する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud NAT はリージョナルリソースであるため、各リージョンに個別に Cloud NAT ゲートウェイと Cloud Router を作成する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "グローバルな Cloud NAT は存在しない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6160,15 +6160,15 @@
           },
           {
             "text": "Google Cloud Armor はロードバランサに接続するセキュリティポリシーで、DDoS 防御と WAF（L7）ルールを両方提供する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPC ファイアウォールや階層型ファイアウォールは L3/L4 レベルの制御であり、XSS や SQL インジェクションなどの L7 攻撃には対応できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC Service Controls はデータ漏洩防止の仕組みであり、DDoS/L7 攻撃防御とは別の目的",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6219,11 +6219,11 @@
           },
           {
             "text": "オンプレミスからデフォルトルート（0.0.0.0/0）を BGP でアナウンスすることで (1) を実現する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "プライベート API へのルートはデフォルトインターネットゲートウェイをネクストホップとするカスタムルートで設定する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "/30 のより具体的なルートは 0.0.0.0/0 より優先されるため（longest prefix match）、API トラフィックは正しくルーティングされる",
@@ -6278,15 +6278,15 @@
           },
           {
             "text": "階層型ファイアウォールポリシーで `goto_next` アクションを使うと、マッチしたトラフィックの評価を下位レベル（VPC ファイアウォールルール）に委任できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "`allow` アクションを使うと下位のルールが評価されず委任ができなくなる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC ファイアウォールルールのみでは、フォルダレベルの一貫したポリシー制御ができない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6337,7 +6337,7 @@
           },
           {
             "text": "ドライランモードはポリシー変更を実際に適用せず、違反がログに記録されるだけの状態で事前検証できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "本番環境に影響を与えずに変更の影響を評価できる「What-if」分析に相当する",
@@ -6392,15 +6392,15 @@
           },
           {
             "text": "Resource Manager の組織ポリシー制約 `constraints/compute.restrictVpnPeerIPs` を使って許可された VPN ピア IP の allowList を定義できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールルールは VM レベルの制御であり、VPN ゲートウェイの接続先制限には使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud Armor は HTTP(S) ロードバランサ用であり、VPN ゲートウェイには適用できない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6451,7 +6451,7 @@
           },
           {
             "text": "CNAME で `*.googleapis.com` を `restricted.googleapis.com` に向け、A レコードで 199.36.153.4/30 を設定してオンプレミス DNS に構成する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPN トンネル経由でルーティングし、オンプレミスのファイアウォールで許可する",
@@ -6459,7 +6459,7 @@
           },
           {
             "text": "`private.googleapis.com` は VPC SC 非対応サービスにもアクセスできるため要件違反。デフォルト GW 削除は API へのルーティングを失わせるため不適切",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6514,11 +6514,11 @@
           },
           {
             "text": "Pod は GKE がノードごとにサブレンジを割り当てる仕組みで、10 ノード分のアドレス空間として /24（256 IP）が必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Service は最大 1024 のため /22 = 1024 IP でちょうどカバーできる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -6569,19 +6569,19 @@
           },
           {
             "text": "オンプレミスバックエンドに転送するには Internet NEG（Network Endpoint Group）を使用する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Google Cloud Armor ポリシーを Internet NEG バックエンドサービスに適用することで IP フィルタリングと XSS 攻撃防御が可能",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "管理対象外インスタンスグループはオンプレミスリソースには使用できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "階層型ファイアウォールや VPC ファイアウォールは L3/L4 レベルの制御であり、XSS 攻撃の防御には不十分",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6632,19 +6632,19 @@
           },
           {
             "text": "VPC ネットワークピアリングは内部 IP を使った低レイテンシの接続を提供し、トラフィックは Google のネットワーク内に留まる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "HA VPN は暗号化オーバーヘッドがあり、Google Cloud 内の VPC 間通信には過剰",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "外部 IP 経由の接続はパブリックインターネットを通過する可能性があり、セキュリティ要件に反する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud NAT はインターネットアクセス用の NAT 機能であり、VPC 間接続には使えない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6691,7 +6691,7 @@
         "approach": [
           {
             "text": "Partner Interconnect の VLAN アタッチメントに関連付ける Cloud Router は ASN 16550 を使用する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "16550 は Google が Partner Interconnect 用に指定した固定の ASN であり、他の接続方式とは区別される",
@@ -6699,7 +6699,7 @@
           },
           {
             "text": "Dedicated Interconnect や HA VPN ではプライベート ASN（64512-65534 等）を使用するが、Partner Interconnect では 16550 が必須",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6750,15 +6750,15 @@
           },
           {
             "text": "プロキシ型ロードバランサ（SSL Proxy、TCP Proxy、HTTP(S)）は接続を終端するため、TCP パススルーの要件を満たせない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "パススルー型のネットワーク負荷分散はリージョナルであり、グローバルに単一 VIP を提供できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "DNS ベースの負荷分散と各リージョンのネットワーク負荷分散を組み合わせることで要件を満たせる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -6805,23 +6805,23 @@
         "approach": [
           {
             "text": "ファイアウォールルールではサービスアカウントとネットワークタグを同一ルール内で混在させることができない",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "選択肢 A は source-tags と target-service-accounts を混在させており無効",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "選択肢 C はターゲットがサービスアカウントの場合、source-ranges と source-service-accounts の組み合わせも無効",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "選択肢 D はタグベースだが source-ranges が指定するサブネット全体にはアプリサーバー以外の VM も含まれる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "選択肢 B はソースもターゲットもサービスアカウントで統一されており、正しい構成",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -6872,19 +6872,19 @@
           },
           {
             "text": "NAT なしの要件から選択肢 C（Cloud NAT 使用）は除外",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "重複する RFC 1918 範囲では直接通信できないため選択肢 B も除外",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC ネットワークピアリングは推移的ルーティングをサポートしないため選択肢 A は不十分",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "RFC 1918 以外の範囲（100.64.0.0/10 等）を単一グローバル VPC で使用すれば、NAT なしでオンプレミスと通信可能",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -6931,19 +6931,19 @@
         "approach": [
           {
             "text": "HTTP（ポート 80）と HTTPS（ポート 443）の両方を TCP で許可する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Web サーバーへの着信を制御するにはイングレス（受信）ルールで設定すべき",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ポート 80 のみの選択肢は HTTPS を許可しないため不十分",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "エグレス（送信）ルールは受信トラフィック制御には方向が逆で不適切",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -6994,15 +6994,15 @@
           },
           {
             "text": "VPC グローバルルーティングを使うと us-west2 から各リージョンへのリージョン間データ転送料金が発生する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Interconnect の物理接続が us-west2 にあっても、VLAN アタッチメントは任意のリージョンの Cloud Router に接続可能",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VLAN アタッチメントをワークロードのあるリージョン（us-east4、us-central1）に直接デプロイすればリージョン間転送コストを回避できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -7049,11 +7049,11 @@
         "approach": [
           {
             "text": "ハブ VPC に Cloud DNS のプライベート転送ゾーンを作成してオンプレミス DNS に転送する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "スポーク VPC からはプライベートピアリングゾーンでハブ VPC の DNS 解決を参照する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud DNS の転送リクエストは 35.199.192.0/19 から発信されるため、Cloud Router でこの範囲をアドバタイズする必要がある",
@@ -7061,7 +7061,7 @@
           },
           {
             "text": "VPC ピアリングでスポークとハブを接続すれば十分であり、各スポークに VPN を張る必要はない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7108,11 +7108,11 @@
         "approach": [
           {
             "text": "ファイアウォールルールの作成・更新には compute.securityAdmin ロールが必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールログの表示には logging.viewer ロールが必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "優先度は数値が小さいほど先に評価される（数値が小さい = 優先度が高い）",
@@ -7120,7 +7120,7 @@
           },
           {
             "text": "新しいルールを既存ルールセットより前に評価させるには、既存ルールより小さい優先度値を設定する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7171,15 +7171,15 @@
           },
           {
             "text": "VPC Service Controls はサービス境界を作成し、アクセスコンテキストポリシーで IP 範囲を制限できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "境界はプロジェクト単位で作成し、同一プロジェクト内の複数 VPC は 1 つの境界でカバーできる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "アクセスコンテキストポリシーは直接サービスにアタッチするのではなく、VPC Service Controls の境界と組み合わせて使用する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7235,11 +7235,11 @@
           },
           {
             "text": "自動スケーリング（選択肢 D）では必要な NAT IP 数を自動計算し、最小ポート数を 128 に設定すれば要件を満たす",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "手動割り当て（選択肢 E）では 256,000 / 64,512 ≈ 3.97 を切り上げて 4 つの NAT IP が必要であり、4 × 64,512 / 128 = 2,016 VM をサポートできるため 2,000 VM の要件を満たす",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -7292,7 +7292,7 @@
         "approach": [
           {
             "text": "Cloud Router がデフォルト（リージョナル）モードの場合、学習したルートは同じリージョンのサブネットにのみ適用される",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "異なるリージョン（asia-southeast1）の VM がオンプレミスと通信できないのは、Cloud Router のルートがそのリージョンに伝播していないため",
@@ -7300,7 +7300,7 @@
           },
           {
             "text": "VPC の動的ルーティングモードをグローバルに変更すれば、学習したルートが全リージョンに伝播して問題が解決する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -7347,11 +7347,11 @@
         "approach": [
           {
             "text": "Compute Engine からオンプレミス DNS を使って名前解決するには、Cloud DNS のプライベート転送ゾーンを作成してオンプレミス DNS サーバーに転送する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud DNS の転送リクエストは 35.199.192.0/19 から送信されるため、この範囲をオンプレミスのファイアウォールで許可する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "また Cloud Router でこの IP 範囲をアドバタイズしてオンプレミスへの到達性を確保する必要がある",
@@ -7406,11 +7406,11 @@
           },
           {
             "text": "プライベートエンドポイントを使用してプライベート接続を確保する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPC ピアリングのルートエクスポート/インポートとカスタムルートアドバタイズの両方がないと、オンプレミスからコントロールプレーンに到達できない",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "承認済みネットワークでオンプレミスサブネットを指定してアクセスを制限する",
@@ -7465,11 +7465,11 @@
           },
           {
             "text": "Cloud Run のバックエンドをロードバランサに接続するにはサーバーレス NEG（Network Endpoint Group）を使用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "グローバル HTTPS ロードバランサの背後にサーバーレス NEG として配置することで要件を満たせる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -7516,15 +7516,15 @@
         "approach": [
           {
             "text": "HA VPN の各トンネルは最大 3 Gbps をサポートするため、4 Gbps をサポートするには追加のトンネルペアが必要",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "アクティブ/パッシブ構成では 1 トンネルのみ使用されるため、帯域幅の拡張には 2 番目のセットを追加する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ECMP（等価コストマルチパス）により複数トンネルにトラフィックを分散して帯域幅を拡張できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -7575,7 +7575,7 @@
           },
           {
             "text": "内部パススルーネットワーク LB（TCP/UDP）はカスタムルートのネクストホップとしてサポートされており、2 つの NVA をバックエンドとして設定できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "LB がヘルスチェックとトラフィック分散を担当することで高可用性を確保できる",
@@ -7583,7 +7583,7 @@
           },
           {
             "text": "内部 HTTP(S) LB や外部 LB はネクストホップとしてサポートされない点に注意",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7634,15 +7634,15 @@
           },
           {
             "text": "デフォルトルートを削除してオンプレミスから 0.0.0.0/0 をアドバタイズすることで全 VM トラフィックをオンプレミス経由にルーティングする",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Google API 用に private.googleapis.com (199.36.153.8/30) へのより具体的な静的ルートをデフォルトインターネットゲートウェイ経由で作成すれば、API トラフィックは VPC 内に留まる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "プライベート DNS ゾーンで googleapis.com を解決する設定も必要",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7689,15 +7689,15 @@
         "approach": [
           {
             "text": "ハブ VPC に仮想アプライアンス（ILB 10.0.0.5）を指すデフォルトルートを作成し、VPC ピアリングでカスタムルートをエクスポート/インポートする",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "スポーク VPC のデフォルトインターネットゲートウェイルートを削除しないと、カスタムルートよりも優先されてハブを経由しなくなる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "アプライアンス VM 自体はインターネットアクセスが必要なため、タグ付きの IGW ルートを残す必要がある",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7748,7 +7748,7 @@
           },
           {
             "text": "BGP ルートアドバタイズメントは Cloud Router の機能であるため、ログのリソースタイプは「gce_router」でフィルタリングする",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -7799,11 +7799,11 @@
           },
           {
             "text": "private.googleapis.com や restricted.googleapis.com の VIP はすべてまたは特定の API セットに適用されるため、Storage のみを選択的に制御するには向かない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Private Service Connect を使えば特定の Google API（Cloud Storage）にのみプライベートエンドポイント経由でアクセスでき、他の API はデフォルトのパブリックドメインを使用できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -7854,11 +7854,11 @@
           },
           {
             "text": "VPC の動的ルーティングモードをグローバルに設定することが最もシンプルかつ迅速な解決策",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "カスタムアドバタイズは手動管理が必要でサブネット追加のたびに更新が必要なため、ルーティングモード変更の方が適切",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7905,11 +7905,11 @@
         "approach": [
           {
             "text": "共有 VPC の場合、DNS 設定はホストプロジェクトで行えばサービスプロジェクトにも自動的に適用される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ホストプロジェクトに Cloud DNS プライベート転送ゾーンを作成し、オンプレミス DNS サーバーに転送する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud Router で 35.199.192.0/19 をアドバタイズしてオンプレミスへの DNS クエリの戻り経路を確保する",
@@ -7917,7 +7917,7 @@
           },
           {
             "text": "169.254.169.254 は GCE メタデータサーバーの IP であり、DNS 転送とは無関係",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -7968,11 +7968,11 @@
           },
           {
             "text": "イングレスルールのターゲットは受信側 VM（VM B）、ソースは送信側 VM（VM A）として設定する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "サービスアカウントベースはタグベースよりも厳密な制御が可能で Google が推奨する方法",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8023,15 +8023,15 @@
           },
           {
             "text": "Network Intelligence Center の接続テスト（Connectivity Tests）はパケットのパスをシミュレーションし、ファイアウォールルールとルーティングの両方をチェックして問題の原因を特定できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPC フローログは実際のトラフィックログであり、ルーティングの問題は直接検出できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "traceroute はルーティングパスの確認のみでファイアウォールの影響は判断できない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -8082,11 +8082,11 @@
           },
           {
             "text": "ネットワーク LB（L4 パススルー型）や TCP プロキシ（L4 プロキシ型）は URL マップによる L7 ルーティングに対応できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "外部 HTTP(S) LB は URL マップをサポートし、X-Forwarded-For ヘッダーでクライアント IP を自動的にバックエンドに伝達する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8137,11 +8137,11 @@
           },
           {
             "text": "VPC ファイアウォールルールは L3/L4 の制御であり、アプリケーション層の攻撃には対応できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Google Cloud Armor はグローバル外部アプリケーション LB のバックエンドサービスに統合し、WAF ルールでアプリケーション層の攻撃を防御できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8192,15 +8192,15 @@
           },
           {
             "text": "Dedicated Interconnect や HA VPN は VPC 内リソースへの接続であり、Google Workspace への接続には使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Google Workspace 等のパブリック Google サービスへの直接接続にはダイレクトピアリングが適切",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "キャリアピアリングは ISP 経由の接続であり、直接接続の要件には合わない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -8251,15 +8251,15 @@
           },
           {
             "text": "VPC フローログをサブネットで有効にすることで接続情報を取得できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "connection フィールドには src_ip（送信元 IP）が含まれており、送信元 IP アドレスの特定に使用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "src_location は地理的位置情報であり、IP アドレスそのものではない点に注意",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -8310,15 +8310,15 @@
           },
           {
             "text": "階層型ファイアウォールポリシーは組織ノードに設定でき、VPC ファイアウォールルールよりも先に評価される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "優先度 0（最高）で企業 IP からの SSH を許可し、優先度 1 ですべての IP からの SSH を拒否することで、許可ルールが先に評価される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPC ファイアウォールルールは各プロジェクト/VPC で上書き可能なため、組織全体の強制には不適切",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -8369,15 +8369,15 @@
           },
           {
             "text": "ターゲットプールは従来の方式で IPv6 をサポートしないため除外",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "TCP プロキシはポートリマッピングをサポートするが、1 インスタンスのみでは高可用性の要件を満たさない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "バックエンドサービスベースのネットワーク LB は IPv4/IPv6 に対応し、2 インスタンスのインスタンスグループで高可用性を確保できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8428,15 +8428,15 @@
           },
           {
             "text": "共有 VPC を使用すればネットワークの一元管理が可能",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ホストプロジェクトに Dedicated Interconnect と VLAN アタッチメントをデプロイすることで、すべてのサービスプロジェクトが共有接続を利用できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "各プロジェクトや部門ごとに個別の Interconnect をデプロイするのはコスト高で非効率",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -8491,11 +8491,11 @@
           },
           {
             "text": "サーバーレスサービスごとに個別のコネクタを作成するとコストが増大する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "1 つのコネクタを共有する方式がコスト効率に優れている",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8547,11 +8547,11 @@
           },
           {
             "text": "20 Gbps を実現するには、追加の VLAN アタッチメントを作成するか、既存のアタッチメントの帯域幅を変更する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "同じリージョンに追加し、MED を同じにすることで ECMP によるロードバランシングを実現できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8608,11 +8608,11 @@
           },
           {
             "text": "リージョン間でフェイルオーバーするには「グローバルルーティング」が必須",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "MED 値は低い方が優先されるため、us-west1 を低く、us-east1 を高く設定する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8667,11 +8667,11 @@
           },
           {
             "text": "プライベートクラスタではプライベートエンドポイント（192.168.38.2）を使用して通信する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VM のサブネット（192.168.40.0/24）を承認ネットワークに追加する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8722,11 +8722,11 @@
           },
           {
             "text": "デフォルトのキャッシュキーには「ホスト」「プロトコル」「パス」が含まれるため、異なるホスト名でアクセスすると別のキャッシュエントリとして扱われる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "同一コンテンツのキャッシュヒット率を上げるには、キャッシュキーからホストとプロトコルを除外する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8777,15 +8777,15 @@
           },
           {
             "text": "単一 VM ではフェイルオーバーできず、静的ルートのネクストホップとしてインスタンス名を指定しても自動フェイルオーバーは困難",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "内部ロードバランサ（TCP/UDP）をネクストホップとする静的ルートが最適解",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "MIG と組み合わせることで、ヘルスチェックと自動フェイルオーバーの両方を実現できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8836,15 +8836,15 @@
           },
           {
             "text": "GKE で PUPI を使用する場合、--enable-ip-alias と --enable-private-nodes が必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "--disable-default-snat を指定することで、ノードが元のポッド IP アドレスを保持して通信できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "デフォルト SNAT が有効のままだとポッド IP が NAT されてしまい、PUPI を使うメリットが薄れる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -8895,15 +8895,15 @@
           },
           {
             "text": "プライベートバケットではアクセス権限がない場合に 403 が返される",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud CDN が USE_ORIGIN_HEADERS モードの場合、オリジンが Cache-Control: private を返すとキャッシュされない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "根本原因はバケットへのアクセス権限がないことであり、公開アクセスを許可することで解決する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -8954,11 +8954,11 @@
           },
           {
             "text": "Compute Engine インスタンスには通常 1 つの外部 IP しか割り当てられないため、プロトコル転送を使用する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ターゲットインスタンスを作成し、各外部 IP に対してプロトコル転送ルールを設定することで複数の IP からのトラフィックを 1 つの VM に転送できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9009,11 +9009,11 @@
           },
           {
             "text": "Packet Mirroring は VPC ピアリングを跨いで動作可能",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "IDS は内部ロードバランサの背後に配置する（Packet Mirroring のコレクターとして機能させるため）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "両リージョンに IDS を配置することで、リージョン内のトラフィックを漏れなく検査できる",
@@ -9069,11 +9069,11 @@
           },
           {
             "text": "内部 HTTP(S) LB はプロキシベースであり、プロキシ専用サブネットが必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ヘルスチェック用のファイアウォールルール（Google のヘルスチェックプローブ IP からの通信許可）も必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9139,7 +9139,7 @@
           },
           {
             "text": "アクティブ側のアドバタイズルート優先度を低く（高優先）、パッシブ側を高く（低優先）設定することが正しい",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9196,15 +9196,15 @@
           },
           {
             "text": "VPC ピアリングにはデフォルト 25 のピアリング制限があり、50 以上のスポークでは対応できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC ピアリングは推移的でないため、ハブ経由のトラフィック転送が困難",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud VPN であれば制限を回避でき、ハブのルーターアプライアンスを介してトラフィック制御が可能",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9255,11 +9255,11 @@
           },
           {
             "text": "原因特定には BGP セッションの状態（アドバタイズされたルートと学習されたルート、MED 値など）を確認する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud Console のハイブリッド接続セクションから Cloud Router の BGP セッション詳細を確認するのが適切",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9310,11 +9310,11 @@
           },
           {
             "text": "Dedicated Interconnect で 99.99% SLA を得るには 2 つの大都市圏にそれぞれ 2 つの接続（合計 4 接続）が必要だが、選択肢にその構成はない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "HA VPN は適切に構成すれば 99.99% SLA を提供するため、最適な選択肢となる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9365,7 +9365,7 @@
           },
           {
             "text": "GKE はノードあたりの最大ポッド数の 2 倍の IP アドレスを予約する（ローリングアップデートのため）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "最大 100 ポッドの場合、200 IP が必要となる",
@@ -9373,7 +9373,7 @@
           },
           {
             "text": "/24 は 256 IP、/25 は 128 IP であるため、200 IP を収容できる /24 が必要",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9428,11 +9428,11 @@
           },
           {
             "text": "1 つのリージョンレベルのポリシーと 1 つのコレクターグループで構成するのがシンプルかつコスト効率が良い",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "インスタンスタグと TCP フィルターを組み合わせることで対象を絞り込む",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9487,11 +9487,11 @@
           },
           {
             "text": "Cloud DNS ピアリングゾーンを使えば、一方の VPC の DNS 設定をもう一方から参照でき、転送ゾーンの設定を一箇所にまとめられる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "DNS ピアリングゾーンは VPC 間のネットワーク接続を必要とせず、VPC の完全分離を維持できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9545,7 +9545,7 @@
           },
           {
             "text": "共有 VPC を使うと、ネットワーク管理を一元化しつつ各プロジェクトを独立して管理できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9590,11 +9590,11 @@
           },
           {
             "text": "VPC フローログはサブネットレベルで設定する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Subnet-2 はサービスプロジェクトの VPC に属しているため、フローログの設定はそのプロジェクトで行う",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9642,19 +9642,19 @@
         "approach": [
           {
             "text": "BGP 非対応のためダイナミックルーティング（HA VPN）は使用できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Classic VPN のルートベースまたはポリシーベースルーティングを使用する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ルートベース VPN は 1 トンネルで 0.0.0.0/0 のトラフィックセレクタを使い、ルーティングで制御できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ポリシーベースでは子 SA ごとに CIDR を指定するが、複数 CIDR を含めると子 SA が増加し問題になりうる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "一意のピア IP でトンネルを分ければ子 SA の問題を回避できる",
@@ -9715,11 +9715,11 @@
           },
           {
             "text": "各 VPC の各ゾーンに最低 10 個のインスタンスが必要で、90% 以上の信頼度が得られる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "トラフィックフローの終点のプロジェクトでメトリックを確認する必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9770,11 +9770,11 @@
           },
           {
             "text": "Google 推奨プラクティスでは HA VPN + BGP が推奨される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Classic VPN は SLA がなく、HA VPN は 99.99% SLA を提供する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -9829,11 +9829,11 @@
           },
           {
             "text": "最大限の多様性を確保するには、各 Interconnect から両リージョンの Cloud Router に VLAN アタッチメントを作成する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "グローバルルーティングを有効にすることで、リージョン間フェイルオーバーが可能になる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9884,7 +9884,7 @@
           },
           {
             "text": "BYOIP を使用すれば既存の IP アドレスを Google Cloud に持ち込める",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "手順は、IP アドレスの所有権確認 → Google Cloud にプレフィックスをプロビジョニング → Google Cloud がアドバタイズ → IP を Compute Engine インスタンスに割り当て",
@@ -9939,11 +9939,11 @@
           },
           {
             "text": "99.99% SLA には 2 つの異なるメトロに各 2 つの接続（合計 4 接続）が必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "グローバル動的ルーティングを有効にしてリージョン間フェイルオーバーを可能にする",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -9994,11 +9994,11 @@
           },
           {
             "text": "VLAN アタッチメントは物理 Interconnect があるリージョンに作成する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud Router と VLAN アタッチメントを us-east4 に作成し、グローバルルーティングで us-central1 のリソースにアクセスさせる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "帯域幅を明示的に指定することでコスト最適化を図る",
@@ -10050,15 +10050,15 @@
         "approach": [
           {
             "text": "BGP セッションが確立されない場合、まず gcloud compute routers get-status で Cloud Router のステータスを確認し、ARP テーブルを確認してレイヤ 2 の接続性を検証する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "次に、オンプレミスルーターのサブインターフェイスが正しいサブネットマスクで構成されているかを確認する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "eBGP マルチホップや MD5 認証は Cloud Router では一般的な原因ではない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10115,11 +10115,11 @@
           },
           {
             "text": "Dedicated Interconnect は低レイテンシで高帯域を提供できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "99.9% SLA には単一メトロで 2 接続が必要で、各接続を異なるエッジ可用性ドメインに配置する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -10170,11 +10170,11 @@
           },
           {
             "text": "NCC のスタートポロジを使用し、ハブ VPC をセンターグループ、スポーク VPC をエッジグループに配置する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "メッシュトポロジは全対全接続のため、ハブアンドスポーク要件には適さない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10225,15 +10225,15 @@
           },
           {
             "text": "HA VPN ゲートウェイとピア VPN ゲートウェイは作成済みなので、残りのステップは Cloud Router の作成・VPN トンネルの追加・BGP セッションの構成である",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "静的ルートは動的交換に該当しないため除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "2 番目の HA VPN ゲートウェイはすでにゲートウェイが作成済みのため不要",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10288,15 +10288,15 @@
           },
           {
             "text": "IP 最小化の観点から、各リージョンに 192.168.x.0/24 の NAT サブネットを配置しエクスポート インクルード ポリシーで NAT サブネットのみをハブにアドバタイズする選択肢 A が妥当",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "選択肢 B は NAT サブネットの IP 範囲 (172.16.x.0/24) がオンプレミスの IP 範囲と重複するため除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "選択肢 D はエクスポート除外ポリシーを使っており、NAT サブネットのみをアドバタイズするにはインクルードポリシーが適切",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10347,15 +10347,15 @@
           },
           {
             "text": "ファイアウォールルールでの制御は Cloud NAT のサブネット制限としては適切でなく、他の管理者による変更リスクも残る",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud NAT のカスタムソース範囲で特定サブネットのみを対象にし、Cloud NAT ルールで制御する方法が最もシンプルかつ直接的",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "組織ポリシー制約 (B) は管理統制として強力だが、Cloud NAT 自体の機能で直接制限する D が正解",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10410,15 +10410,15 @@
           },
           {
             "text": "VPC ピアリングのフルメッシュ (5C2=10 接続) では重複 IP 問題を柔軟に解決する手段が限られる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "NCC のメッシュトポロジ + エクスポート除外フィルターで 240.0.0.0/4 を除外するのが最適",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VPC ピアリングにはエクスポート除外フィルター機能がないため、D は除外できる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10469,19 +10469,19 @@
           },
           {
             "text": "NO_PROPOSAL_CHOSEN は IPsec のフェーズ 2 (CHILD_SA) でのネゴシエーション失敗を示す",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "原因は暗号スイート（暗号化アルゴリズム・認証アルゴリズム・DH グループ等）のミスマッチである",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "BGP ダウンは VPN トンネル未確立の二次的な結果であり根本原因ではないため、A は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "フェーズ 1 が成功しているからこそフェーズ 2 のネゴシエーションに進んでいるため、D（フェーズ 1 の変更）は不適切",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10532,7 +10532,7 @@
           },
           {
             "text": "原因は Ingress にデフォルトバックエンドが定義されていないこと",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "GKE Ingress では、定義されたパスルールに一致しないリクエストはデフォルトバックエンドに転送されるが、未定義の場合は 404 が返される",
@@ -10540,11 +10540,11 @@
           },
           {
             "text": "パスルールの追加とデフォルトバックエンドの定義は異なる概念であり、GKE の推奨はデフォルトバックエンドの定義",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "デフォルトバックエンドは Ingress リソースで定義するものであり、サービス YAML では定義しない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10595,7 +10595,7 @@
           },
           {
             "text": "リージョンが異なるためグローバル動的ルーティングが必要であり、リージョナルモードでは異なるリージョン間でルートが伝播しない",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "BGP の優先度（MED 値）で経路優先を制御し、値が小さいほど優先される",
@@ -10603,7 +10603,7 @@
           },
           {
             "text": "Interconnect の優先度を 100（低い値＝高優先）、VPN の優先度を 20000（高い値＝低優先）に設定する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -10654,15 +10654,15 @@
           },
           {
             "text": "単一の共有 VPC では本番/非本産の分離が不十分であり C は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "各プロジェクトに独自の VPC を持つ構成（D）ではネットワークの一元管理ができない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "共有 VPC ホストプロジェクトでネットワークを一元管理し、サービスプロジェクトでアプリケーションの課金を分離する構成が全要件を満たす",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -10713,19 +10713,19 @@
           },
           {
             "text": "ロードバランサーを経由しない VM に対する保護には、Cloud Armor のネットワークエッジセキュリティポリシー (CLOUD_ARMOR_NETWORK) が適切",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "バックエンドセキュリティポリシーはロードバランサー背後のバックエンドサービス用であり、パブリック IP を持つ個々の VM には適用できない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "エッジセキュリティポリシー (CLOUD_ARMOR_EDGE) は CDN コンテンツ用であり VM の保護には使用しない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ファイアウォールポリシーには --network-src-asns パラメータがないため D は除外できる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10780,15 +10780,15 @@
           },
           {
             "text": "PBR でフロントエンド VM からのトラフィックを NVA（ILB 経由）にリダイレクトする",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "PBR の送信元はフロントエンドサブネット、宛先はバックエンドサブネットに設定し、フロントエンドのネットワークタグで対象 VM を絞り込む",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "選択肢 A は送信元と宛先の方向が逆であるため除外できる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10839,19 +10839,19 @@
           },
           {
             "text": "ECMP はアクティブ/アクティブ構成であり、アクティブ/パッシブの要件を満たさないため B は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "MED は Google Cloud 側で設定する値でオンプレミス側のルート選択には主に LOCAL_PREF が使われる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "AS_PATH プリペンドも可能だが、単一 Cloud Router での構成ではアクティブ/パッシブ制御として最適ではない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "オンプレミスルーターで LOCAL_PREF を設定し、アクティブ側のルートに高い LOCAL_PREF を設定してパッシブ側より優先する方法が正解",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -10906,7 +10906,7 @@
           },
           {
             "text": "これはファイアウォールポリシーとルールの評価順序が問題であることを示唆している",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "デフォルトではファイアウォールポリシーが VPC ファイアウォールルールより先に評価されるが、VPC ファイアウォールルールが先に評価される構成になっている可能性がある",
@@ -10914,7 +10914,7 @@
           },
           {
             "text": "優先度番号の変更（B、D）ではポリシーと VPC ルール間の評価レイヤーの順序は変わらない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -10965,19 +10965,19 @@
           },
           {
             "text": "パケットミラーリングはトラフィックのコピーを作成する機能であり IPS 機能とは異なるため A は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "goto_next は次の評価レイヤーに処理を委譲するアクションであり IPS 検査を行わないため B は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ファイアウォールルールのマッチング条件はレイヤー 3/4（IP アドレス・プロトコル・ポート）であり、ホスト名によるマッチングは不可のため C は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "送信元/宛先 IP アドレスでトラフィックを一致させ、apply_security_profile_group アクションでファイアウォールエンドポイントに転送して IPS 検査を行う",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11028,19 +11028,19 @@
           },
           {
             "text": "次のステップとしてバックエンドサービスの正常性を検証し、バックエンドサービスのロギングを有効化する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "statusDetails ログフィールドにはロードバランサーがエラーを返した理由（バックエンド障害・タイムアウト等）が記録される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "SSH でのバックエンド VM への直接アクセスはロードバランサー経由の問題を特定できず、バックエンド数の増加は根本原因の解決にならない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud Armor の無効化はセキュリティリスクがあり、エラー原因が Cloud Armor でない可能性が高い",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -11096,19 +11096,19 @@
           },
           {
             "text": "VPC Service Controls は Google API へのアクセスを制御するものであり、VM 間のネットワークトラフィックには影響しない（A は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "パブリック IP の有無は VPC 間トラフィックの転送に直接影響しないため C は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "バックエンドサービスへの追加も VPC 間転送に影響しないため E は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "確認すべき項目はファイアウォールルールの変更と IP フォワーディングの状態の 2 点",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11165,15 +11165,15 @@
           },
           {
             "text": "poolReader ロールは CA プールの読み取り権限のみであり、証明書を生成するには certificateRequester が必要（B は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "信頼構成の作成だけでは TLS 検査ポリシーの作成とエンドポイント関連付けが欠けているため C・D は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "正しい手順は「certificateRequester ロール付与 → TLS 検査ポリシー作成（CA プールにリンク）→ VPC エンドポイントの関連付けに設定 → ファイアウォールルールの TLS フラグを true にする」",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11224,19 +11224,19 @@
           },
           {
             "text": "ファイアウォールポリシールールの手動確認（A）は要件に反する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "外部からの接続テスト（C）も手動であり網羅的な確認が困難",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Network Analyzer はネットワーク構成の分析を行うが、ファイアウォールルールの過度な許可の検出に特化していない（D は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Firewall Insights の「過度に許可されたルール」インサイトが最適で、自動的にファイアウォールルールを分析できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11287,15 +11287,15 @@
           },
           {
             "text": "問題は異なるリージョン間のアクセスに関するものなので、リージョナルモードではなくグローバル routing_mode を確認すべき（C・D は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "unique_destinations_limit は上限値を示すだけであり、実際にドロップされたかどうかの確認にはならない（B は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "dropped_unique_destinations メトリックでドロップされたルート数を確認し、グローバル routing_mode 属性でルーティングモードを確認する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11346,19 +11346,19 @@
           },
           {
             "text": "HA VPN はコストが高く低コスト要件に合致しないため A・B は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC ピアリングは最もコスト効率が良く高パフォーマンス（Google のネットワーク内で直接通信）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "PUPI 範囲を交換するには「カスタムルートのエクスポート/インポート」ではなく「パブリック IP アドレスを持つサブネットルートのエクスポート/インポート」を有効にする必要がある（C は除外）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ファイアウォールのソースフィルタはネットワークタグではなく IP 範囲で指定する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -11413,19 +11413,19 @@
           },
           {
             "text": "VM 削除・サブネット削除・再作成（A）はダウンタイムが大きく要件に合わない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "vpc-pre-prod スポークを削除して再追加する方法（D）も一時的に接続が切断され不適切",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ハブではなくスポーク単位で --exclude-export-ranges を設定する必要があるため C は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "vpc-dev のスポーク作成時に --exclude-export-ranges フラグで競合する IP 範囲を除外するのが最も迅速かつ低影響",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11480,15 +11480,15 @@
           },
           {
             "text": "FORCE_CACHE_ALL は全レスポンスを無条件にキャッシュするため、アプリケーションのキャッシュ制御（private・no-store 等）を無視してしまう（B は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "CACHE_ALL_STATIC はデフォルトモードで静的コンテンツを自動キャッシュするが、アプリケーションが定義したキャッシュディレクティブを完全には尊重しない場合がある",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "オリジンの Cache-Control ヘッダーを尊重する USE_ORIGIN_HEADERS が最適",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11539,19 +11539,19 @@
           },
           {
             "text": "全 SMTP 拒否が最高優先度（D）では、企業ネットワークからのトラフィックも含めて全てブロックされ VPC レベルの許可に到達しない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "選択肢 A は出力（egress）ルールとして設定されており、入力（ingress）制御が必要である点も誤り",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "選択肢 B のデフォルト許可は安全でなく、除外すべき VPC を全て特定して拒否する方式は漏れのリスクがある",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "企業ネットワークからのトラフィックを goto_next で先に通過させ（優先度 10000）、それ以外を拒否（優先度 10010）し、許可が必要な VPC のみファイアウォールポリシーで TCP 25 を許可する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11602,15 +11602,15 @@
           },
           {
             "text": "FQDN オブジェクトはドメイン名のみの制御であり、パスレベルのフィルタリングができないため A・B は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Secure Web Proxy にはグローバルアクセス機能がなく、リージョナルサービスのため各リージョンに配置が必要（C は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "各リージョンに Secure Web Proxy を配置し、URL リストで URL レベル（ホスト名+パス）のフィルタリングを行い、セキュアタグで対象マシンを識別する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11661,19 +11661,19 @@
           },
           {
             "text": "同一 Cloud Router の全 BGP セッションには同じ ASN を使用し、BGP セッションごとに異なる ASN は設定しない（A は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ASN 16550 は Google のパブリック ASN であり、プライベート接続では使用しないため C は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "BGP セッションを無効化するのはアクティブ/パッシブの実現方法として不適切で、障害時に自動フェイルオーバーしない（D は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "プライマリに低い優先度値（0）、セカンダリに高い優先度値（200）を設定し、両 BGP セッションに同じ ASN (65100) を使用する",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11724,11 +11724,11 @@
           },
           {
             "text": "PGA はプロジェクト・VM・VPC レベルではなく、サブネットレベルで有効化する（A・B・C は除外）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "デフォルトルート (0.0.0.0/0 → default-internet-gateway) は PGA のトラフィックを Google のネットワークにルーティングするために必要であり、削除すると Google API にルーティングできない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -11779,19 +11779,19 @@
           },
           {
             "text": "マネージドサービスで Cloud DNS を構成する要件があるため、OS を直接オンプレミス DNS に向ける方法（A）は除外できる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC ピアリングの再作成（B）は DNS 解決の問題に対して適切でない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "全クエリをオンプレミスに転送する方法（D）は非効率であり、Cloud DNS プロキシ範囲のアドバタイズも含まれていない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "正しい構成は「VM がメタデータサービス (169.254.169.254) をリゾルバとして使用」「オンプレミスドメインの送信転送ゾーンを構成」「Cloud DNS プロキシ範囲 (35.199.192.0/19) をオンプレミスにアドバタイズ」の 3 点",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11842,19 +11842,19 @@
           },
           {
             "text": "Cloud Armor には TLS インスペクション機能がなく、DDoS 防御と WAF が主な用途（A は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "NGFW Essentials には TLS インスペクション機能がなく Enterprise 限定である（B は除外）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VM に TLS エージェントを入れる方法（C）はマネージドでない手動のアプローチであり不適切",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud NGFW Enterprise の --tls-inspect フラグ付き出力ファイアウォールルールで TLS トラフィックを復号して検査できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11909,19 +11909,19 @@
           },
           {
             "text": "スポークの Cloud Router（A）はオンプレミスへの直接接続がないためアドバタイズできない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "カスタムルートアドバタイズメント（B）ではスポークの変更に追従するために手動管理が必要になる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "カスタム学習ルート（D）はアドバタイズではなく学習する機能であり目的が異なる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "BGP ルートポリシー（C）を使ってスポーク VPC のサブネットがオンプレミスに向けて通知されるよう構成できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -11972,7 +11972,7 @@
           },
           {
             "text": "/22 のスーパーネットは元の /24 サブネット 3 つを正確にカバーしないため A・B は除外できる（4 つの /24 をカバーし、存在しないサブネットまで含む）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Classic VPN のポリシーベーストンネルでは LOCAL_TS がオンプレミス側のネットワーク、REMOTE_TS が Google Cloud 側のネットワークとして構成される",
@@ -11980,7 +11980,7 @@
           },
           {
             "text": "オンプレミスの 3 つのサブネットを LOCAL_TS に、Google Cloud の 3 つのサブネットを REMOTE_TS に個別に指定する C が正確なトラフィックセレクタ構成",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12031,19 +12031,19 @@
           },
           {
             "text": "サンプルレート 0.5（A）では半分のリクエストしかログされず、Cloud Armor 固有の詳細情報も含まれない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VERBOSE 設定だけ（B）では不十分で、Cloud Armor のログ記録自体をバックエンドサービスに対して有効にする必要がある",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "サンプルレートを 1.0 にする（D）と全リクエストがログされるが、WAF 固有の詳細情報（マッチしたルール・シグネチャ等）は含まれない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "バックエンドサービスで Cloud Armor ログ記録を有効にした上で VERBOSE モードに設定することで最も詳細なログが取得可能",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12094,11 +12094,11 @@
           },
           {
             "text": "オンプレミスに PSA の CIDR を通知するにはカスタムルートアドバタイズメントを使用する（カスタム「学習」ルートは Cloud Router がピアから受信したかのように扱うもので、通知には使えない）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "アクティブ/パッシブを実現するには BGP のルートプライオリティ（advertised-route-priority）に差をつける必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "既存ルートに影響を与えずに構成できる点も重要",
@@ -12106,7 +12106,7 @@
           },
           {
             "text": "MED はルートプライオリティの値から計算され、BGP ルートポリシーはより高度な制御だがこのケースでは不要",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -12161,11 +12161,11 @@
           },
           {
             "text": "共有 VPC では GKE サービスアカウントが「ホストプロジェクト」でネットワークリソースにアクセスする権限を持つ必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "必要なロールは networkUser（サブネット使用）、hostServiceAgentUser（GKE によるファイアウォールルールなどの管理）、securityAdmin（ファイアウォール管理）の 3 つ",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12216,11 +12216,11 @@
           },
           {
             "text": "IAM の networkUser ロールをプロジェクトレベルで付与するとすべてのサブネットにアクセスできてしまうため、サブネット単位の制限には不十分",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "組織ポリシーの constraints/compute.restrictSharedVpcSubnetworks を使うと、各サービスプロジェクトがアクセスできるサブネットを明示的に指定できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12271,15 +12271,15 @@
           },
           {
             "text": "HA VPN の 1 トンネルは最大 3 Gbps / 250,000 PPS であるため、4 Gbps を達成するには複数トンネルが必要",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "99.99% SLA を得るには HA VPN ゲートウェイの 2 つのインターフェースを使い、各インターフェースにトンネルを構成する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "1 つの HA VPN ゲートウェイ（2 トンネル）では帯域幅管理の予測可能性の観点から不十分であり、2 つの HA VPN ゲートウェイ（計 4 トンネル）を同じ MED で ECMP 分散するのが適切",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12330,11 +12330,11 @@
           },
           {
             "text": "Google Cloud では既存の VM のエフェメラル（一時的）内部 IP アドレスを、VM を停止せずに静的割り当てに「昇格」できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "この操作では IP アドレス自体は変わらず、割り当てタイプのみが変更されるため、サービス停止は発生しない",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12385,11 +12385,11 @@
           },
           {
             "text": "デフォルトの脅威シグネチャセットでは一部のアクションがアラートのみとなっている場合がある",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "セキュリティプロファイルで重大度レベルごとのデフォルトオーバーライドアクションを「拒否」に変更することで、全重大度の脅威がログ記録されパケットがドロップされる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12440,11 +12440,11 @@
           },
           {
             "text": "99.9% SLA には同一メトロの異なるゾーン（エッジアベイラビリティドメイン）に 2 つの接続（冗長性）が必要（99.99% には異なるメトロが必要）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "コスト最小化のためには最小構成として各ゾーン 10 Gbps（合計 20 Gbps）で十分",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Cloud Router は接続先（フランクフルト）の近くに配置する必要があり、グローバルルーティングを有効にすれば us-east4 のリソースにもルートが伝搬される",
@@ -12499,11 +12499,11 @@
           },
           {
             "text": "ip-masq-agent の nonMasqueradeCIDR リストに含まれる宛先への通信は Pod IP がそのままに保持される（ノード IP へのマスカレードが行われない）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "35.100.0.0/16 を nonMasqueradeCIDR に含めると、Pod IP のまま外部に出ていき、Cloud NAT がその Pod IP レンジの NAT を担当する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "これにより、ノードの外部 IP ではなく Cloud NAT の IP で 35.100.0.0/16 と通信できる",
@@ -12558,7 +12558,7 @@
           },
           {
             "text": "共有 VPC ではホストプロジェクトで VPC を管理し、サービスプロジェクトにリソースを配置するモデルを取る",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "これにより中央チームがネットワークを管理しつつ、各チームは自分のプロジェクトで作業できる",
@@ -12566,7 +12566,7 @@
           },
           {
             "text": "VPC はホストプロジェクトに作成する点が重要（サービスプロジェクトに作成するのは誤り）",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -12617,11 +12617,11 @@
           },
           {
             "text": "excludeExportRanges ですべてのサブネットを除外すると通信が完全にブロックされるため、A と B は明らかに誤り",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "NCC のスタートポロジでは、すべての VPC をセンターグループに配置することで相互接続が実現できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "出題の文脈ではスタートポロジ（ハブ＆スポークモデル）が推奨構成として選ばれている",
@@ -12680,15 +12680,15 @@
           },
           {
             "text": "HA VPN の 99.99% SLA を得るには HA VPN ゲートウェイの 2 つのインターフェース（if0, if1）にそれぞれトンネルを構成する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "オンプレミスが単一 IP の場合でも、1 つの HA VPN ゲートウェイの 2 インターフェースから同じオンプレミス IP にトンネルを張ることで SLA を達成できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "2 つの HA VPN ゲートウェイは過剰でセットアップの手間が増えるため要件に合わない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -12739,11 +12739,11 @@
           },
           {
             "text": "送信元 IP を保持するにはパススルー型のロードバランサーが必要（プロキシ型は送信元 IP を書き換える）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "内部パススルーネットワーク LB はリージョナルだが、グローバルアクセスを有効にすれば他リージョンからもアクセス可能",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "複数リージョンをカバーするには複数のリージョナル LB を DNS ルーティングポリシーで分散する",
@@ -12798,15 +12798,15 @@
           },
           {
             "text": "Cloud DNS の転送ゾーンは外部 DNS サーバーへの転送用であり、プロジェクト間の DNS ゾーン共有には適さない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "DNS ピアリングは別の VPC の名前解決順序を使うもので、ゾーンの共有とは異なる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud DNS のプロジェクト間バインディング（cross-project binding）を使うと、サービスプロジェクトで作成した DNS ゾーンをホストプロジェクトの共有 VPC にバインドでき、共有 VPC 上のすべてのワークロードがそのゾーンを解決できる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -12857,15 +12857,15 @@
           },
           {
             "text": "HA VPN over Cloud Interconnect では、Cloud Interconnect 層と HA VPN 層で別々の Cloud Router が必要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "HA VPN ゲートウェイを作成して暗号化 VLAN アタッチメントに関連付け、さらに HA VPN 専用の Cloud Router、ピア VPN ゲートウェイ、トンネルを新規作成することが正しい手順",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "MACsec は Layer 2 暗号化であり、HA VPN（IPsec、Layer 3）とは異なる暗号化方式",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -12916,11 +12916,11 @@
           },
           {
             "text": "ファイアウォールインサイトは Network Intelligence Center の一部で、ファイアウォールルールを自動分析し、過度に許可されたルールやシャドウルールを検出する機能を提供する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "CSV エクスポートや外部からの接続テストは手動作業であり、自動化の要件に反する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -12971,11 +12971,11 @@
           },
           {
             "text": "99.9% SLA には同一メトロ内の異なるエッジアベイラビリティドメインに 2 つの Cloud Interconnect 接続が必要（99.99% には 2 つの異なるコロケーション施設が必要）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "VLAN アタッチメントと Cloud Router は共有 VPC のホストプロジェクトに作成する必要がある",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "2 つの異なるコロケーション施設を使用する構成は 99.9% の要件も満たすため、A が正答となる",
@@ -13030,15 +13030,15 @@
           },
           {
             "text": "BGP ホールドタイマーを増やすとフラップの表面的な症状は隠せるが、障害検出が遅くなるためリスクが増す",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "グレースフルリスタートは計画的な再起動時のルーティング継続性を提供するが、頻繁なフラップの解決には直接つながらない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "BFD（双方向転送検出）はフォワーディングパスの障害を数ミリ秒〜数秒で高速検出し、BGP とは独立して動作するため、BGP セッションの安定性を向上させるのに適切",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -13089,11 +13089,11 @@
           },
           {
             "text": "重複する IP 範囲を持つ VPC 間の通信には Private NAT が必要（VPC ピアリングは重複 IP をサポートしない）",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "Network Connectivity Center (NCC) を大規模なマルチ VPC 環境のハブとして使い、Private NAT と組み合わせることで重複 IP を処理できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ルーティング VPC でオンプレミスとの動的ルート交換を行うことで、オンプレミスアクセスも実現できる",
@@ -13101,7 +13101,7 @@
           },
           {
             "text": "PSC は重複 IP の問題を解決するものではなく、NVA ベースは 250+ ユニットのスケールには向かない",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -13152,19 +13152,19 @@
           },
           {
             "text": "インターネット NEG はパブリック IP 経由の接続であり要件に反する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ゾーン NEG は Google Cloud 内の VM やコンテナ用であり、オンプレミスリソースには使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "ハイブリッド NEG はオンプレミスや他クラウドのバックエンドを Cloud Interconnect/VPN 経由で接続する仕組みであり、要件に合致する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "ALB はプロキシベースなのでバックエンドへのトラフィックはプロキシ専用サブネットから送信されるため、ファイアウォールでそのサブネットを許可する必要がある",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -13219,11 +13219,11 @@
           },
           {
             "text": "Cloud NAT のログは NAT 変換の情報を提供するが、断続的な TCP 接続問題の根本原因を特定するには不十分",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "接続テスト（Connectivity Tests）は TCP プロトコルを指定してネットワークパスを分析でき、ライブデータプレーン分析で実際のパケットフローを検証できるため最も洞察が得られる",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -13274,7 +13274,7 @@
           },
           {
             "text": "BGP 設定は「自分の視点」で構成するため、顧客の「ローカル」は Google Cloud の「ピア」、顧客の「ピア」は Google Cloud の「ローカル」となる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "顧客のローカル BGP アドレス 169.254.11.1 が Google Cloud のピア BGP IP、顧客のピア BGP アドレス 169.254.11.2 が Google Cloud のローカル BGP IP となる",
@@ -13286,11 +13286,11 @@
           },
           {
             "text": "MED は各側で独立して設定し、Cloud Router のデフォルト MED は 100",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "MD5 認証は両側で一致させる必要があるため、顧客が無効なら Google Cloud 側も無効にする",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "顧客の設定:",
@@ -13369,15 +13369,15 @@
           },
           {
             "text": "Cloud DNS のプロジェクト間バインディングはプロジェクトではなく VPC ネットワークに対して行う点が重要",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "各サービスプロジェクトの DNS ゾーンをホストプロジェクト内の VPC（SH_VPC）にバインドすることで、SH_VPC を使用するすべてのワークロードがゾーンを解決できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "追加の VPC 作成やピアリング構成が必要な選択肢は、セットアップの労力を最小限にするという要件に反する",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -13428,15 +13428,15 @@
           },
           {
             "text": "パケットミラーリングはより詳細な分析ができるが、コレクター VM の設定が必要で手間がかかる",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VLAN アタッチメントのドロップパケットメトリックはアタッチメントレベルの統計であり、VM からの送信が正しいかの検証には不十分",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "VPC フローログを SAMPLE_RATE=1.0（100% サンプリング）で有効にし、ログエクスプローラーで分析するのが Google 推奨のシンプルなアプローチ",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -13487,11 +13487,11 @@
           },
           {
             "text": "新しい URL への変更は要件に反する（問題文で「同じ URL」と明示されている）",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud Storage に正しいバイナリをアップロードし、Cloud CDN のキャッシュ無効化（Cache Invalidation）で古いバージョンを即座に削除する",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "無効化後のリクエストはオリジンサーバーに転送され、最新のコンテンツが取得・キャッシュされる",
@@ -13546,15 +13546,15 @@
           },
           {
             "text": "LB 自体にはクライアント IP ごとのレート制限機能はなく、VM レベルの iptables による対処はスケーラブルでない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud Armor のセキュリティポリシーでスロットルルール（レート制限）を構成し、閾値以下は許可（conform: allow）、超過時は HTTP 429 を返す（exceed: deny-429）設定が適切",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "OWASP ルールは SQL インジェクションや XSS などの攻撃パターン検出用であり、レート制限とは異なる",
-            "type": "normal"
+            "type": "trap"
           }
         ],
         "analysis": [
@@ -13605,15 +13605,15 @@
           },
           {
             "text": "origin.ip は直接接続しているクライアント（プロキシ/WAF）の IP を参照するため、元のクライアント IP には使えない",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "origin.user_ip を使うと userIpRequestHeaders[] で指定したヘッダーから元のクライアント IP を抽出できる",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "origin.user_ip はバックエンドセキュリティポリシーでのみ使用可能であり、ネットワークエッジセキュリティポリシーではサポートされない",
-            "type": "normal"
+            "type": "key"
           }
         ],
         "analysis": [
@@ -13664,11 +13664,11 @@
           },
           {
             "text": "サブドメインへの変更や新しい URL の作成は、クライアントが myglobalapp.terramearth.com にアクセスするという要件に反する",
-            "type": "normal"
+            "type": "trap"
           },
           {
             "text": "Cloud DNS のプライベートゾーンはパブリックゾーンと同じドメイン名で作成可能で、VPC にバインドされたプライベートゾーンがパブリックゾーンよりも優先される",
-            "type": "normal"
+            "type": "key"
           },
           {
             "text": "これにより VPC 内のクライアントは内部 IP で解決し、外部クライアントは引き続きパブリックゾーンで解決できる",

@@ -172,7 +172,7 @@ function renderQuiz() {
     });
     renderExplanation(q.explanation);
     document.getElementById('explanation-panel').classList.remove('hidden');
-    document.getElementById('skip-area').classList.add('hidden');
+    document.getElementById('btn-skip').classList.add('hidden');
     const navArea = document.getElementById('nav-area');
     navArea.classList.remove('hidden');
     const nextBtn = document.getElementById('btn-next');
@@ -186,7 +186,7 @@ function renderQuiz() {
     // 未回答: 通常表示
     document.getElementById('explanation-panel').classList.add('hidden');
     document.getElementById('nav-area').classList.add('hidden');
-    document.getElementById('skip-area').classList.remove('hidden');
+    document.getElementById('btn-skip').classList.remove('hidden');
   }
 }
 
@@ -213,7 +213,7 @@ function onChoiceSelected(selected, q) {
   document.getElementById('explanation-panel').classList.remove('hidden');
 
   // スキップボタンを非表示、次の問題ボタンを表示
-  document.getElementById('skip-area').classList.add('hidden');
+  document.getElementById('btn-skip').classList.add('hidden');
   const navArea = document.getElementById('nav-area');
   navArea.classList.remove('hidden');
   const nextBtn = document.getElementById('btn-next');

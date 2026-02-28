@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Cloud Network Engineer 問題集</title>
+  <meta name="theme-color" content="#4299e1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- スタート画面 -->
+  <div id="screen-start" class="screen">
+    <h1 id="quiz-title"></h1>
+    <div id="completion-message" class="card completion-card hidden">
+      <span>出題範囲の全問を解き終えました！</span>
+      <button id="btn-dismiss" class="btn btn-secondary btn-sm">✕</button>
+    </div>
+    <div class="card">
+      <h2>出題範囲</h2>
+      <div class="range-inputs">
+        <span>No.</span>
+        <input type="number" id="range-start" min="1" value="1">
+        <span>〜 No.</span>
+        <input type="number" id="range-end" min="1" value="1">
+      </div>
+      <div class="btn-group">
+        <button id="btn-sequential" class="btn btn-primary">▶ 順番通りに出題</button>
+        <button id="btn-random" class="btn btn-primary">🔀 ランダムに出題</button>
+        <button id="btn-incorrect-only" class="btn btn-primary">🔁 不正解のみ出題</button>
+      </div>
+      <p id="incorrect-only-msg" class="hidden" style="color:#e53e3e;font-size:0.875rem;margin-top:0.5rem"></p>
+    </div>
+    <div class="card summary">
+      <div id="summary-text"></div>
+      <div class="summary-actions">
+        <button id="btn-progress" class="btn btn-secondary">📊 進捗一覧を見る</button>
+        <button id="btn-reset" class="btn btn-secondary btn-sm">🗑 進捗リセット</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div id="screen-quiz" class="screen hidden">
+    <header class="quiz-header">
+      <button id="btn-home" class="btn btn-secondary btn-sm">🏠 ホーム</button>
+      <span id="quiz-counter"></span>
+      <button id="btn-to-progress" class="btn btn-secondary btn-sm">📊 進捗</button>
+    </header>
+    <div class="card">
+      <p id="question-text"></p>
+    </div>
+    <div id="choices" class="choices"></div>
+    <div id="skip-area" class="skip-area">
+      <button id="btn-skip" class="btn btn-secondary btn-sm">スキップ →</button>
+    </div>
+    <div id="explanation-panel" class="card explanation hidden">
+      <h3>解説</h3>
+      <p><strong>テスト観点:</strong> <span id="exp-focus"></span></p>
+      <div id="exp-approach"></div>
+      <div id="exp-analysis"></div>
+      <div id="exp-pitfalls"></div>
+    </div>
+    <div class="nav-area hidden" id="nav-area">
+      <button id="btn-next" class="btn btn-primary">次の問題 →</button>
+    </div>
+  </div>
+
+  <!-- 進捗一覧画面 -->
+  <div id="screen-progress" class="screen hidden">
+    <header class="progress-header">
+      <button id="btn-back" class="btn btn-secondary">← 戻る</button>
+      <h2>進捗一覧</h2>
+    </header>
+    <div class="filter-tabs">
+      <button class="tab active" data-filter="all">全て</button>
+      <button class="tab" data-filter="correct">正解</button>
+      <button class="tab" data-filter="incorrect">不正解</button>
+      <button class="tab" data-filter="unanswered">未回答</button>
+    </div>
+    <div id="progress-list"></div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>

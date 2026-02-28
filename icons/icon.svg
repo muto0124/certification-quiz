@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#4299e1"/>
+  <path d="M256 140c-48 0-88 32-98 76-2-1-5-1-8-1-33 0-60 27-60 60s27 60 60 60h212c39 0 70-31 70-70 0-36-27-66-62-70-14-32-46-55-84-55h-30z" fill="rgba(255,255,255,0.25)"/>
+  <text x="256" y="340" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="200" fill="white">Q</text>
+</svg>

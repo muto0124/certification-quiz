@@ -6,6 +6,7 @@ let allQuestions = [];   // data.json から読み込んだ全問題
 let sessionQuestions = []; // 今回の出題リスト（範囲・シャッフル済み）
 let currentIndex = 0;    // sessionQuestions 内の現在位置
 let answered = false;    // 現在の問題を回答済みか
+let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {selected, isCorrect}=回答済み)
 
 // --- 進捗管理 ---
 
@@ -73,6 +74,7 @@ function startQuiz(mode) {
     sessionQuestions = [...sessionQuestions].sort(() => Math.random() - 0.5);
   }
   currentIndex = 0;
+  sessionAnswers = new Array(sessionQuestions.length).fill(null);
   renderQuiz();
   showScreen('screen-quiz');
 }
@@ -96,6 +98,7 @@ function startIncorrectOnly() {
 
   sessionQuestions = [...incorrectIds].sort(() => Math.random() - 0.5);
   currentIndex = 0;
+  sessionAnswers = new Array(sessionQuestions.length).fill(null);
   renderQuiz();
   showScreen('screen-quiz');
 }
@@ -158,6 +161,7 @@ function onChoiceSelected(selected, q) {
 
   const isCorrect = q.answer.includes(selected);
   recordAnswer(q.id, isCorrect);
+  sessionAnswers[currentIndex] = { selected, isCorrect };
 
   // 選択肢をハイライト
   document.querySelectorAll('.choice-btn').forEach(btn => {
@@ -290,6 +294,7 @@ function jumpToQuestion(qid) {
   // 指定問題を先頭にして順番通りモードで開始
   sessionQuestions = allQuestions.filter(q => q.id === qid);
   currentIndex = 0;
+  sessionAnswers = new Array(sessionQuestions.length).fill(null);
   renderQuiz();
   showScreen('screen-quiz');
 }

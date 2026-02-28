@@ -1,7 +1,7 @@
 {
   "title": "Google Cloud Network Engineer 問題集",
-  "total": 235,
-  "version": "20260228183023",
+  "total": 236,
+  "version": "20260228184050",
   "questions": [
     {
       "id": 1,
@@ -6584,6 +6584,48 @@
           }
         ],
         "pitfalls": "- --disable-default-snat は、プライベートに使用するパブリック IP を使用する場合に重要。デフォルト SNAT が有効だと、ポッドからの通信がノード IP に NAT されるため、PUPI を使用するメリットが減る\n- C と D の違いは --disable-default-snat の有無のみ"
+      }
+    },
+    {
+      "id": 157,
+      "question": "Cloud CDN で 、 プ ラ イ ベ ー ト Cloud Storage バ ケ ッ ト で ホ ス ト さ れ て い る\nhttps://www.example.com/images/spacetime.png 静的画像ファイルを提供する必要があります。\nUSE_ORIGIN_HEADERS キャッシュ モードを使用しています。ブラウザでファイルを開くと HTTP\n403 エラーが表示され、HTTP レスポンスに Cache-Control: private, max-age=0 ヘッダーが含まれて\nいることがわかります。この問題をどのように修正すればよいでしょうか。",
+      "choices": {
+        "A": "バックエンド バケットのネガティブ キャッシュを有効にします。",
+        "B": "キャッシュ モードを「すべてのコンテンツを強制キャッシュ」に変更します。",
+        "C": "allUsers にストレージ レガシー オブジェクト リーダー ロールを付与する Cloud Storage バケット 権限を構成します。",
+        "D": "バックエンド サービスのデフォルトの有効期間 (TTL) を増やします。"
+      },
+      "answer": "C",
+      "explanation": {
+        "focus": "Cloud CDN + プライベート Cloud Storage バケットでの HTTP 403 エラーの解決",
+        "approach": "- HTTP 403 エラーが発生し、Cache-Control: private, max-age=0 ヘッダーが返されている\n- プライベートバケットではアクセス権限がない場合に 403 が返される\n- Cloud CDN が USE_ORIGIN_HEADERS モードの場合、オリジンが Cache-Control: private を返すとキャッシュされない\n- 根本原因はバケットへのアクセス権限がないことであり、公開アクセスを許可することで解決する",
+        "analysis": [
+          {
+            "choice": "A",
+            "summary": "ネガティブキャッシュを有効化",
+            "correct": false,
+            "reason": "ネガティブキャッシュはエラーレスポンスをキャッシュするもの。403 エラーの根本原因を解決しない"
+          },
+          {
+            "choice": "B",
+            "summary": "キャッシュモードを FORCE_CACHE_ALL に変更",
+            "correct": false,
+            "reason": "403 エラーをキャッシュしても問題は解決しない。根本原因はアクセス権限"
+          },
+          {
+            "choice": "C",
+            "summary": "allUsers にストレージレガシーオブジェクトリーダーロールを付与",
+            "correct": true,
+            "reason": "バケットを公開読み取りにすることで 403 が解消し、正しい Cache-Control ヘッダーが返される"
+          },
+          {
+            "choice": "D",
+            "summary": "デフォルト TTL を増やす",
+            "correct": false,
+            "reason": "TTL を増やしてもアクセス権限の問題は解決しない"
+          }
+        ],
+        "pitfalls": "- HTTP 403 の原因が「キャッシュ設定」ではなく「バケットのアクセス権限」であることに着目する\n- USE_ORIGIN_HEADERS モードでは、オリジンが返す Cache-Control ヘッダーに従うため、オリジン側の問題を先に解決する必要がある\n- Cloud CDN 経由で公開コンテンツを配信する場合、バケットのオブジェクトは公開読み取り可能にする必要がある"
       }
     },
     {

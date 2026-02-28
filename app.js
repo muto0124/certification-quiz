@@ -345,7 +345,7 @@ async function init() {
 
   // バージョン表示（YYYYMMDDHHMMSS → "Build: YYYY-MM-DD HH:MM"）
   const ver = data.version || '';
-  if (ver.length >= 12) {
+  if (ver.length >= 14) {
     const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
     document.getElementById('app-version').textContent = formatted;
   }

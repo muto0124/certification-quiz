@@ -219,3 +219,26 @@ h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #4a5568; }
 .jump-cell.cell-incorrect { background: #fed7d7; border-color: #fc8181; color: #9b2c2c; }
 .jump-cell.cell-unanswered { background: #e2e8f0; border-color: #cbd5e0; color: #4a5568; }
 .jump-cell.cell-current { border-color: #4299e1; box-shadow: 0 0 0 2px #bee3f8; }
+
+/* 解法アプローチ ハイライト */
+.approach-lines { margin: 0.25rem 0; }
+.approach-line {
+  padding: 0.4rem 0.75rem;
+  margin-bottom: 0.25rem;
+  border-radius: 6px;
+  line-height: 1.7;
+  font-size: 0.9rem;
+}
+.approach-line::before { content: "- "; }
+.approach-key {
+  background: #f0fff4;
+  border-left: 3px solid #38a169;
+  padding-left: 0.7rem;
+}
+.approach-key::before { content: "✓ "; color: #38a169; font-weight: 700; }
+.approach-trap {
+  background: #fff5f5;
+  border-left: 3px solid #e53e3e;
+  padding-left: 0.7rem;
+}
+.approach-trap::before { content: "⚠ "; color: #e53e3e; font-weight: 700; }

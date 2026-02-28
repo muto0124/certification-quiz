@@ -72,6 +72,21 @@
     <div class="nav-area hidden" id="nav-area">
       <button id="btn-next" class="btn btn-primary">次の問題 →</button>
     </div>
+    <!-- ジャンプグリッドモーダル -->
+    <div id="jump-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>問題一覧</h3>
+          <button id="btn-close-modal" class="btn btn-secondary btn-sm">✕</button>
+        </div>
+        <div class="modal-legend">
+          <span class="legend-item"><span class="legend-dot legend-correct"></span>正解</span>
+          <span class="legend-item"><span class="legend-dot legend-incorrect"></span>不正解</span>
+          <span class="legend-item"><span class="legend-dot legend-unanswered"></span>未回答</span>
+        </div>
+        <div id="jump-grid" class="jump-grid"></div>
+      </div>
+    </div>
   </div>
 
   <!-- 進捗一覧画面 -->

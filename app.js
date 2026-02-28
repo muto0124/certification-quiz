@@ -334,6 +334,46 @@ function jumpToQuestion(qid) {
   showScreen('screen-quiz');
 }
 
+// --- ジャンプグリッドモーダル ---
+
+function openJumpModal() {
+  const modal = document.getElementById('jump-modal');
+  const grid = document.getElementById('jump-grid');
+  grid.innerHTML = '';
+
+  sessionQuestions.forEach((q, idx) => {
+    const cell = document.createElement('button');
+    cell.className = 'jump-cell';
+    cell.textContent = q.id;
+
+    const ans = sessionAnswers[idx];
+    if (ans === null) {
+      cell.classList.add('cell-unanswered');
+    } else if (ans.isCorrect) {
+      cell.classList.add('cell-correct');
+    } else {
+      cell.classList.add('cell-incorrect');
+    }
+
+    if (idx === currentIndex) {
+      cell.classList.add('cell-current');
+    }
+
+    cell.addEventListener('click', () => {
+      currentIndex = idx;
+      closeJumpModal();
+      renderQuiz();
+    });
+    grid.appendChild(cell);
+  });
+
+  modal.classList.remove('hidden');
+}
+
+function closeJumpModal() {
+  document.getElementById('jump-modal').classList.add('hidden');
+}
+
 // --- キーボードショートカット ---
 
 function handleKeydown(e) {
@@ -414,6 +454,11 @@ async function init() {
   document.getElementById('btn-incorrect-only').addEventListener('click', startIncorrectOnly);
   document.getElementById('btn-skip').addEventListener('click', skipQuestion);
   document.getElementById('btn-prev').addEventListener('click', goToPrevQuestion);
+  document.getElementById('btn-jump-grid').addEventListener('click', openJumpModal);
+  document.getElementById('btn-close-modal').addEventListener('click', closeJumpModal);
+  document.getElementById('jump-modal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeJumpModal();
+  });
   document.getElementById('btn-progress').addEventListener('click', renderProgress);
   document.getElementById('btn-home').addEventListener('click', () => {
     renderStart();

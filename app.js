@@ -337,6 +337,16 @@ function jumpToQuestion(qid) {
 // --- キーボードショートカット ---
 
 function handleKeydown(e) {
+  // モーダルが表示中なら Escape で閉じるのみ
+  const modal = document.getElementById('jump-modal');
+  if (modal && !modal.classList.contains('hidden')) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeJumpModal();
+    }
+    return;
+  }
+
   // クイズ画面が非表示なら無視
   if (document.getElementById('screen-quiz').classList.contains('hidden')) return;
 
@@ -347,6 +357,13 @@ function handleKeydown(e) {
     e.preventDefault();
     renderStart();
     showScreen('screen-start');
+    return;
+  }
+
+  // ArrowLeft: 前の問題に戻る
+  if (key === 'ArrowLeft') {
+    e.preventDefault();
+    goToPrevQuestion();
     return;
   }
 

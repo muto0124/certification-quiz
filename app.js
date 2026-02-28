@@ -109,6 +109,12 @@ function skipQuestion() {
   renderQuiz();
 }
 
+function goToPrevQuestion() {
+  if (currentIndex <= 0) return;
+  currentIndex--;
+  renderQuiz();
+}
+
 function showCompletionMessage() {
   const msg = document.getElementById('completion-message');
   msg.classList.remove('hidden');
@@ -129,11 +135,15 @@ function renderQuiz() {
     return;
   }
 
-  answered = false;
   const q = sessionQuestions[currentIndex];
+  const savedAnswer = sessionAnswers[currentIndex];
+  answered = savedAnswer !== null;
 
   document.getElementById('quiz-counter').textContent =
     `問題 ${q.id} （${currentIndex + 1} / ${sessionQuestions.length}）`;
+
+  // 前へボタンの有効/無効
+  document.getElementById('btn-prev').disabled = currentIndex === 0;
 
   document.getElementById('question-text').textContent = q.question;
 
@@ -149,10 +159,35 @@ function renderQuiz() {
     choicesDiv.appendChild(btn);
   }
 
-  // 解説・次へボタンを非表示、スキップボタンを表示
-  document.getElementById('explanation-panel').classList.add('hidden');
-  document.getElementById('nav-area').classList.add('hidden');
-  document.getElementById('skip-area').classList.remove('hidden');
+  if (answered) {
+    // 回答済み: 選択肢ハイライト＋解説を復元
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.disabled = true;
+      const label = btn.dataset.label;
+      if (q.answer.includes(label)) {
+        btn.classList.add('correct');
+      } else if (label === savedAnswer.selected && !savedAnswer.isCorrect) {
+        btn.classList.add('incorrect');
+      }
+    });
+    renderExplanation(q.explanation);
+    document.getElementById('explanation-panel').classList.remove('hidden');
+    document.getElementById('skip-area').classList.add('hidden');
+    const navArea = document.getElementById('nav-area');
+    navArea.classList.remove('hidden');
+    const nextBtn = document.getElementById('btn-next');
+    const isLast = currentIndex === sessionQuestions.length - 1;
+    nextBtn.textContent = isLast ? 'スタートに戻る' : '次の問題 →';
+    nextBtn.onclick = () => {
+      if (isLast) { renderStart(); showScreen('screen-start'); }
+      else { currentIndex++; renderQuiz(); }
+    };
+  } else {
+    // 未回答: 通常表示
+    document.getElementById('explanation-panel').classList.add('hidden');
+    document.getElementById('nav-area').classList.add('hidden');
+    document.getElementById('skip-area').classList.remove('hidden');
+  }
 }
 
 function onChoiceSelected(selected, q) {
@@ -361,6 +396,7 @@ async function init() {
   document.getElementById('btn-random').addEventListener('click', () => startQuiz('random'));
   document.getElementById('btn-incorrect-only').addEventListener('click', startIncorrectOnly);
   document.getElementById('btn-skip').addEventListener('click', skipQuestion);
+  document.getElementById('btn-prev').addEventListener('click', goToPrevQuestion);
   document.getElementById('btn-progress').addEventListener('click', renderProgress);
   document.getElementById('btn-home').addEventListener('click', () => {
     renderStart();

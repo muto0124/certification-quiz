@@ -230,8 +230,14 @@ function renderExplanation(exp) {
 
   // 解法アプローチ
   const approachDiv = document.getElementById('exp-approach');
-  if (exp.approach) {
-    approachDiv.innerHTML = `<p><strong>解法アプローチ:</strong></p><pre style="white-space:pre-wrap;font-family:inherit;font-size:0.9rem">${exp.approach}</pre>`;
+  if (exp.approach && exp.approach.length) {
+    const lines = exp.approach.map(item => {
+      const cls = item.type === 'key' ? ' approach-key'
+               : item.type === 'trap' ? ' approach-trap'
+               : '';
+      return `<div class="approach-line${cls}">${item.text}</div>`;
+    }).join('');
+    approachDiv.innerHTML = `<p><strong>解法アプローチ:</strong></p><div class="approach-lines">${lines}</div>`;
   } else { approachDiv.innerHTML = ''; }
 
   // 選択肢分析テーブル

@@ -1,6 +1,10 @@
 // app.js — 資格試験学習サイト メインロジック
 
-const STORAGE_KEY = 'quiz_progress';
+let currentExamId = null;  // 現在選択中の試験ID
+
+function getStorageKey() {
+  return `quiz_progress_${currentExamId}`;
+}
 
 let allQuestions = [];   // data.json から読み込んだ全問題
 let sessionQuestions = []; // 今回の出題リスト（範囲・シャッフル済み）
@@ -12,12 +16,12 @@ let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {
 
 function loadProgress() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { progress: {} };
+    return JSON.parse(localStorage.getItem(getStorageKey())) || { progress: {} };
   } catch { return { progress: {} }; }
 }
 
 function saveProgress(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(getStorageKey(), JSON.stringify(data));
 }
 
 function recordAnswer(questionId, isCorrect) {
@@ -443,13 +447,50 @@ function handleKeydown(e) {
 
 // --- 初期化 ---
 
-async function init() {
-  const res = await fetch('data.json');
+function migrateOldProgress() {
+  const oldKey = 'quiz_progress';
+  const oldData = localStorage.getItem(oldKey);
+  if (!oldData) return;
+
+  const newKey = 'quiz_progress_google_network';
+  if (!localStorage.getItem(newKey)) {
+    localStorage.setItem(newKey, oldData);
+  }
+  localStorage.removeItem(oldKey);
+}
+
+function renderSelectScreen(indexData) {
+  showScreen('screen-select');
+  const list = document.getElementById('exam-list');
+  list.innerHTML = '';
+
+  indexData.exams.forEach(exam => {
+    const card = document.createElement('button');
+    card.className = 'exam-card card';
+    card.innerHTML = `
+      <h2 class="exam-card-title">${exam.title}</h2>
+      <span class="exam-card-info">${exam.total}問</span>
+    `;
+    card.addEventListener('click', () => selectExam(exam.id));
+    list.appendChild(card);
+  });
+
+  // バージョン表示
+  const ver = indexData.version || '';
+  if (ver.length >= 14) {
+    const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
+    document.getElementById('app-version-select').textContent = formatted;
+  }
+}
+
+async function selectExam(examId) {
+  currentExamId = examId;
+  const res = await fetch(`data/${examId}.json`);
   const data = await res.json();
   allQuestions = data.questions;
   window._quizTitle = data.title;
 
-  // バージョン表示（YYYYMMDDHHMMSS → "Build: YYYY-MM-DD HH:MM"）
+  // バージョン表示
   const ver = data.version || '';
   if (ver.length >= 14) {
     const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
@@ -457,6 +498,16 @@ async function init() {
   }
 
   renderStart();
+}
+
+async function init() {
+  migrateOldProgress();
+
+  const res = await fetch('data/index.json');
+  const indexData = await res.json();
+  window._indexData = indexData;
+
+  renderSelectScreen(indexData);
 
   document.getElementById('btn-sequential').addEventListener('click', () => startQuiz('sequential'));
   document.getElementById('btn-random').addEventListener('click', () => startQuiz('random'));
@@ -475,19 +526,21 @@ async function init() {
   });
   document.getElementById('btn-to-progress').addEventListener('click', renderProgress);
   document.getElementById('btn-reset').addEventListener('click', () => {
-    if (confirm('進捗データをすべてリセットしますか？')) {
-      localStorage.removeItem(STORAGE_KEY);
+    if (confirm('この試験の進捗データをすべてリセットしますか？')) {
+      localStorage.removeItem(getStorageKey());
       renderStart();
     }
   });
   document.getElementById('btn-back').addEventListener('click', () => {
-    // クイズ中なら戻る、スタートからなら戻る
     if (!document.getElementById('screen-quiz').classList.contains('hidden')) {
       showScreen('screen-quiz');
     } else {
       renderStart();
       showScreen('screen-start');
     }
+  });
+  document.getElementById('btn-back-to-select').addEventListener('click', () => {
+    renderSelectScreen(window._indexData);
   });
 
   document.querySelectorAll('.tab').forEach(tab => {

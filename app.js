@@ -15,6 +15,7 @@ let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {
 // --- 進捗管理 ---
 
 function loadProgress() {
+  if (!currentExamId) return { progress: {} };
   try {
     return JSON.parse(localStorage.getItem(getStorageKey())) || { progress: {} };
   } catch { return { progress: {} }; }

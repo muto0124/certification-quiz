@@ -1,12 +1,12 @@
 // Service Worker — キャッシュファースト戦略
-const CACHE_VERSION = '20260301100125';
+const CACHE_VERSION = '20260301100643';
 const CACHE_NAME = `quiz-cache-${CACHE_VERSION}`;
 const ASSETS = [
   './',
   './index.html',
   './app.js',
   './style.css',
-  './data.json',
+  './data/index.json',
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192.png',
@@ -36,7 +36,16 @@ self.addEventListener('activate', event => {
 // フェッチ: キャッシュファースト → ネットワークフォールバック
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(cached => cached || fetch(event.request))
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+      return fetch(event.request).then(response => {
+        // data/ 配下の JSON はキャッシュに追加（オンデマンドキャッシュ）
+        if (event.request.url.includes('/data/') && event.request.url.endsWith('.json')) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      });
+    })
   );
 });

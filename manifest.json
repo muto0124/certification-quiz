@@ -1,7 +1,7 @@
 {
-  "name": "Google Cloud Network Engineer 問題集",
-  "short_name": "GCP NW Quiz",
-  "description": "Google Cloud Professional Cloud Network Engineer 資格試験の学習クイズアプリ",
+  "name": "資格試験問題集",
+  "short_name": "資格クイズ",
+  "description": "資格試験の学習クイズアプリ",
   "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",

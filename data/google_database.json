@@ -1,7 +1,7 @@
 {
   "title": "Google Cloud Database Engineer 問題集",
   "total": 326,
-  "version": "20260301181540",
+  "version": "20260301215529",
   "questions": [
     {
       "id": 1,
@@ -69,7 +69,8 @@
       "choices": {
         "A": "マルチリージョンストレージ",
         "B": "地域ストレージ",
-        "C": "ニアラインストレージ DAI-ILRS4Y AKL —Y (RSET)"
+        "C": "ニアラインストレージ",
+        "D": "コールドラインストレージ"
       },
       "answer": "D",
       "explanation": {}
@@ -200,7 +201,7 @@
       "choices": {
         "A": "請求書を Cloud Storage バケットにエクスポートし、分析のために Cloud Bigtable にインポートします。 . 請求書を Cloud Storage バケットにエクスポートし、G6oogle スプレッドシートにインポートして分析します。トランザクションをローカルファイルにエクスポートし、デスクトップツールを使用して分析を実行します。請求書を BigQuery データセットにエクスポートし、分析用に時間枠ベースの SOL クエリを記述します。 | QO ow 9"
       },
-      "answer": "BD",
+      "answer": "D",
       "explanation": {}
     },
     {
@@ -1472,7 +1473,7 @@
         "C": "1.Cloud Monitoring ワークスペースを作成し、GCP プロジェクトを関連付けます。2. CPU 使用率をモニタリングし、それをカスタム指標として Cloud Monitoring に送信するスクリプトを作成します。3. Cloud Monitoring でインスタンスの稼働時間チェックを作成します。",
         "D": "1. Cloud Logging で、次の正規表現を使用して CPU 使用率を抽出するログベースの指標を作成します : CPU EBX: ((0-9] {1,3})% 2. Cloud Monitoring で、この指標に基づいてアラートポリシーを作成します。3. 通知チャネルでメールアドレスを設定します。"
       },
-      "answer": "D",
+      "answer": "B",
       "explanation": {}
     },
     {
@@ -1484,7 +1485,7 @@
         "C": "Cloud Monitoring アラートポリシーを作成し、Cloud Spanner の CPU がしきい値を超えた場合に Google Cloud サポートのメールアドレスにアラートを送信します。Google サポートはそれに応じてリソースをスケールアップまたはスケールダウンします。",
         "D": "Cloud Monitoring 7 アラートポリシーを作成し、Cloud Spanner の CPU 使用率がしきい値を超えたり下回ったりした場合に Webhook にアラートを送信します。HTTP をリッスンし、それに応じて Spanner リソースのサイズを変更する Cloud Functions を作成します。"
       },
-      "answer": "C",
+      "answer": "A",
       "explanation": {}
     },
     {

@@ -22,6 +22,7 @@ function loadProgress() {
 }
 
 function saveProgress(data) {
+  if (!currentExamId) return;
   localStorage.setItem(getStorageKey(), JSON.stringify(data));
 }
 
@@ -486,19 +487,25 @@ function renderSelectScreen(indexData) {
 
 async function selectExam(examId) {
   currentExamId = examId;
-  const res = await fetch(`data/${examId}.json`);
-  const data = await res.json();
-  allQuestions = data.questions;
-  window._quizTitle = data.title;
+  try {
+    const res = await fetch(`data/${examId}.json`);
+    const data = await res.json();
+    allQuestions = data.questions;
+    window._quizTitle = data.title;
 
-  // バージョン表示
-  const ver = data.version || '';
-  if (ver.length >= 14) {
-    const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
-    document.getElementById('app-version').textContent = formatted;
+    // バージョン表示
+    const ver = data.version || '';
+    if (ver.length >= 14) {
+      const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
+      document.getElementById('app-version').textContent = formatted;
+    }
+
+    renderStart();
+  } catch (e) {
+    console.error('Failed to load exam data:', e);
+    currentExamId = null;
+    alert('試験データの読み込みに失敗しました。再度お試しください。');
   }
-
-  renderStart();
 }
 
 async function init() {

@@ -1,7 +1,7 @@
 {
   "title": "Google Cloud Network Engineer 問題集",
   "total": 236,
-  "version": "20260301024717",
+  "version": "20260301090012",
   "questions": [
     {
       "id": 1,
@@ -9624,9 +9624,9 @@
           {
             "choice": "C",
             "summary": "LOCAL_TS=各 172.16.x.0/24, REMOTE_TS=各 192.168.x.0/24",
-            "correct": false,
-            "type": null,
-            "reason": "LOCAL_TS にオンプレミス IP、REMOTE_TS に Google Cloud IP を指定しており方向が逆"
+            "correct": true,
+            "type": "key",
+            "reason": "オンプレミスの 3 つのサブネットを LOCAL_TS に、Google Cloud の 3 つのサブネットを REMOTE_TS に個別に指定しており正確なトラフィックセレクタ構成"
           },
           {
             "choice": "D",

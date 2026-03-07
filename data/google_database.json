@@ -1,7 +1,7 @@
 {
   "title": "Google Cloud Database Engineer 問題集",
   "total": 326,
-  "version": "20260302230228",
+  "version": "20260307233258",
   "questions": [
     {
       "id": 1,
@@ -2397,7 +2397,7 @@
     },
     {
       "id": 53,
-      "question": "貴社では、Compute Engine 上で 3 層ソリューションを実行しています。現在のインフラストラクチャの構成は以下の通りです。  各層には、その層内のすべてのインスタンスに関連付けられたサービスアカウントがあります。TCP ポート 8080 で、以下のように層間の通信を有効にする必要があります。  * 層 #1 のインスタンスは層 #2 に通信する必要があります。 * 層 #2 のインスタンスは層 #3 に通信する必要があります。 どうすればいいでしょうか？",
+      "question": "貴社では、Compute Engine 上で 3 層ソリューションを実行しています。現在のインフラストラクチャの構成は以下の通りです。 各層には、その層内のすべてのインスタンスに関連付けられたサービスアカウントがあります。TCP ポート 8080 で、以下のように層間の通信を有効にする必要があります。 * 層 #1 のインスタンスは層 #2 に通信する必要があります。 * 層 #2 のインスタンスは層 #3 に通信する必要があります。 どうすればいいでしょうか？",
       "choices": {
         "A": "次の設定でイングレスファイアウォールルールを作成します。対象: すべてのインスタンス ソースフィルタ: IP 範囲（範囲は 10.0.2.0/24 に設定）プロトコル: TCP 許可: 8080. 次の設定でイングレスファイアウォールルールを作成します。対象: すべてのインスタンス ソースフィルタ: IP 範囲（範囲は 10.0.1.0/24 に設定）プロトコル: すべて 許可: すべて",
         "B": "次の設定でイングレスファイアウォールルールを作成します。対象: 階層 #2 のサービスアカウントを持つすべてのインスタンス ソースフィルタ: 階層 #1 のサービスアカウントを持つすべてのインスタンス プロトコル: TCP 許可: 8080. 次の設定でイングレスファイアウォールルールを作成します。対象: 階層 #3 のサービスアカウントを持つすべてのインスタンス ソースフィルタ: 階層 #2 のサービスアカウントを持つすべてのインスタンス プロトコル: TCP 許可: 8080",
@@ -3271,7 +3271,7 @@
     },
     {
       "id": 72,
-      "question": "下記のYAMLファイルを使用して、Google Kubernetes Engineクラスター内に新しいアプリケーションをデプロイしました。  デプロイされたポッドのステータスを確認したところ、そのうちの1つがまだPENDINGステータスのままであることがわかりました。  kubectl get pods -l app=myapp NAME READY STATUS RESTART AGE myapp-deployment-58ddbbb995-lp86m 0/1 Pending 0 9m myapp-deployment-58ddbbb995-qjpkg 1/1 Running 0 9m  ポッドがPENDINGステータスのままになっている理由を調べたいのですが、どうすればよいでしょうか？",
+      "question": "下記のYAMLファイルを使用して、Google Kubernetes Engineクラスター内に新しいアプリケーションをデプロイしました。 デプロイされたポッドのステータスを確認したところ、そのうちの1つがまだPENDINGステータスのままであることがわかりました。 kubectl get pods -l app=myapp NAME READY STATUS RESTART AGE myapp-deployment-58ddbbb995-lp86m 0/1 Pending 0 9m myapp-deployment-58ddbbb995-qjpkg 1/1 Running 0 9m ポッドがPENDINGステータスのままになっている理由を調べたいのですが、どうすればよいでしょうか？",
       "choices": {
         "A": "myapp-service サービスオブジェクトの詳細を確認し、エラーメッセージを確認します。",
         "B": "myapp-deployment オブジェクトの詳細を確認し、エラーメッセージを確認します。",
@@ -4283,7 +4283,7 @@
     },
     {
       "id": 94,
-      "question": "プリエンプティブルノードプールがあるGoogle Kubernetes Engineクラスタに、2つのレプリカを持つDeploymentを作成しました。数分後、kubectlを使用してPodのステータスを確認したところ、1つのPodがまだPendingステータスのままでした。  $ kubectl get pods -n app myapp NAME                                    READY     STATUS    RESTART   AGE myapp-deployment-58dbbb995-lp6m   0/1       Pending   0          9m myapp-deployment-58dbbb995-gjqkg   1/1       Running   0          9m  これはどのような原因で起こるでしょうか？",
+      "question": "プリエンプティブルノードプールがあるGoogle Kubernetes Engineクラスタに、2つのレプリカを持つDeploymentを作成しました。数分後、kubectlを使用してPodのステータスを確認したところ、1つのPodがまだPendingステータスのままでした。 $ kubectl get pods -n app myapp NAME READY STATUS RESTART AGE myapp-deployment-58dbbb995-lp6m 0/1 Pending 0 9m myapp-deployment-58dbbb995-gjqkg 1/1 Running 0 9m これはどのような原因で起こるでしょうか？",
       "choices": {
         "A": "保留中のポッドのリソース要求が大きすぎるため、クラスタの1つのノードに収まりません。",
         "B": "クラスタ内ですでに実行されているポッドが多すぎて、保留中のポッドをスケジュールするためのリソースが不足しています。",
@@ -4475,12 +4475,12 @@
     },
     {
       "id": 98,
-      "question": "お客様がCloud Spannerを使用したソリューションを実装したところ、あるテーブルで読み取りレイテンシ関連のパフォーマンス問題が発生していることがわかりました。このテーブルには、主キーを使用してユーザーの分布がアクセスします。テーブルスキーマは以下の通りです。  CREATE TABLE Persons (    person_id INT64 NOT NULL,    // sequential number based on number of registration    account_creation_date DATE,   // system date    birthdate DATE,   // customer birthdate    firstname STRING (255),   // first name    lastname STRING (255),   // last name    profile_picture BYTES (255)    // profile picture ) PRIMARY KEY(person_id)  この問題を解決したいと考えています。どうすればよいでしょうか？",
+      "question": "お客様がCloud Spannerを使用したソリューションを実装したところ、あるテーブルで読み取りレイテンシ関連のパフォーマンス問題が発生していることがわかりました。このテーブルには、主キーを使用してユーザーの分布がアクセスします。テーブルスキーマは以下の通りです。 CREATE TABLE Persons ( person_id INT64 NOT NULL, // sequential number based on number of registration account_creation_date DATE, // system date birthdate DATE, // customer birthdate firstname STRING (255), // first name lastname STRING (255), // last name profile_picture BYTES (255) // profile picture ) PRIMARY KEY(person_id) この問題を解決したいと考えています。どうすればよいでしょうか？",
       "choices": {
         "A": "テーブルからprofile_pictureフィールドを削除します。",
         "B": "person_id列にセカンダリインデックスを追加します。",
         "C": "主キーの値が周期的に増加しないように変更します。",
-        "D": "次のデータ定義言語(DDL)を使用してセカンダリインデックスを作成します。CREATE INDEX person_id_ix ON Persons (   person_id,   firstname,   lastname ) STORING (   profile_picture )"
+        "D": "次のデータ定義言語(DDL)を使用してセカンダリインデックスを作成します。CREATE INDEX person_id_ix ON Persons ( person_id, firstname, lastname ) STORING ( profile_picture )"
       },
       "answer": "C",
       "explanation": {
@@ -11061,7 +11061,7 @@
     },
     {
       "id": 241,
-      "question": "gcloud container clusters コマンドを使用して、prod-cluster と dev-cluster という 2 つの Google Cloud Kubernetes （GKE）クラスタを作成しました。  ・prod-cluster は標準クラスタです。・dev-cluster はオーバープロビジョンクラスタです。kubectl  get nodes コマンドを実行すると、prod-cluster のノードのみが表示されます。dev-cluster のノードステータスを確認するには、どのコマンドを実行すればよいですか？",
+      "question": "gcloud container clusters コマンドを使用して、prod-cluster と dev-cluster という 2 つの Google Cloud Kubernetes （GKE）クラスタを作成しました。 ・prod-cluster は標準クラスタです。・dev-cluster はオーバープロビジョンクラスタです。kubectl get nodes コマンドを実行すると、prod-cluster のノードのみが表示されます。dev-cluster のノードステータスを確認するには、どのコマンドを実行すればよいですか？",
       "choices": {
         "A": "gcloud コンテナ クラスター get-credentials dev-cluster kubectl ノードの取得",
         "B": "gcloud コンテナ クラスター アップデート --generate-password dev-cluster kubectl ノードを取得",
@@ -11107,7 +11107,7 @@
     },
     {
       "id": 242,
-      "question": "最近、開発者が開発プロセス中に多数のサービスアカウントキーを使用していることが判明しました。長期的な改善に取り組む一方で、社内で有効期間の短いサービスアカウントと認証情報を適用するプロセスを迅速に導入する必要があります。以下の要件があります。  ・キーを必要とするすべてのサービスアカウントは、pj-sa という一元管理プロジェクトに作成する必要があります。・サービスアカウントキーの有効期間は 1 日のみにする必要があります。  コストを最小限に抑える Google 推奨のソリューションが必要です。どうすればよいでしょうか？",
+      "question": "最近、開発者が開発プロセス中に多数のサービスアカウントキーを使用していることが判明しました。長期的な改善に取り組む一方で、社内で有効期間の短いサービスアカウントと認証情報を適用するプロセスを迅速に導入する必要があります。以下の要件があります。 ・キーを必要とするすべてのサービスアカウントは、pj-sa という一元管理プロジェクトに作成する必要があります。・サービスアカウントキーの有効期間は 1 日のみにする必要があります。 コストを最小限に抑える Google 推奨のソリューションが必要です。どうすればよいでしょうか？",
       "choices": {
         "A": "pj-sa 内のすべてのサービスアカウントキーを定期的にローテーションする Cloud Run ジョブを実装します。pj-sa を除くすべてのサービスアカウントキーの作成を拒否する組織ポリシーを適用します。",
         "B": "すべてのサービスアカウントキーを定期的にローテーションする Kubernetes CronJob を実装します。pj-sa を除くすべてのプロジェクトで、リソースへのサービスアカウントのアタッチを無効にします。",
@@ -11291,7 +11291,7 @@
     },
     {
       "id": 246,
-      "question": "会社では、オンプレミスのワークロードを Google Cloud に移行したいと考えています。現在のオンプレミスのワークロードは、次のもので構成されています。  ・Flask ウェブアプリケーション ・バックエンド API ・ETL とレポート作成のための、スケジュール設定された長時間実行のバッチグランドジョブ  運用コストを抑える必要があります。これらのワークロードを Google Cloud 上のサーバーレス ソリューションに移行するには、Google が提案するプラクティスに従う必要があります。どうすればよいでしょうか？",
+      "question": "会社では、オンプレミスのワークロードを Google Cloud に移行したいと考えています。現在のオンプレミスのワークロードは、次のもので構成されています。 ・Flask ウェブアプリケーション ・バックエンド API ・ETL とレポート作成のための、スケジュール設定された長時間実行のバッチグランドジョブ 運用コストを抑える必要があります。これらのワークロードを Google Cloud 上のサーバーレス ソリューションに移行するには、Google が提案するプラクティスに従う必要があります。どうすればよいでしょうか？",
       "choices": {
         "A": "ウェブアプリケーションを App Engine に移行し、バックエンド API を Cloud Run に移行します。Cloud Tasks を使用して、Compute Engine でバックグラウンドジョブを実行します。",
         "B": "ウェブアプリケーションを App Engine に移行し、バックエンド API で Cloud Run に移行します。Cloud Tasks を使用して、Cloud Run でバックグラウンドジョブを実行します。",

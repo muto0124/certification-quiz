@@ -159,7 +159,7 @@ function renderQuiz() {
   for (const [label, text] of Object.entries(q.choices)) {
     const btn = document.createElement('button');
     btn.className = 'choice-btn';
-    btn.innerHTML = `<span class="choice-label">${label}</span><span>${text}</span>`;
+    btn.innerHTML = `<span class="choice-label">${label}</span><span>${text.replace(/\n/g, '<br>')}</span>`;
     btn.dataset.label = label;
     btn.addEventListener('click', () => onChoiceSelected(label, q));
     choicesDiv.appendChild(btn);

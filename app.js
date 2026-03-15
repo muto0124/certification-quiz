@@ -131,6 +131,32 @@ function showCompletionMessage() {
   };
 }
 
+// --- ユーティリティ ---
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatQuestionText(text) {
+  const bulletRe = /[•・]/;
+  if (!bulletRe.test(text)) {
+    return escapeHtml(text);
+  }
+  const firstIdx = text.search(bulletRe);
+  const prefix = text.substring(0, firstIdx).trim();
+  const bulletPart = text.substring(firstIdx);
+  const items = bulletPart.split(/[•・]/).map(s => s.trim()).filter(s => s.length > 0);
+
+  let html = '';
+  if (prefix) {
+    html += escapeHtml(prefix);
+  }
+  html += '<ul>' + items.map(item => `<li>${escapeHtml(item)}</li>`).join('') + '</ul>';
+  return html;
+}
+
 // --- クイズ画面 ---
 
 function renderQuiz() {
@@ -151,7 +177,7 @@ function renderQuiz() {
   // 前へボタンの有効/無効
   document.getElementById('btn-prev').disabled = currentIndex === 0;
 
-  document.getElementById('question-text').textContent = q.question;
+  document.getElementById('question-text').innerHTML = formatQuestionText(q.question);
 
   // 選択肢ボタンを生成
   const choicesDiv = document.getElementById('choices');

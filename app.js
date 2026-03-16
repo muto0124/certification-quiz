@@ -175,6 +175,91 @@ function formatQuestionText(text) {
   return html;
 }
 
+function isAnsweredState(answerState) {
+  return Boolean(answerState && answerState.isSubmitted);
+}
+
+function renderSubmittedAnswer(q, answerState) {
+  const correctLabels = window.QuizLogic.getAnswerLabels(q.answer);
+
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    const label = btn.dataset.label;
+    if (correctLabels.includes(label)) {
+      btn.classList.add('correct');
+    } else if (answerState.selected.includes(label)) {
+      btn.classList.add('incorrect');
+    }
+  });
+
+  renderExplanation(q.explanation);
+  document.getElementById('explanation-panel').classList.remove('hidden');
+  document.getElementById('btn-skip').classList.add('hidden');
+  document.getElementById('btn-submit').classList.add('hidden');
+  document.getElementById('selection-hint').classList.add('hidden');
+
+  const navArea = document.getElementById('nav-area');
+  navArea.classList.remove('hidden');
+
+  const nextBtn = document.getElementById('btn-next');
+  const isLast = currentIndex === sessionQuestions.length - 1;
+  nextBtn.textContent = isLast ? 'スタートに戻る' : '次の問題 →';
+  nextBtn.onclick = () => {
+    if (isLast) {
+      renderStart();
+      showScreen('screen-start');
+    } else {
+      currentIndex++;
+      renderQuiz();
+    }
+  };
+}
+
+function renderPendingAnswer(q, selectedLabels) {
+  document.getElementById('explanation-panel').classList.add('hidden');
+  document.getElementById('nav-area').classList.add('hidden');
+  document.getElementById('btn-skip').classList.remove('hidden');
+
+  const selectionHint = document.getElementById('selection-hint');
+  const submitBtn = document.getElementById('btn-submit');
+  const isMultiAnswer = window.QuizLogic.isMultiAnswerQuestion(q);
+
+  if (isMultiAnswer) {
+    selectionHint.textContent = '複数選択問題です。正しい選択肢をすべて選んでから「回答する」を押してください。';
+    selectionHint.classList.remove('hidden');
+    submitBtn.classList.remove('hidden');
+    submitBtn.disabled = selectedLabels.length === 0;
+  } else {
+    selectionHint.classList.add('hidden');
+    submitBtn.classList.add('hidden');
+  }
+
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = false;
+    btn.classList.toggle('selected', selectedLabels.includes(btn.dataset.label));
+  });
+}
+
+function submitCurrentAnswer() {
+  if (answered) return;
+
+  const q = sessionQuestions[currentIndex];
+  const selectedLabels = sessionAnswers[currentIndex]?.selected || [];
+  if (selectedLabels.length === 0) return;
+
+  const normalizedSelection = window.QuizLogic.getAnswerLabels(selectedLabels);
+  const isCorrect = window.QuizLogic.evaluateAnswer(q.answer, normalizedSelection);
+
+  recordAnswer(q.id, isCorrect);
+  sessionAnswers[currentIndex] = {
+    selected: normalizedSelection,
+    isCorrect,
+    isSubmitted: true,
+  };
+  answered = true;
+  renderQuiz();
+}
+
 // --- クイズ画面 ---
 
 function renderQuiz() {
@@ -186,18 +271,16 @@ function renderQuiz() {
   }
 
   const q = sessionQuestions[currentIndex];
-  const savedAnswer = sessionAnswers[currentIndex];
-  answered = savedAnswer !== null;
+  const answerState = sessionAnswers[currentIndex];
+  const selectedLabels = answerState?.selected || [];
+  answered = isAnsweredState(answerState);
 
   document.getElementById('quiz-counter').textContent =
     `問題 ${q.id} （${currentIndex + 1} / ${sessionQuestions.length}）`;
 
-  // 前へボタンの有効/無効
   document.getElementById('btn-prev').disabled = currentIndex === 0;
-
   document.getElementById('question-text').innerHTML = formatQuestionText(q.question);
 
-  // 選択肢ボタンを生成
   const choicesDiv = document.getElementById('choices');
   choicesDiv.innerHTML = '';
   for (const [label, text] of Object.entries(q.choices)) {
@@ -205,74 +288,44 @@ function renderQuiz() {
     btn.className = 'choice-btn';
     btn.innerHTML = `<span class="choice-label">${label}</span><span>${text.replace(/\n/g, '<br>')}</span>`;
     btn.dataset.label = label;
+    btn.setAttribute('aria-pressed', String(selectedLabels.includes(label)));
     btn.addEventListener('click', () => onChoiceSelected(label, q));
     choicesDiv.appendChild(btn);
   }
 
   if (answered) {
-    // 回答済み: 選択肢ハイライト＋解説を復元
-    document.querySelectorAll('.choice-btn').forEach(btn => {
-      btn.disabled = true;
-      const label = btn.dataset.label;
-      if (q.answer.includes(label)) {
-        btn.classList.add('correct');
-      } else if (label === savedAnswer.selected && !savedAnswer.isCorrect) {
-        btn.classList.add('incorrect');
-      }
-    });
-    renderExplanation(q.explanation);
-    document.getElementById('explanation-panel').classList.remove('hidden');
-    document.getElementById('btn-skip').classList.add('hidden');
-    const navArea = document.getElementById('nav-area');
-    navArea.classList.remove('hidden');
-    const nextBtn = document.getElementById('btn-next');
-    const isLast = currentIndex === sessionQuestions.length - 1;
-    nextBtn.textContent = isLast ? 'スタートに戻る' : '次の問題 →';
-    nextBtn.onclick = () => {
-      if (isLast) { renderStart(); showScreen('screen-start'); }
-      else { currentIndex++; renderQuiz(); }
-    };
+    renderSubmittedAnswer(q, answerState);
   } else {
-    // 未回答: 通常表示
-    document.getElementById('explanation-panel').classList.add('hidden');
-    document.getElementById('nav-area').classList.add('hidden');
-    document.getElementById('btn-skip').classList.remove('hidden');
+    renderPendingAnswer(q, selectedLabels);
   }
 }
 
 function onChoiceSelected(selected, q) {
   if (answered) return;
-  answered = true;
 
-  const isCorrect = q.answer.includes(selected);
+  if (window.QuizLogic.isMultiAnswerQuestion(q)) {
+    const currentSelection = sessionAnswers[currentIndex]?.selected || [];
+    const nextSelection = window.QuizLogic.toggleSelection(currentSelection, selected);
+
+    sessionAnswers[currentIndex] = nextSelection.length
+      ? { selected: nextSelection, isSubmitted: false }
+      : null;
+
+    renderQuiz();
+    return;
+  }
+
+  const normalizedSelection = window.QuizLogic.getAnswerLabels([selected]);
+  const isCorrect = window.QuizLogic.evaluateAnswer(q.answer, normalizedSelection);
+
   recordAnswer(q.id, isCorrect);
-  sessionAnswers[currentIndex] = { selected, isCorrect };
-
-  // 選択肢をハイライト
-  document.querySelectorAll('.choice-btn').forEach(btn => {
-    btn.disabled = true;
-    const label = btn.dataset.label;
-    if (q.answer.includes(label)) {
-      btn.classList.add('correct');
-    } else if (label === selected && !isCorrect) {
-      btn.classList.add('incorrect');
-    }
-  });
-
-  renderExplanation(q.explanation);
-  document.getElementById('explanation-panel').classList.remove('hidden');
-
-  // スキップボタンを非表示、次の問題ボタンを表示
-  document.getElementById('btn-skip').classList.add('hidden');
-  const navArea = document.getElementById('nav-area');
-  navArea.classList.remove('hidden');
-  const nextBtn = document.getElementById('btn-next');
-  const isLast = currentIndex === sessionQuestions.length - 1;
-  nextBtn.textContent = isLast ? 'スタートに戻る' : '次の問題 →';
-  nextBtn.onclick = () => {
-    if (isLast) { renderStart(); showScreen('screen-start'); }
-    else { currentIndex++; renderQuiz(); }
+  sessionAnswers[currentIndex] = {
+    selected: normalizedSelection,
+    isCorrect,
+    isSubmitted: true,
   };
+  answered = true;
+  renderQuiz();
 }
 
 function renderExplanation(exp) {
@@ -406,7 +459,7 @@ function openJumpModal() {
     cell.textContent = q.id;
 
     const ans = sessionAnswers[idx];
-    if (ans === null) {
+    if (!isAnsweredState(ans)) {
       cell.classList.add('cell-unanswered');
     } else if (ans.isCorrect) {
       cell.classList.add('cell-correct');
@@ -436,7 +489,6 @@ function closeJumpModal() {
 // --- キーボードショートカット ---
 
 function handleKeydown(e) {
-  // モーダルが表示中なら Escape で閉じるのみ
   const modal = document.getElementById('jump-modal');
   if (modal && !modal.classList.contains('hidden')) {
     if (e.key === 'Escape') {
@@ -446,12 +498,10 @@ function handleKeydown(e) {
     return;
   }
 
-  // クイズ画面が非表示なら無視
   if (document.getElementById('screen-quiz').classList.contains('hidden')) return;
 
   const key = e.key;
 
-  // Escape: ホームに戻る
   if (key === 'Escape') {
     e.preventDefault();
     renderStart();
@@ -459,23 +509,32 @@ function handleKeydown(e) {
     return;
   }
 
-  // ArrowLeft: 前の問題に戻る
   if (key === 'ArrowLeft') {
     e.preventDefault();
     goToPrevQuestion();
     return;
   }
 
-  // 未回答時: 数字キーで選択肢を選ぶ、s でスキップ
   if (!answered) {
     const choiceBtns = document.querySelectorAll('.choice-btn');
-    if (key >= '1' && key <= '4') {
-      const idx = parseInt(key) - 1;
+    if (/^[1-5]$/.test(key)) {
+      const idx = parseInt(key, 10) - 1;
       if (idx < choiceBtns.length) {
+        e.preventDefault();
         choiceBtns[idx].click();
       }
       return;
     }
+
+    if (key === 'Enter') {
+      const submitBtn = document.getElementById('btn-submit');
+      if (!submitBtn.classList.contains('hidden') && !submitBtn.disabled) {
+        e.preventDefault();
+        submitBtn.click();
+        return;
+      }
+    }
+
     if (key === 's' || key === 'S') {
       e.preventDefault();
       skipQuestion();
@@ -483,11 +542,9 @@ function handleKeydown(e) {
     }
   }
 
-  // 回答後: Enter / ArrowRight で次の問題
   if (answered && (key === 'Enter' || key === 'ArrowRight')) {
     e.preventDefault();
     document.getElementById('btn-next').click();
-    return;
   }
 }
 
@@ -565,6 +622,7 @@ async function init() {
   document.getElementById('btn-random').addEventListener('click', () => startQuiz('random'));
   document.getElementById('btn-incorrect-only').addEventListener('click', startIncorrectOnly);
   document.getElementById('btn-skip').addEventListener('click', skipQuestion);
+  document.getElementById('btn-submit').addEventListener('click', submitCurrentAnswer);
   document.getElementById('btn-prev').addEventListener('click', goToPrevQuestion);
   document.getElementById('btn-jump-grid').addEventListener('click', openJumpModal);
   document.getElementById('btn-close-modal').addEventListener('click', closeJumpModal);

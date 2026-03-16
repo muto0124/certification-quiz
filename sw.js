@@ -1,10 +1,11 @@
-// Service Worker — キャッシュファースト戦略
-const CACHE_VERSION = '20260315155816';
+﻿// Service Worker — キャッシュファースト戦略
+const CACHE_VERSION = '20260316201426';
 const CACHE_NAME = `quiz-cache-${CACHE_VERSION}`;
 const ASSETS = [
   './',
   './index.html',
   './app.js',
+  './quiz-logic.js',
   './style.css',
   './data/index.json',
   './manifest.json',
@@ -49,3 +50,4 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -72,10 +72,12 @@
     <div class="card">
       <p id="question-text"></p>
     </div>
+    <p id="selection-hint" class="selection-hint hidden"></p>
     <div id="choices" class="choices"></div>
     <div id="bottom-nav" class="bottom-nav">
       <button id="btn-prev" class="btn btn-secondary btn-sm" disabled>◀ 戻る</button>
       <button id="btn-jump-grid" class="btn btn-secondary btn-sm">▤ ジャンプ</button>
+      <button id="btn-submit" class="btn btn-primary btn-sm hidden">回答する</button>
       <button id="btn-skip" class="btn btn-secondary btn-sm">スキップ →</button>
     </div>
     <div id="explanation-panel" class="card explanation hidden">
@@ -120,6 +122,7 @@
     <div id="progress-list"></div>
   </div>
 
+  <script src="quiz-logic.js"></script>
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
@@ -128,3 +131,6 @@
   </script>
 </body>
 </html>
+
+
+

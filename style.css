@@ -1,4 +1,4 @@
-/* リセット・基本 */
+﻿/* リセット・基本 */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -44,6 +44,7 @@ h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #4a5568; }
   font-family: inherit;
 }
 .btn:active { transform: scale(.97); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
 .btn-primary { background: #4299e1; color: #fff; }
 .btn-primary:hover { background: #3182ce; }
 .btn-secondary { background: #edf2f7; color: #4a5568; }
@@ -72,6 +73,11 @@ h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #4a5568; }
   list-style: disc; line-height: 1.7;
 }
 #question-text li { margin-bottom: 0.25rem; }
+.selection-hint {
+  margin: -0.25rem 0 0.75rem;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
 
 /* 選択肢 */
 .choices { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
@@ -85,6 +91,8 @@ h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #4a5568; }
   font-family: inherit; line-height: 1.5;
 }
 .choice-btn:hover:not(:disabled) { border-color: #4299e1; background: #ebf8ff; }
+.choice-btn.selected { border-color: #4299e1; background: #ebf8ff; }
+.choice-btn.selected .choice-label { color: #2b6cb0; background: #bee3f8; }
 
 .choice-label {
   font-weight: 700; color: #4299e1; min-width: 1.5rem;
@@ -273,3 +281,4 @@ h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #4a5568; }
 .exam-card:active { transform: scale(.98); }
 .exam-card-title { font-size: 1rem; color: #2d3748; margin: 0; }
 .exam-card-info { font-size: 0.9rem; color: #718096; white-space: nowrap; }
+

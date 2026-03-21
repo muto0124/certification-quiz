@@ -42,8 +42,26 @@
     return [...selected].sort();
   }
 
+  function getLatestOverallStats(progress) {
+    const entries = Object.values(progress || {});
+    const answered = entries.filter((item) => {
+      const history = item && Array.isArray(item.history) ? item.history : [];
+      return history.length > 0;
+    }).length;
+
+    const latestCorrect = entries.filter((item) => {
+      const history = item && Array.isArray(item.history) ? item.history : [];
+      return history.length > 0 && history[history.length - 1] === 'correct';
+    }).length;
+
+    const rate = answered ? Math.round((latestCorrect / answered) * 100) : 0;
+
+    return { answered, latestCorrect, rate };
+  }
+
   return {
     evaluateAnswer,
+    getLatestOverallStats,
     getAnswerLabels,
     isMultiAnswerQuestion,
     toggleSelection,

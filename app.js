@@ -57,12 +57,7 @@ function renderStart() {
 
   // サマリー表示
   const data = loadProgress();
-  const answered = Object.values(data.progress).filter(p => p.history.length > 0).length;
-  const correctTotal = Object.values(data.progress)
-    .reduce((s, p) => s + p.history.filter(h => h === 'correct').length, 0);
-  const totalAnswered = Object.values(data.progress)
-    .reduce((s, p) => s + p.history.length, 0);
-  const rate = totalAnswered ? Math.round(correctTotal / totalAnswered * 100) : 0;
+  const { answered, rate } = window.QuizLogic.getLatestOverallStats(data.progress);
   document.getElementById('summary-text').innerHTML =
     `<strong>${allQuestions.length}</strong>問中 <strong>${answered}</strong>問回答済み ／ 正答率 <strong>${rate}%</strong>`;
 }

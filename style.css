@@ -65,6 +65,16 @@ h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #4a5568; }
   gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;
 }
 #quiz-counter { font-size: 0.95rem; color: #4a5568; font-weight: 600; }
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: #2b6cb0;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
 
 /* 問題文 */
 #question-text { font-size: 1rem; line-height: 1.7; }

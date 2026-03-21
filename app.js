@@ -11,13 +11,18 @@ let sessionQuestions = []; // 今回の出題リスト（範囲・シャッフ�
 let currentIndex = 0;    // sessionQuestions 内の現在位置
 let answered = false;    // 現在の問題を回答済みか
 let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {selected, isCorrect}=回答済み)
+let currentMode = 'sequential';
 
 // --- 進捗管理 ---
 
 function loadProgress() {
   if (!currentExamId) return { progress: {} };
   try {
-    return JSON.parse(localStorage.getItem(getStorageKey())) || { progress: {} };
+    const parsed = JSON.parse(localStorage.getItem(getStorageKey())) || {};
+    const progress = parsed && typeof parsed.progress === 'object' && parsed.progress
+      ? parsed.progress
+      : {};
+    return { ...parsed, progress };
   } catch { return { progress: {} }; }
 }
 
@@ -28,8 +33,10 @@ function saveProgress(data) {
 
 function recordAnswer(questionId, isCorrect) {
   const data = loadProgress();
+  if (!data.progress || typeof data.progress !== 'object') data.progress = {};
   if (!data.progress[questionId]) data.progress[questionId] = { history: [] };
   data.progress[questionId].history.push(isCorrect ? 'correct' : 'incorrect');
+  data.progress[questionId].lastAnsweredAt = new Date().toISOString();
   saveProgress(data);
 }
 
@@ -48,12 +55,14 @@ function showScreen(id) {
 // --- スタート画面 ---
 
 function renderStart() {
+  currentMode = 'sequential';
   showScreen('screen-start');
   document.getElementById('quiz-title').textContent = allQuestions.length
     ? window._quizTitle : '';
   document.getElementById('range-end').value = allQuestions.length;
   document.getElementById('range-start').max = allQuestions.length;
   document.getElementById('range-end').max = allQuestions.length;
+  showStartMessage('');
 
   // サマリー表示
   const data = loadProgress();
@@ -62,15 +71,37 @@ function renderStart() {
     `<strong>${allQuestions.length}</strong>問中 <strong>${answered}</strong>問回答済み ／ 正答率 <strong>${rate}%</strong>`;
 }
 
-function startQuiz(mode) {
-  document.getElementById('completion-message').classList.add('hidden');
+function showStartMessage(text) {
+  const msg = document.getElementById('incorrect-only-msg');
+  clearTimeout(showStartMessage.timerId);
+
+  if (!text) {
+    msg.textContent = '';
+    msg.classList.add('hidden');
+    return;
+  }
+
+  msg.textContent = text;
+  msg.classList.remove('hidden');
+  showStartMessage.timerId = setTimeout(() => msg.classList.add('hidden'), 3000);
+}
+
+function getSelectedRangeQuestions() {
   const startVal = parseInt(document.getElementById('range-start').value) || 1;
   const endVal = parseInt(document.getElementById('range-end').value) || allQuestions.length;
   const start = Math.max(1, Math.min(startVal, allQuestions.length));
   const end = Math.max(start, Math.min(endVal, allQuestions.length));
 
+  return allQuestions.filter(q => q.id >= start && q.id <= end);
+}
+
+function startQuiz(mode) {
+  document.getElementById('completion-message').classList.add('hidden');
+  showStartMessage('');
+  currentMode = mode;
+
   // id は 1-based
-  sessionQuestions = allQuestions.filter(q => q.id >= start && q.id <= end);
+  sessionQuestions = getSelectedRangeQuestions();
   if (mode === 'random') {
     sessionQuestions = [...sessionQuestions].sort(() => Math.random() - 0.5);
   }
@@ -82,6 +113,7 @@ function startQuiz(mode) {
 
 function startIncorrectOnly() {
   document.getElementById('completion-message').classList.add('hidden');
+  currentMode = 'incorrect-only';
   const data = loadProgress();
   const incorrectIds = allQuestions.filter(q => {
     const p = data.progress[q.id];
@@ -90,14 +122,34 @@ function startIncorrectOnly() {
   });
 
   if (incorrectIds.length === 0) {
-    const msg = document.getElementById('incorrect-only-msg');
-    msg.textContent = '不正解の問題はありません';
-    msg.classList.remove('hidden');
-    setTimeout(() => msg.classList.add('hidden'), 3000);
+    showStartMessage('不正解の問題はありません');
     return;
   }
 
+  showStartMessage('');
   sessionQuestions = [...incorrectIds].sort(() => Math.random() - 0.5);
+  currentIndex = 0;
+  sessionAnswers = new Array(sessionQuestions.length).fill(null);
+  renderQuiz();
+  showScreen('screen-quiz');
+}
+
+function startReviewMode() {
+  document.getElementById('completion-message').classList.add('hidden');
+  const data = loadProgress();
+  const reviewCandidates = window.QuizLogic.getReviewCandidates(
+    getSelectedRangeQuestions(),
+    data.progress,
+  );
+
+  if (reviewCandidates.length === 0) {
+    showStartMessage('回答済みの復習対象が範囲内にありません');
+    return;
+  }
+
+  showStartMessage('');
+  currentMode = 'review';
+  sessionQuestions = reviewCandidates.map((item) => item.question);
   currentIndex = 0;
   sessionAnswers = new Array(sessionQuestions.length).fill(null);
   renderQuiz();
@@ -272,6 +324,7 @@ function renderQuiz() {
 
   document.getElementById('quiz-counter').textContent =
     `問題 ${q.id} （${currentIndex + 1} / ${sessionQuestions.length}）`;
+  document.getElementById('quiz-mode-badge').classList.toggle('hidden', currentMode !== 'review');
 
   document.getElementById('btn-prev').disabled = currentIndex === 0;
   document.getElementById('question-text').innerHTML = formatQuestionText(q.question);
@@ -434,6 +487,7 @@ function applyFilter(filter) {
 
 function jumpToQuestion(qid) {
   // 指定問題を先頭にして順番通りモードで開始
+  currentMode = 'sequential';
   sessionQuestions = allQuestions.filter(q => q.id === qid);
   currentIndex = 0;
   sessionAnswers = new Array(sessionQuestions.length).fill(null);
@@ -616,6 +670,7 @@ async function init() {
   document.getElementById('btn-sequential').addEventListener('click', () => startQuiz('sequential'));
   document.getElementById('btn-random').addEventListener('click', () => startQuiz('random'));
   document.getElementById('btn-incorrect-only').addEventListener('click', startIncorrectOnly);
+  document.getElementById('btn-review').addEventListener('click', startReviewMode);
   document.getElementById('btn-skip').addEventListener('click', skipQuestion);
   document.getElementById('btn-submit').addEventListener('click', submitCurrentAnswer);
   document.getElementById('btn-prev').addEventListener('click', goToPrevQuestion);

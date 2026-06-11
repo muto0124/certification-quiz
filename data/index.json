@@ -1,5 +1,5 @@
 {
-  "version": "20260321213108",
+  "version": "20260611213552",
   "exams": [
     {
       "id": "google_network",
@@ -10,6 +10,11 @@
       "id": "google_database",
       "title": "Google Cloud Database Engineer 問題集",
       "total": 326
+    },
+    {
+      "id": "AIP",
+      "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集",
+      "total": 97
     }
   ]
 }

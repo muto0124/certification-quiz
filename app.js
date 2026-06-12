@@ -168,6 +168,28 @@ function goToPrevQuestion() {
   renderQuiz();
 }
 
+function goToNextQuestion() {
+  const nextState = window.QuizLogic.getNextQuestionState(currentIndex, sessionQuestions.length);
+  if (nextState.isLast) {
+    renderStart();
+    showScreen('screen-start');
+    return;
+  }
+
+  currentIndex++;
+  renderQuiz();
+}
+
+function updateNextQuestionButtons() {
+  const nextState = window.QuizLogic.getNextQuestionState(currentIndex, sessionQuestions.length);
+
+  ['btn-next-top', 'btn-next'].forEach((id) => {
+    const button = document.getElementById(id);
+    button.textContent = nextState.label;
+    button.onclick = goToNextQuestion;
+  });
+}
+
 function showCompletionMessage() {
   const msg = document.getElementById('completion-message');
   msg.classList.remove('hidden');
@@ -247,24 +269,14 @@ function renderSubmittedAnswer(q, answerState) {
 
   const navArea = document.getElementById('nav-area');
   navArea.classList.remove('hidden');
-
-  const nextBtn = document.getElementById('btn-next');
-  const isLast = currentIndex === sessionQuestions.length - 1;
-  nextBtn.textContent = isLast ? 'スタートに戻る' : '次の問題 →';
-  nextBtn.onclick = () => {
-    if (isLast) {
-      renderStart();
-      showScreen('screen-start');
-    } else {
-      currentIndex++;
-      renderQuiz();
-    }
-  };
+  document.getElementById('btn-next-top').classList.remove('hidden');
+  updateNextQuestionButtons();
 }
 
 function renderPendingAnswer(q, selectedLabels) {
   document.getElementById('explanation-panel').classList.add('hidden');
   document.getElementById('nav-area').classList.add('hidden');
+  document.getElementById('btn-next-top').classList.add('hidden');
   document.getElementById('btn-skip').classList.remove('hidden');
 
   const selectionHint = document.getElementById('selection-hint');

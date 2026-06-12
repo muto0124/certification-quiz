@@ -202,48 +202,6 @@ function showCompletionMessage() {
 
 // --- ユーティリティ ---
 
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function formatQuestionText(text) {
-  const bulletRe = /[•・]/;
-  if (!bulletRe.test(text)) {
-    return escapeHtml(text);
-  }
-  const firstIdx = text.search(bulletRe);
-  const prefix = text.substring(0, firstIdx).trim();
-  const bulletPart = text.substring(firstIdx);
-  const items = bulletPart.split(/[•・]/).map(s => s.trim()).filter(s => s.length > 0);
-
-  // 最後のセグメントから後続テキスト（箇条書き外の文章）を分離
-  let suffix = '';
-  if (items.length > 0) {
-    const last = items[items.length - 1];
-    const periodIdx = last.indexOf('。');
-    if (periodIdx !== -1 && periodIdx < last.length - 1) {
-      // 「。」の後にテキストが続く → 後続文として分離
-      items[items.length - 1] = last.substring(0, periodIdx + 1);
-      suffix = last.substring(periodIdx + 1).trim();
-    } else if (periodIdx === -1) {
-      // 「。」なし → 質問パターンで分割を試行
-      const qMatch = last.match(/(何を|どう|どの|どのように|この|これらの).*$/);
-      if (qMatch && qMatch.index > 0) {
-        items[items.length - 1] = last.substring(0, qMatch.index).trim();
-        suffix = qMatch[0].trim();
-      }
-    }
-  }
-
-  let html = '';
-  if (prefix) html += escapeHtml(prefix);
-  html += '<ul>' + items.map(item => `<li>${escapeHtml(item)}</li>`).join('') + '</ul>';
-  if (suffix) html += escapeHtml(suffix);
-  return html;
-}
-
 function isAnsweredState(answerState) {
   return Boolean(answerState && answerState.isSubmitted);
 }
@@ -339,7 +297,7 @@ function renderQuiz() {
   document.getElementById('quiz-mode-badge').classList.toggle('hidden', currentMode !== 'review');
 
   document.getElementById('btn-prev').disabled = currentIndex === 0;
-  document.getElementById('question-text').innerHTML = formatQuestionText(q.question);
+  document.getElementById('question-text').innerHTML = window.QuizLogic.formatQuestionText(q.question);
 
   const choicesDiv = document.getElementById('choices');
   choicesDiv.innerHTML = '';

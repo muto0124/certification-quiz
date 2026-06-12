@@ -1,7 +1,7 @@
 {
   "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集",
   "total": 97,
-  "version": "20260611213552",
+  "version": "20260612235631",
   "questions": [
     {
       "id": 1,
@@ -776,7 +776,7 @@
             "reason": "RAGは構成要素の一部に過ぎず、メモリ管理/セッション認識は別途実装が必要"
           }
         ],
-        "pitfalls": "- メモリ/セッション/ID/イベント処理を一括でマネージド提供するのは Amazon Bedrock AgentCore。\n- AgentCore は API Gateway + EventBridge 経由で Lambda/REST API をアクションとして統合でき、同期・非同期の両方をカスタムコード無しで扱える。\n- Bedrock Agents + Step Functions + SQS + DynamoDB の自前構成はスケーラビリティ/運用負荷で劣る。"
+        "pitfalls": "- メモリ/セッション/ID/イベント処理を一括でマネージド提供するのは Amazon Bedrock AgentCore。\n- AgentCore は API Gateway + EventBridge 経由で Lambda/REST API をアクションとして統合でき、同期・非同期の両方をカスタムコード無しで扱える。\n- 補足: AgentCore Gateway 自体は Lambda/OpenAPI/Smithy を MCP ツールへネイティブ変換し専用エンドポイントで公開する（その用途では別途 API Gateway/EventBridge は不要）。選択肢 B は「API Gateway+EventBridge で Lambda/REST API をアクション登録」という統合パターンを指す。\n- Bedrock Agents + Step Functions + SQS + DynamoDB の自前構成はスケーラビリティ/運用負荷で劣る。"
       }
     },
     {
@@ -1127,7 +1127,7 @@
             "summary": "Extended Thinking+4,000トークン思考予算+DynamoDB",
             "correct": false,
             "type": "trap",
-            "reason": "Extended Thinking は推論時間を増やし 3秒未満を満たしにくく、ソースリンク機能も無い"
+            "reason": "Extended Thinking は推論時間を増やし 3秒未満を満たしにくい。ソース帰属は Extended Thinking ではなく Knowledge Bases/Citations の機能で本構成には含まれない"
           },
           {
             "choice": "C",
@@ -1258,7 +1258,7 @@
             "summary": "DynamoDB に格納し参照のみ渡す+Map 状態",
             "correct": false,
             "type": "trap",
-            "reason": "DynamoDB は 400KB アイテム制限があり大きな推論トレースに不向き。Map は並列用で順次 ReAct に不適合"
+            "reason": "DynamoDB は 400KB アイテム制限があり大きな推論トレースに不向き。Map はコレクション各要素への同一処理の繰り返し用で、観察結果で動的に分岐する ReAct ループには Choice/再帰が適合（MaxConcurrency=1 で順次実行自体は可能）"
           },
           {
             "choice": "B",
@@ -1318,7 +1318,7 @@
             "summary": "PostgreSQL+pgvector+Lambda 類似性検索",
             "correct": false,
             "type": "trap",
-            "reason": "pgvector は 2億レビュー規模の 500ms 要件を満たすスケーラビリティが不足"
+            "reason": "pgvector 自体は大規模ベクトルにも対応可能（数千億規模の本番実績あり）。B が優位なのは PostgreSQL に類似検索を自前実装する C より OpenSearch の k-NN/自動スケール/Bedrock 統合が最小開発労力だから"
           },
           {
             "choice": "D",
@@ -1328,7 +1328,7 @@
             "reason": "カスタム取り込みパイプライン開発が必要で開発労力大、毎時更新の維持も困難"
           }
         ],
-        "pitfalls": "- 「複雑な自然言語クエリ」=セマンティック検索が必要なので、キーワードベース(A)は不可。\n- pgvector は中小規模向け。2億レビュー＋500ms 要件には OpenSearch のスケーラビリティが必要。\n- クエリ側も同じ基盤モデルで埋め込みに変換してから k-NN 検索を行う点が標準パターン。"
+        "pitfalls": "- 「複雑な自然言語クエリ」=セマンティック検索が必要なので、キーワードベース(A)は不可。\n- pgvector はスケーラビリティ不足ではなく、数千億規模のベクトルワークロード実績がある。B が優位なのは OpenSearch の水平スケール・自動スケール・Bedrock 統合による最小開発労力。\n- クエリ側も同じ基盤モデルで埋め込みに変換してから k-NN 検索を行う点が標準パターン。"
       }
     },
     {
@@ -1457,7 +1457,7 @@
             "summary": "X-Ray+Logs Insights+CloudTrail+QuickSight",
             "correct": false,
             "type": "trap",
-            "reason": "X-Ray は分散トレーシング用でベースライン比較・異常検出を提供しない"
+            "reason": "X-Ray の主目的は分散トレーシング。X-Ray Insights を有効化すれば異常検出は可能だがグループ単位の有効化が前提で、選択肢 B はそれを使わずベースライン比較も行わない"
           },
           {
             "choice": "C",
@@ -1474,7 +1474,7 @@
             "reason": "カスタム PPL クエリの開発・保守が運用負荷大で CloudWatch マネージド機能に劣る"
           }
         ],
-        "pitfalls": "- 「ベースラインと比較して逸脱を検出」=CloudWatch 異常検出（ML）が必要。固定しきい値アラーム(A)では不可。\n- Container Insights はコンテナ向け。EC2 上のアプリ監視には Application Insights が適切。\n- X-Ray はトレーシング用でベースライン比較機能を持たない。"
+        "pitfalls": "- 「ベースラインと比較して逸脱を検出」=CloudWatch 異常検出（ML）が必要。固定しきい値アラーム(A)では不可。\n- Container Insights はコンテナ向け。EC2 上のアプリ監視には Application Insights が適切。\n- X-Ray の主目的はトレーシング。X-Ray Insights（グループ単位で有効化）なら異常検出・根本原因分析は可能だが、選択肢 B はこれを用いない。"
       }
     },
     {
@@ -1566,7 +1566,7 @@
             "reason": "バッチ最適化はリアルタイムと矛盾、サーバーレスはコールドスタートで 200ms を満たしにくい"
           }
         ],
-        "pitfalls": "- 「リアルタイム/200ms」要件があるので「バッチ最適化」を含む選択肢(A,D)は除外。\n- サーバーレスエンドポイントはコールドスタートで低レイテンシー要件と相性が悪い。\n- プロビジョンドスループット + 自動スケーリングが予測可能コストとピーク対応の両立に有効。"
+        "pitfalls": "- 「リアルタイム/200ms」要件があるので「バッチ最適化」を含む選択肢(A,D)は除外。\n- サーバーレスエンドポイントはコールドスタートで低レイテンシー要件と相性が悪い。\n- プロビジョンドスループット + 自動スケーリングが予測可能コストとピーク対応の両立に有効。\n- ⚠️ 出題意図上の正答は B だが、Amazon Bedrock のプロビジョンドスループット（モデルユニット固定購入）に自前の自動スケーリング機能は存在しない（ユニット数は手動で Modify）。現行 AWS 仕様では正確でない点に注意。"
       }
     },
     {
@@ -1610,7 +1610,7 @@
             "summary": "SageMaker Clarify+word error rate+toxicity",
             "correct": false,
             "type": "trap",
-            "reason": "Clarify は公平性評価が主目的で WER/toxicity は精度メトリクスとして不適切"
+            "reason": "Clarify(FMEval) は accuracy/toxicity/robustness/factual knowledge を測定可能だが word error rate は FMEval の精度指標ではなく不適切。AC のマネージド構成より運用負荷も高い"
           },
           {
             "choice": "E",
@@ -1620,7 +1620,7 @@
             "reason": "カスタム Python の開発・保守が運用負荷大でマネージド評価ジョブに劣る"
           }
         ],
-        "pitfalls": "- Bedrock 評価ジョブのデータセットアクセスに必要なのは「IAM + CORS」。VPC エンドポイントではない(Bの罠)。\n- SageMaker Clarify は公平性/バイアス評価が主目的で、精度評価には Bedrock の組み込み評価が適切。\n- 精度メトリクスは RWK/BERT Score。word error rate や toxicity は精度の指標として不適切。"
+        "pitfalls": "- Bedrock 評価ジョブのデータセットアクセスに必要なのは「IAM + CORS」。VPC エンドポイントではない(Bの罠)。\n- SageMaker Clarify(FMEval) は accuracy/toxicity/robustness/factual knowledge 等を測定できる（バイアス/説明可能性に限定されない）。本問で AC が優位なのは Bedrock コンソールのマネージド評価で運用負荷が最小だから。\n- 精度メトリクスは RWK/BERT Score。word error rate や toxicity は精度の指標として不適切。"
       }
     },
     {
@@ -1771,10 +1771,10 @@
             "summary": "最上位に metadata.json+AccessControlList オブジェクト",
             "correct": false,
             "type": "trap",
-            "reason": "Q Business の S3 コネクタが期待する標準ファイル名は acl.json で metadata.json ではない"
+            "reason": "アクセス制御はサイドカー ACL ファイルで定義する。D の metadata.json + AccessControlList 構造は Q Business の S3 コネクタの ACL 定義方法ではない"
           }
         ],
-        "pitfalls": "- Q Business の S3 コネクタが期待するファイル名は「acl.json」。metadata.json(D)は誤り。\n- 単一ファイルでバケット全体を一元管理するのが標準で最小運用負荷。部門フォルダごとに作る(A)のは負荷大。\n- アクセス制御は IAM 権限セット側ではなく ACL ファイルで定義する。"
+        "pitfalls": "- Q Business の S3 コネクタの ACL ファイルパスは任意指定（aclConfigurationFilePath、acl.json は慣例例）。D はメタデータ構造でアクセス制御しようとする点が誤り。\n- 単一ファイルでバケット全体を一元管理するのが標準で最小運用負荷。部門フォルダごとに作る(A)のは負荷大。\n- アクセス制御は IAM 権限セット側ではなく ACL ファイルで定義する。"
       }
     },
     {
@@ -2004,7 +2004,7 @@
             "reason": "カスタム実装が増え運用負荷が高い。Bedrock のレイテンシー最適化＋プロンプトキャッシュの方が少ない開発労力で満たせる"
           }
         ],
-        "pitfalls": "- 「同じコンテキストを共有する類似クエリ」はプロンプトキャッシュの典型的な適用シーン。ElastiCache/DynamoDB の自前キャッシュは不要。\n- プロビジョンドスループットは安定スループット用途だが、スパイクのためだけに常時確保するとコスト効率が悪い。"
+        "pitfalls": "- 「同じコンテキストを共有する類似クエリ」はプロンプトキャッシュの典型的な適用シーン。ElastiCache/DynamoDB の自前キャッシュは不要。\n- プロビジョンドスループットは安定スループット用途だが、スパイクのためだけに常時確保するとコスト効率が悪い。\n- 補足: レイテンシー最適化推論は対応モデル/リージョンが限定的（リリース当初はプレビュー扱い）。利用前に対応状況を確認する。"
       }
     },
     {
@@ -2072,7 +2072,7 @@
             "summary": "Step Functions Express＋確認 Lambda、会話履歴を RDS",
             "correct": false,
             "type": "trap",
-            "reason": "Express は高スループット向けだが長めの確認/Callback には Standard が適切。RDS は急激な同時アクセスへのスケーリングで DynamoDB より運用負荷が高い"
+            "reason": "Wait for Callback (.waitForTaskToken) は Express Workflow では非サポート（Standard 専用の仕様上の制約）。RDS も急激な同時アクセスのスケーリングで DynamoDB より運用負荷が高い"
           },
           {
             "choice": "B",
@@ -2096,7 +2096,7 @@
             "reason": "SQS はワークフロー状態管理が限定的で確認フローには Step Functions が適切。ElastiCache はキャッシュ用途で永続会話記録には DynamoDB が適切"
           }
         ],
-        "pitfalls": "- 「確認/追加情報待ち」のような状態保持型フローは Step Functions Standard ＋ Wait for Callback パターンが定石（Express は短時間/高スループット向け）。\n- 永続的な会話履歴は DynamoDB、ElastiCache はあくまでキャッシュ用途。"
+        "pitfalls": "- Wait for Callback (.waitForTaskToken) は Standard Workflow 専用で Express では使用不可（仕様上の制約）。確認/追加情報待ちの状態保持型フローは Standard ＋ Wait for Callback が定石。\n- 永続的な会話履歴は DynamoDB、ElastiCache はあくまでキャッシュ用途。"
       }
     },
     {
@@ -2157,7 +2157,7 @@
       "answer": "C",
       "explanation": {
         "focus": "RAG 検索範囲が広すぎる問題を最小変更で改善（メタデータフィルタリング）",
-        "keyInsight": "原因はモデル性能ではなく検索範囲の広さ。Bedrock ナレッジベースで S3 オブジェクトメタデータによるフィルタリングを有効化すれば、既存構成を維持しつつ範囲を絞れる。",
+        "keyInsight": "原因はモデル性能ではなく検索範囲の広さ。Bedrock ナレッジベースのメタデータフィルタリング（各ファイルに {filename}.metadata.json サイドカーを付与）を使えば、既存構成を維持しつつ範囲を絞れる。",
         "analysis": [
           {
             "choice": "A",
@@ -2188,7 +2188,7 @@
             "reason": "移行はアーキテクチャ変更が大きく、既存 Bedrock ナレッジベースを活かす要件に合わない"
           }
         ],
-        "pitfalls": "- 「fine tuning では効果なし」と明記されている場合、埋め込みモデル強化は不正解の合図。\n- 「既存アーキテクチャへの変更を最小限」が条件なら OpenSearch や Q Business への移行は避ける。"
+        "pitfalls": "- 「fine tuning では効果なし」と明記されている場合、埋め込みモデル強化は不正解の合図。\n- 「既存アーキテクチャへの変更を最小限」が条件なら OpenSearch や Q Business への移行は避ける。\n- 補足: Bedrock KB のメタデータフィルタは S3 オブジェクトメタデータ(x-amz-meta-*)ではなく {filename}.metadata.json サイドカーファイルで定義する。"
       }
     },
     {
@@ -2234,7 +2234,7 @@
             "reason": "DocumentDB は本要件の低レイテンシーベクトル検索基盤として最適でなく、IVFFlat も精度最大化では Flat に劣る可能性"
           }
         ],
-        "pitfalls": "- 「精度最大化」かつ「小規模/インデックス少」なら近似検索（HNSW/IVFFlat）ではなく正確検索の Flat を選ぶ。\n- HNSW・IVFFlat は大規模データで速度を稼ぐための近似手法という位置づけを区別する。"
+        "pitfalls": "- 「精度最大化」かつ「小規模/インデックス少」なら近似検索（HNSW/IVFFlat）ではなく正確検索の Flat を選ぶ。\n- HNSW・IVFFlat は大規模データで速度を稼ぐための近似手法という位置づけを区別する。\n- 補足: 超低レイテンシーは MemoryDB（サブミリ秒）、MongoDB 互換要件は DocumentDB（ミリ秒）という使い分け（AWS Prescriptive Guidance）。"
       }
     },
     {
@@ -2394,7 +2394,7 @@
             "summary": "DAX＋クエリ/応答を PK/SK、LIKE フィルター式",
             "correct": false,
             "type": "trap",
-            "reason": "DAX は完全一致のキーバリュー向けで意味的類似性に非対応。LIKE は部分文字列マッチで言い回しの違いを吸収できず、フィルター式は全スキャンで低レイテンシーにも反する"
+            "reason": "DAX は完全一致のキーバリュー向けで意味的類似性に非対応。そもそも DynamoDB フィルター式に LIKE 演算子は存在せず（部分一致は contains 関数）、フィルター式はパーティション内読み取り後に適用され除外分も読み取りキャパシティを消費する"
           },
           {
             "choice": "B",
@@ -2418,7 +2418,7 @@
             "reason": "ステミング/正規化は語形変化には有効だが、語彙が大きく異なる言い換えの意味的等価性検出には不十分"
           }
         ],
-        "pitfalls": "- 「意味的に等価」を扱うにはテキストの完全一致やステミングでは不十分で、埋め込みベクトルの k-NN 検索が必須。\n- DAX/DynamoDB のキー検索やフィルター式は低レイテンシーの意味検索には向かない。"
+        "pitfalls": "- 「意味的に等価」を扱うにはテキストの完全一致やステミングでは不十分で、埋め込みベクトルの k-NN 検索が必須。\n- DynamoDB フィルター式に LIKE は存在しない（部分一致は contains）。フィルター式は全テーブルスキャンではなくパーティション内絞り込み後に適用される（除外分もキャパシティ消費）。DAX/フィルター式は意味検索には向かない。"
       }
     },
     {
@@ -2464,7 +2464,7 @@
             "reason": "レイヤーはコード/ライブラリ共有の仕組みでサーバーホスト機能ではなく、ARN をコマンド実行不可。環境変数への認証情報格納もアンチパターン"
           }
         ],
-        "pitfalls": "- MCP のトランスポートは「ローカル＝STDIO」「ネットワーク経由＝Streamable HTTP」。Lambda 間のリモート通信では Streamable HTTP。\n- ユーザー単位の認可は IAM 呼び出し権限では不十分で、OAuth 2.1（Cognito）が MCP 認可仕様の推奨標準。"
+        "pitfalls": "- MCP のトランスポートは「ローカル＝STDIO」「ネットワーク経由＝Streamable HTTP」。Lambda 間のリモート通信では Streamable HTTP。\n- ユーザー単位の認可は IAM 呼び出し権限では不十分。\n- ⚠️ 注記: Amazon Cognito が実装するのは OAuth 2.0（RFC 6749）であり、MCP 仕様が要求する OAuth 2.1 に厳密準拠ではない（Implicit Grant を継続サポート）。出題意図上の正答は C だが「Cognito で OAuth 2.1 を強制」という記述は現行仕様では正確でない。"
       }
     },
     {
@@ -2532,7 +2532,7 @@
             "summary": "Bedrock Flows で開始/終了に S3 action ノード＋agent ステップ",
             "correct": false,
             "type": "trap",
-            "reason": "Bedrock Flows に S3 action ノードという機能は存在しない。Flows はプロンプト/KB/Lambda などをノード接続するもので S3 直接統合は提供されない"
+            "reason": "Bedrock Flows に「S3 action ノード」という名称のノードは無い（実在するのは S3 retrieval/S3 storage ノード）。また Flows の「式」は入力の抽出用でテンプレート解析はできず、本ワークフローには Step Functions のネイティブ統合(B)が適する"
           },
           {
             "choice": "B",
@@ -2556,7 +2556,7 @@
             "reason": "3 つの Lambda を自前実装する必要があり、Step Functions のネイティブ統合より保守負荷が大きい。agent オーケストレーションは決定論性を損なう"
           }
         ],
-        "pitfalls": "- 決定論的なバッチ処理は Step Functions のネイティブ統合（S3/Bedrock）が最適で、Bedrock agent はオーバースペック。\n- 「Bedrock Flows の S3 action ノード」のような存在しない機能を提示する罠に注意。"
+        "pitfalls": "- 決定論的なバッチ処理は Step Functions のネイティブ統合（S3/Bedrock）が最適で、Bedrock agent はオーバースペック。\n- Bedrock Flows には S3 retrieval/S3 storage ノードが実在する（「S3 action ノード」という名称は無い）。A は存在しない名称＋Flows で解析処理を行う前提が誤りで、決定論的バッチには Step Functions が適切。"
       }
     },
     {
@@ -2847,7 +2847,7 @@
       "answer": "C",
       "explanation": {
         "focus": "Amazon Bedrock guardrails によるPII保護・トピック制御と会話の監査ログ（画像含む）",
-        "keyInsight": "PII検出とトピック制御はマネージドな Bedrock guardrails（機密情報ポリシー＋トピックポリシー）で実現し、Converse API のモデル呼び出しログ・配信ログ・画像ログを S3 に出力すれば画像/ドキュメントを含む監査要件も最小労力で満たせる。",
+        "keyInsight": "PII検出とトピック制御はマネージドな Bedrock guardrails（機密情報ポリシー＋トピックポリシー）で実現し、Converse API のモデル呼び出しログ（テキスト/画像/埋め込みのデータ配信を含む）を S3 に出力すれば画像/ドキュメントを含む監査要件も最小労力で満たせる。",
         "analysis": [
           {
             "choice": "A",
@@ -2878,7 +2878,7 @@
             "reason": "正規表現は多様なPIIを網羅しにくく、投資アドバイス抑制もプロンプトのみでは確実性が低い"
           }
         ],
-        "pitfalls": "- Macie は「保存データ（S3）の機密検出」、Bedrock guardrails は「リアルタイムのプロンプト/レスポンス制御」という役割の違い。\n- CloudTrail は API 操作ログであり、会話内容そのものの監査には Bedrock のモデル呼び出しログ（テキスト/画像/配信ログ）を使う。\n- 投資アドバイスのような禁止トピックは「トピックポリシー」、PII は「機密情報ポリシー」で扱う。"
+        "pitfalls": "- Macie は「保存データ（S3）の機密検出」、Bedrock guardrails は「リアルタイムのプロンプト/レスポンス制御」という役割の違い。\n- CloudTrail は API 操作ログであり、会話内容そのものの監査には Bedrock のモデル呼び出しログを使う（設定項目は textDataDeliveryEnabled / imageDataDeliveryEnabled / embeddingDataDeliveryEnabled。「配信ログ」「画像ログ」は通称）。\n- 投資アドバイスのような禁止トピックは「トピックポリシー」、PII は「機密情報ポリシー」で扱う。"
       }
     },
     {
@@ -3092,7 +3092,7 @@
             "summary": "CloudWatch Logs Insightsで呼び出しログのトークン消費・アプリ別使用を分析 + ログウィジェット",
             "correct": true,
             "type": "key",
-            "reason": "標準機能でアプリ別帰属と高使用量シナリオの継続監視が可能"
+            "reason": "標準機能でアプリ別帰属とトークン消費のクエリ分析が可能（継続的なアラートは C のアラームが担当）"
           },
           {
             "choice": "C",
@@ -3116,7 +3116,7 @@
             "reason": "Firehose/OpenSearch追加で運用要素が増える。CloudWatchで要件を満たせる"
           }
         ],
-        "pitfalls": "- 「最小運用オーバーヘッド」「リアルタイム可視化＋アラート」が条件なら CloudWatch（Logs Insights＋メトリクス＋アラーム）が基本。\n- QuickSight は分析ダッシュボード向けでリアルタイムアラートには不向き。\n- Grafana ゼロETL統合や Firehose/OpenSearch 追加は運用要素を増やす罠。"
+        "pitfalls": "- 「最小運用オーバーヘッド」「リアルタイム可視化＋アラート」が条件なら CloudWatch（Logs Insights＋メトリクス＋アラーム）が基本。\n- QuickSight は分析ダッシュボード向けでリアルタイムアラートには不向き。\n- Grafana ゼロETL統合や Firehose/OpenSearch 追加は運用要素を増やす罠。\n- 補足: CloudWatch Logs Insights はアドホックなクエリ/分析ツール。継続監視・しきい値アラートは CloudWatch Alarms（C）が担う。"
       }
     },
     {
@@ -3170,7 +3170,7 @@
             "reason": "JumpStartはモデル発見/デプロイ支援で、プロビジョンドスループットやハイブリッド要件を直接満たさない"
           }
         ],
-        "pitfalls": "- 「一貫した高スループット（バッチ）」=プロビジョンドスループット、「ハイブリッド/エッジ」=SageMaker Neo によるエッジデプロイ。\n- 非同期エンドポイントは大きなペイロード/長時間処理向けで、リアルタイム低レイテンシーには不適。\n- JumpStart はモデル発見・デプロイの支援であり、要件そのものを満たす構成ではない。"
+        "pitfalls": "- 「一貫した高スループット」=プロビジョンドスループット、「ハイブリッド/エッジ」=SageMaker でのエッジデプロイ、という対応で出題意図上の正答は BC。\n- ⚠️ 注記: 現行 AWS 仕様では (1) バッチ推論はプロビジョンドモデル非対応（\"Batch inference isn't supported for provisioned models.\"）、(2) SageMaker Neo は従来型 CV モデル向けで FM 非対応・SageMaker Edge Manager は 2024-04-26 EOL（代替: ONNX / IoT Greengrass V2）。選択肢 B/C の記述は現行仕様と乖離がある点に注意。\n- 非同期エンドポイントは大きなペイロード/長時間処理向けで、リアルタイム低レイテンシーには不適。\n- JumpStart はモデル発見・デプロイの支援であり、要件そのものを満たす構成ではない。"
       }
     },
     {
@@ -3369,7 +3369,7 @@
       "answer": "B",
       "explanation": {
         "focus": "多地域・低レイテンシーRAGで顧客データを直近地域外に出さないデータレジデンシー",
-        "keyInsight": "各リージョンに Bedrock モデルと Bedrock Knowledge Bases（ベクトルDB）を配置しデータを各地域 S3 に保存、クロスリージョン推論プロファイルを適切に使い低レイテンシーと地域データ保持を両立する。",
+        "keyInsight": "各リージョンに Bedrock モデルと Bedrock Knowledge Bases（ベクトルDB）を配置しデータを各地域 S3 に保存、クロスリージョン推論プロファイル（地理範囲内）でスループット/可用性を高めつつ地域データ保持を両立する。",
         "analysis": [
           {
             "choice": "A",
@@ -3400,7 +3400,7 @@
             "reason": "EC2上でLLM運用が必要でマネージドな低レイテンシーRAG構成として不適切"
           }
         ],
-        "pitfalls": "- マネージドRAGは Bedrock Knowledge Bases が基本。Kendra+Lambda の自前組み合わせは複雑。\n- 「データを直近地域外に出さない」ため、中央リージョン集約型（C）や EC2 自前LLM（D）は不適。\n- クロスリージョン推論プロファイルは地理範囲を保ったまま可用性と低レイテンシーを高める。"
+        "pitfalls": "- マネージドRAGは Bedrock Knowledge Bases が基本。Kendra+Lambda の自前組み合わせは複雑。\n- 「データを直近地域外に出さない」ため、中央リージョン集約型（C）や EC2 自前LLM（D）は不適。\n- クロスリージョン推論プロファイルは地理範囲を保ったままスループット/可用性を高める（主便益はスループット向上）。乱用検出目的で入出力が宛先リージョンに保存される場合がある点にも注意。"
       }
     },
     {
@@ -3446,7 +3446,7 @@
             "reason": "統一会話IF・一貫認証・messages配列でのコンテキスト維持を満たす"
           }
         ],
-        "pitfalls": "- Converse API は messages 配列に履歴を含めてマルチターンを維持できる。ElastiCache/DynamoDB の追加ストアは不要。\n- プロセスメモリに会話履歴を持つと Lambda 実行終了やコンテナ再起動で消えるため不適。\n- 一貫認証は IAM ロールで実現。環境ごとに別認証方式を使うのはNG。"
+        "pitfalls": "- Converse API は messages 配列に履歴を含めてマルチターンを維持する。\n- 補足: Converse API はステートレスで Bedrock 側は履歴を保持しない。Lambda/EKS のようなステートレス環境ではターンをまたぐ messages 配列の保持に外部永続ストア（DynamoDB 等）が実質必要になる点に留意（本問は最小構成として messages 配列での受け渡しを問うている）。\n- プロセスメモリに会話履歴を持つと Lambda 実行終了やコンテナ再起動で消えるため不適。\n- 一貫認証は IAM ロールで実現。環境ごとに別認証方式を使うのはNG。"
       }
     },
     {
@@ -3538,7 +3538,7 @@
             "reason": "実現可能だがAPI Gateway/Cognito構成が増える。関数URL+SigV4+IAMの方が運用負荷が少ない"
           }
         ],
-        "pitfalls": "- 「最小運用オーバーヘッド」で Lambda を HTTP 公開する場合、API Gateway を追加するより Lambda 関数URL が軽量。\n- Streamable HTTP トランスポートが MCP の通信方式に対応し、SigV4＋IAM で厳格な認証認可を実現。\n- API キーは厳格な認証認可としては不十分。"
+        "pitfalls": "- 「最小運用オーバーヘッド」で Lambda を HTTP 公開する場合、API Gateway を追加するより Lambda 関数URL が軽量。\n- Streamable HTTP トランスポートが MCP の通信方式に対応し、SigV4＋IAM で厳格な認証認可を実現。\n- API キーは厳格な認証認可としては不十分。\n- 補足: 非AWS/外部クライアントには SigV4 署名実装の負担が生じる。MCP 標準の認可は OAuth 2.1 で、SigV4 は AWS 固有方式（外部連携では MCP Proxy 等が必要）。"
       }
     },
     {
@@ -3599,7 +3599,7 @@
       "answer": "B",
       "explanation": {
         "focus": "動画分析プラットフォームでのFMアクセスパターン制御・暗号化・包括的な利用者監査",
-        "keyInsight": "IAM属性ベース制御＋IAM条件キー（GuardrailIdentifier/ModelId強制）でアクセスパターンを制御、CloudTrail管理/データイベント・KMS使用・S3アクセスログ・CloudTrail Lakeで「誰が何にいつ」を包括監査する。",
+        "keyInsight": "IAM属性ベース制御＋IAM 条件キー（bedrock:GuardrailIdentifier 等）とモデル ARN 指定でアクセスパターンを制御、CloudTrail管理/データイベント・KMS使用・S3アクセスログ・CloudTrail Lakeで「誰が何にいつ」を包括監査する。",
         "analysis": [
           {
             "choice": "A",
@@ -3630,7 +3630,7 @@
             "reason": "異常検出/分類には有効だがGuardrailId/ModelIdでアクセスパターンを制御する仕組みがない"
           }
         ],
-        "pitfalls": "- 「FMアクセスパターンを制御」は IAM 条件キーで GuardrailIdentifier/ModelId を強制するのが要点。\n- 「誰が何にいつアクセスしたか」の監査は CloudTrail（管理/データイベント）＋S3アクセスログ。AWS Config はリソース設定追跡用。\n- Macie は機密データ分類で、アクセスパターン制御の代替にはならない。"
+        "pitfalls": "- 「FMアクセスパターンを制御」は IAM で実現するのが要点（bedrock:GuardrailIdentifier は実在する条件キー）。\n- ⚠️ 注記: bedrock:ModelId という条件キーは存在しない（Service Authorization Reference 未掲載）。モデル制限はリソース ARN 指定か bedrock:InferenceProfileArn で行う。出題意図上の正答は B だが「ModelId 条件キー」の記述は現行仕様では正確でない。\n- 「誰が何にいつアクセスしたか」の監査は CloudTrail（管理/データイベント）＋S3アクセスログ。AWS Config はリソース設定追跡用。\n- Macie は機密データ分類で、アクセスパターン制御の代替にはならない。"
       }
     },
     {
@@ -3722,7 +3722,7 @@
             "reason": "retrieve-onlyでは生成品質を評価できない。正解構成はClaude Sonnetによる評価"
           }
         ],
-        "pitfalls": "- 「生成品質」を評価するなら retrieve-only ではなく retrieve-and-generate 評価ジョブ。\n- チャンク戦略は個別ジョブを乱立させるより評価データセットに含めて比較する方が効率的。\n- 「品質しきい値を強制」のため手動レビュー（C）は自動化要件に反する。"
+        "pitfalls": "- 「生成品質」を評価するなら retrieve-only ではなく retrieve-and-generate 評価ジョブ。\n- チャンク戦略は個別ジョブを乱立させるより評価データセットに含めて比較する方が効率的。\n- 「品質しきい値を強制」のため手動レビュー（C）は自動化要件に反する。\n- 補足: D が不正解なのは retrieve-only で生成品質を測れない点であり、Nova Pro 自体は LLM-as-a-judge 評価モデルとして公式サポートされている（評価モデル選択の問題ではない）。"
       }
     },
     {
@@ -3868,7 +3868,7 @@
             "reason": "REST API より HTTP API の方がシンプル・低コストで最小運用負荷に合う"
           }
         ],
-        "pitfalls": "- HTTP API と REST API の違い: 最小運用負荷・低コストなら HTTP API が優先。\n- クライアント側ポーリングは「ストリーミングのシミュレート」であり真のストリーミングではない。\n- トークン制限はフロントエンドではなくバックエンド（Lambda）で強制しないと改ざんされる。"
+        "pitfalls": "- HTTP API と REST API の違い: 一般に最小運用負荷・低コストなら HTTP API が優先。\n- ⚠️ 注記: 公式仕様では response streaming は REST API のみサポート（HTTP API 非対応）。現行 AWS 仕様で真のストリーミングを満たすのは D（REST API）または Lambda Function URL。出題意図上の正答は A だが、HTTP API + response streaming は現行仕様と乖離がある点に注意。\n- クライアント側ポーリングは「ストリーミングのシミュレート」であり真のストリーミングではない。\n- トークン制限はフロントエンドではなくバックエンド（Lambda）で強制しないと改ざんされる。"
       }
     },
     {
@@ -3914,7 +3914,7 @@
             "reason": "キーワード判定では複雑さを正確に判断しにくく、プロビジョンドスループットの固定コストも非効率"
           }
         ],
-        "pitfalls": "- 「自前で分類器/Lambda を組む」案は機能的には可能でも、マネージドの intelligent prompt routing より実装負荷が高い。\n- キーワードベースのルールでは問い合わせの「複雑さ」を正確に判定できない。\n- プロビジョンドスループットは固定コストが発生しコスト効率を損ねる場合がある。"
+        "pitfalls": "- 「自前で分類器/Lambda を組む」案は機能的には可能でも、マネージドの intelligent prompt routing より実装負荷が高い。\n- キーワードベースのルールでは問い合わせの「複雑さ」を正確に判定できない。\n- プロビジョンドスループットは固定コストが発生しコスト効率を損ねる場合がある。\n- 補足: intelligent prompt routing は同一モデルファミリー内の 2 モデル間でのルーティングに限定される（\"exactly two models within the same family\"）。"
       }
     },
     {
@@ -3929,14 +3929,14 @@
       "answer": "A",
       "explanation": {
         "focus": "プロンプトチェーンアプリの出力一貫性・低レイテンシー・安全性（検証済み制御）の同時達成",
-        "keyInsight": "プロビジョンドスループットでレイテンシー安定化、guardrails のセマンティック拒否ルールで安全でない/hallucination 出力をブロック、Prompt Management で承認ワークフロー付きのバージョン管理。",
+        "keyInsight": "プロビジョンドスループットでレイテンシー安定化、guardrails の Denied Topics/Contextual Grounding Check で安全でない/hallucination 出力をブロック、Prompt Management でプロンプトのバージョン管理を行う。",
         "analysis": [
           {
             "choice": "A",
             "summary": "プロビジョンドスループット + guardrails セマンティック拒否ルール + Prompt Management",
             "correct": true,
             "type": "key",
-            "reason": "レイテンシー安定・安全制御・出力一貫性（承認ワークフロー）を包括的に満たす"
+            "reason": "レイテンシー安定・安全制御・出力一貫性を包括的に満たす"
           },
           {
             "choice": "B",
@@ -3960,7 +3960,7 @@
             "reason": "取得・オーケストレーションには寄与するがレイテンシー安定・出力一貫性・安全ブロックを包括的に満たさない"
           }
         ],
-        "pitfalls": "- 「安全でない/hallucination 出力のブロック」は guardrails（セマンティック拒否ルール）が担う。\n- レイテンシーの安定化はプロビジョンドスループットで確保する。\n- 出力一貫性・品質統制は Prompt Management の承認ワークフロー付きバージョン管理で実現。"
+        "pitfalls": "- 「安全でない/hallucination 出力のブロック」は guardrails が担う（正式機能名は Denied Topics と Contextual Grounding Check。「セマンティック拒否ルール」という機能名は存在しない）。\n- レイテンシーの安定化はプロビジョンドスループットで確保する。\n- 出力一貫性・品質統制は Prompt Management のバージョン管理で実現（承認ワークフローは組み込みではなく、Git/CI-CD 連携で実装するのが実態）。"
       }
     },
     {
@@ -4006,7 +4006,7 @@
             "reason": "手動レポートとカスタム監視は運用負荷が高い"
           }
         ],
-        "pitfalls": "- クロスリージョン推論はデータが大陸/リージョン外へ出る可能性があり、データレジデンシー要件と矛盾する。\n- データ分類は Amazon Macie、改ざん防止の監査証跡は CloudTrail（+ Object Lock）が定石。\n- 手動追跡/手動レポートは「運用オーバーヘッド最小化」要件と相反する。"
+        "pitfalls": "- 汎用のクロスリージョン推論はデータが大陸/リージョン外へ出る可能性があり、データレジデンシー要件と矛盾しうる（選択肢 A）。\n- 補足: 地理スコープ付きプロファイル（eu./us./apac.）は大陸内に限定されデータレジデンシー要件に適合する（Q96 参照）。両者を区別すること。\n- データ分類は Amazon Macie、改ざん防止の監査証跡は CloudTrail（+ Object Lock）が定石。\n- 手動追跡/手動レポートは「運用オーバーヘッド最小化」要件と相反する。"
       }
     },
     {
@@ -4052,7 +4052,7 @@
             "reason": "WAF は Web リクエスト保護で生成 AI の出力安全性/hallucination 制御に不適"
           }
         ],
-        "pitfalls": "- AWS WAF は Web アプリ保護であり、生成 AI 出力の安全性制御には使わない（guardrails が担当）。\n- hallucination 検出は Amazon Bedrock Model Evaluation を使う。\n- 低レイテンシー（200ms）かつ TTL 付き保存には DynamoDB が適する。"
+        "pitfalls": "- AWS WAF は Web アプリ保護であり、生成 AI 出力の安全性制御には使わない（guardrails が担当）。\n- ⚠️ 注記: Amazon Bedrock Model Evaluation はデプロイ前の非同期バッチ評価ジョブで、200ms のリアルタイム hallucination 検出には使えない。リアルタイム検出は Guardrails の contextual grounding check（grounding/relevance スコアで推論時にブロック）が担う。出題意図上の正答は A だが、選択肢に grounding check が無く Model Evaluation でのリアルタイム検出という記述は現行仕様と乖離がある。\n- 低レイテンシー（200ms）かつ TTL 付き保存には DynamoDB が適する。"
       }
     },
     {
@@ -4282,7 +4282,7 @@
             "reason": "単語フィルターのみでは多様な PII 検出に不十分、クロスリージョンもレジデンシーに反する"
           }
         ],
-        "pitfalls": "- データレジデンシー（同一リージョン処理）要件下ではクロスリージョン guardrail は不可。各リージョンへコピー展開する。\n- detect モードは検出のみでマスク/ブロックしない。評価には mask、本番には block。\n- PII 検出は「機密情報フィルター」。単語フィルター単独では不十分。"
+        "pitfalls": "- データレジデンシー（同一リージョン処理）要件下ではクロスリージョン guardrail は不可。各リージョンへコピー展開する。\n- detect モードは検出のみでマスク/ブロックしない（ガードレール有効性の評価用途）。実際にマスク結果を確認しながら評価するなら mask、本番適用は block。\n- PII 検出は「機密情報フィルター」。単語フィルター単独では不十分。"
       }
     },
     {
@@ -4496,7 +4496,7 @@
             "summary": "eu-north-1 の Lambda + プライベート REST API + 別リージョン FM 用 VPC エンドポイント + SCP 拡張",
             "correct": false,
             "type": "trap",
-            "reason": "VPC エンドポイントはリージョン単位。別リージョンの FM 用 VPC エンドポイントを直接利用する構成は不適"
+            "reason": "そもそも eu-central-1/eu-west-3 は SCP で許可されておらずリソース作成自体が SCP 違反（主因）。加えて VPC エンドポイントはリージョン単位で別リージョン FM へ直接利用できない"
           },
           {
             "choice": "B",
@@ -4520,7 +4520,7 @@
             "reason": "要件は Bedrock FM へのアクセス。SageMaker への再デプロイは不要"
           }
         ],
-        "pitfalls": "- 選定 FM が許可外リージョン（eu-central-1/eu-west-3）にあるため、SCP を「ヨーロッパ内推論プロファイル許可」に拡張する必要がある。\n- VPC エンドポイントはリージョン単位で作成されるため、別リージョンの FM へ直接は使えない。クロスリージョン推論プロファイルで対応。\n- Bedrock の FM を EC2/SageMaker に再デプロイする選択肢は要件から外れる。"
+        "pitfalls": "- 選定 FM が許可外リージョン（eu-central-1/eu-west-3）にあるため、SCP を「ヨーロッパ内推論プロファイル許可」に拡張する必要がある。\n- 主因は SCP が eu-north-1/eu-west-1 のみ許可しており eu-central-1/eu-west-3 でのリソース作成が SCP 違反になる点。VPC エンドポイントがリージョン単位で別リージョン FM に直接使えない（Bedrock の PrivateLink はクロスリージョン非対応）のは補強理由。クロスリージョン推論プロファイルで対応。\n- Bedrock の FM を EC2/SageMaker に再デプロイする選択肢は要件から外れる。"
       }
     },
     {
@@ -4535,7 +4535,7 @@
       "answer": "B",
       "explanation": {
         "focus": "semantic dilution 低減（複雑クエリの高精度回答）+ ドメイン用語参照を最小運用負荷で実現",
-        "keyInsight": "Bedrock ナレッジベースの query decomposition を有効化し、複雑クエリをサブクエリに分解。Bedrock flow で FM と KB を組み合わせ、カスタム ML/Lambda なしで低運用負荷を達成。",
+        "keyInsight": "Bedrock ナレッジベースの query decomposition（RetrieveAndGenerate API の orchestrationConfiguration で指定）で複雑クエリをサブクエリに分解。Bedrock flow で FM と KB を組み合わせ、カスタム ML/Lambda なしで低運用負荷を達成。",
         "analysis": [
           {
             "choice": "A",
@@ -4556,7 +4556,7 @@
             "summary": "SageMaker でカスタム ML（分解/拡張）+ KB + 文書暗号化",
             "correct": false,
             "type": null,
-            "reason": "SageMaker でカスタムモデルをホストする運用負荷が高い。query decomposition は KB 側で有効化できる"
+            "reason": "SageMaker でカスタムモデルをホストする運用負荷が高い。query decomposition は RetrieveAndGenerate のリクエスト時に指定する"
           },
           {
             "choice": "D",
@@ -4566,7 +4566,7 @@
             "reason": "Lambda による自前クエリ分解は運用負荷とレイテンシーを増やす"
           }
         ],
-        "pitfalls": "- 複雑クエリの分解（semantic dilution 低減）は Bedrock ナレッジベースの query decomposition 機能で実現でき、自前実装は不要。\n- カスタム ML（SageMaker）や複数 Lambda による分解は運用負荷とレイテンシーを増やす。\n- ドメイン固有用語の参照は参照医療文書をナレッジベースに保存して根拠化する。"
+        "pitfalls": "- 複雑クエリの分解（semantic dilution 低減）は Bedrock ナレッジベースの query decomposition で実現でき自前実装は不要。これは RetrieveAndGenerate API の orchestrationConfiguration.queryTransformationConfiguration.type=QUERY_DECOMPOSITION でリクエスト単位に指定する（KB への永続設定ではない）。\n- カスタム ML（SageMaker）や複数 Lambda による分解は運用負荷とレイテンシーを増やす。\n- ドメイン固有用語の参照は参照医療文書をナレッジベースに保存して根拠化する。"
       }
     }
   ]

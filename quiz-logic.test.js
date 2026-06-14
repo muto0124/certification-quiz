@@ -137,6 +137,35 @@ assert.equal(
   '前提です。<ul><li>各組織は共有する。</li><li>両方が有効。</li></ul>',
 );
 
+// --- formatQuestionText: 文単位（句点ごと）の改行 ---
+
+// 複数文は文と文の間に <br> を挿入する
+assert.equal(
+  formatQuestionText('文1である。文2である。最後はどれか。'),
+  '文1である。<br>文2である。<br>最後はどれか。',
+);
+
+// 末尾の文末記号には <br> を付けない（単一文は不変）
+assert.equal(formatQuestionText('一文だけである。'), '一文だけである。');
+
+// 半角ピリオド（バージョン番号）では改行しない
+assert.equal(
+  formatQuestionText('モデルはamazon.nova-pro-v1:0を使う。次に設定する。'),
+  'モデルはamazon.nova-pro-v1:0を使う。<br>次に設定する。',
+);
+
+// 引用文「。」は閉じ括弧を取り込んでから改行（引用を途中で割らない）
+assert.equal(
+  formatQuestionText('「エラー。」と表示される。対応する。'),
+  '「エラー。」<br>と表示される。<br>対応する。',
+);
+
+// 箇条書きの prefix が複数文のとき、prefix 内で <br> 分割される
+assert.equal(
+  formatQuestionText('前提1。前提2。次の構成です。 ・項目A ・項目B'),
+  '前提1。<br>前提2。<br>次の構成です。<ul><li>項目A</li><li>項目B</li></ul>',
+);
+
 // HTML エスケープ
 assert.equal(escapeHtml('a<b>&c'), 'a&lt;b&gt;&amp;c');
 

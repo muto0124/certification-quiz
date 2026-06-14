@@ -139,13 +139,20 @@
       .replace(/>/g, '&gt;');
   }
 
+  function formatSentences(text) {
+    // HTMLエスケープ後、全角文末記号（。！？）＋直後の閉じ括弧類の後ろに、
+    // まだ文が続く場合のみ <br> を挿入する（＝文と文の間だけ改行）。
+    // 半角 . ? ! は対象外（ARN・バージョン番号・コード・URL を壊さないため）。
+    return escapeHtml(text).replace(/([。！？]+[」』）"'”’]*)\s*(?=\S)/gu, '$1<br>');
+  }
+
   function formatQuestionText(text) {
     // • は常に箇条書きマーカー。・（中黒）は「検出・測定」のように語と語を
     // つなぐインライン区切りとして多用されるため、直前が文字／数字でない場合
     // （＝空白・句読点・括弧の後、または行頭）のみ箇条書きとみなす。
     const bulletRe = /•|(?<![\p{L}\p{N}])・/u;
     if (!bulletRe.test(text)) {
-      return escapeHtml(text);
+      return formatSentences(text);
     }
     const firstIdx = text.search(bulletRe);
     const prefix = text.substring(0, firstIdx).trim();
@@ -172,9 +179,9 @@
     }
 
     let html = '';
-    if (prefix) html += escapeHtml(prefix);
+    if (prefix) html += formatSentences(prefix);
     html += '<ul>' + items.map((item) => `<li>${escapeHtml(item)}</li>`).join('') + '</ul>';
-    if (suffix) html += escapeHtml(suffix);
+    if (suffix) html += formatSentences(suffix);
     return html;
   }
 

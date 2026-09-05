@@ -1,7 +1,7 @@
 {
   "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集",
   "total": 97,
-  "version": "20260905160613",
+  "version": "20260905165327",
   "questions": [
     {
       "id": 1,
@@ -12,17 +12,17 @@
         "C": "Amazon SageMaker Clarifyを設定してモデル出力を分析する。公平性メトリクスをAmazon CloudWatchに発行する。SageMaker ClarifyのバイアスメトリクスとAmazon Bedrock のレイテンシーメトリクスを組み合わせたCloudWatch複合アラームを作成して包括的な公平性評価ダッシュボードを提供する。",
         "D": "2つのプロンプトバリアント間の公平性を比較するAmazon Bedrockモデル評価ジョブを作成する。Amazon CloudWatchでモデル呼び出しログを有効にする。各人口統計グループのディメンションでInvocationsIntervenedメトリクスのCloudWatchアラームを設定する。"
       },
-      "answer": "C",
+      "answer": "A",
       "explanation": {
         "focus": "生成AIモデル出力の公平性/バイアス評価とリアルタイム監視を最小カスタム開発で実現する手段",
-        "keyInsight": "Amazon SageMaker Clarify はバイアス検出・公平性メトリクス算出の専用マネージドサービスであり、CloudWatch への発行と複合アラームでリアルタイム監視・しきい値アラート・週次レポートを実現できる。",
+        "keyInsight": "モデル応答のポストプロセッシングで人口統計グループ別の公平性メトリクスを算出し CloudWatch カスタムメトリクスとして発行する A が、リアルタイム監視・15% しきい値アラート・週次レポートをすべて満たす唯一の構成。",
         "analysis": [
           {
             "choice": "A",
             "summary": "CloudWatchダッシュボード+EventBridge+Lambdaでカスタム公平性メトリクス発行",
-            "correct": false,
-            "type": "trap",
-            "reason": "Lambdaで公平性分析を自前実装する必要があり、カスタム開発労力が大きい"
+            "correct": true,
+            "type": "key",
+            "reason": "Bedrock を監視できる唯一の構成。Lambda でグループ間差分を算出して CloudWatch カスタムメトリクスに発行すれば、15% 超過のアラーム通知と週次集計レポートを同じメトリクス体系で賄える"
           },
           {
             "choice": "B",
@@ -34,9 +34,9 @@
           {
             "choice": "C",
             "summary": "SageMaker Clarifyで分析し公平性メトリクスをCloudWatchに発行/複合アラーム",
-            "correct": true,
-            "type": "key",
-            "reason": "Clarifyがバイアス検出・公平性算出をネイティブ提供し、最小開発でリアルタイム監視・アラート・週次レポートを実現"
+            "correct": false,
+            "type": "trap",
+            "reason": "Clarify のバイアスドリフト監視は SageMaker エンドポイント（または batch transform）を対象にスケジュール実行する processing job であり、Bedrock アプリのリアルタイム監視には使えない。レイテンシーメトリクスとの複合アラームも 15% の公平性差分を表現できない"
           },
           {
             "choice": "D",
@@ -46,7 +46,7 @@
             "reason": "モデル評価ジョブはバッチ評価でリアルタイム非対応。InvocationsIntervenedは公平性メトリクスではない"
           }
         ],
-        "pitfalls": "- Bedrock guardrails はコンテンツモデレーション用であり、人口統計グループ間の公平性/バイアス測定はできない。\n- Bedrock モデル評価ジョブはバッチ処理であり、リアルタイム監視要件には合わない。\n- InvocationsIntervened は guardrail 介入回数のメトリクスで、公平性指標とは無関係。\n- バイアス/公平性の専用サービスは SageMaker Clarify である点を押さえる。"
+        "pitfalls": "- Bedrock guardrails はコンテンツモデレーション用であり、人口統計グループ間の公平性/バイアス測定はできない。\n- Bedrock モデル評価ジョブはバッチ処理であり、リアルタイム監視要件には合わない。\n- InvocationsIntervened は guardrail 介入回数のメトリクスで、公平性指標とは無関係。\n- SageMaker Clarify はバイアス検出の専用サービスだが、監視対象は SageMaker エンドポイントで実行はスケジュール（時間/日単位）。Bedrock のリアルタイム監視には使えない。加えて SageMaker Model Monitor は新規顧客の受付を終了している。\n- 「最小のカスタム開発労力」はマネージドサービス名に引きずられず、要件（リアルタイム・しきい値・週次）を全部満たすかで判断する。"
       }
     },
     {
@@ -1486,10 +1486,10 @@
         "C": "95%のブレークポイントパーセンタイルしきい値と3センテンスのバッファサイズを持つセマンティックチャンキングを使用する。Amazon Bedrock RetrieveAndGenerate APIコールを使用して埋め込み類似性スコアに基づいて最も関連性の高いチャンクを動的に選択する。",
         "D": "基盤モデルのトークナイザーを使用してドキュメントトークン数を分析する前処理 AWS Lambda 関数を作成する。Lambda 関数を設定してドキュメントをコンテキストウィンドウの80%に収まる等しいセグメントに分割する。Lambda関数を設定して各セグメントを独立して処理し結果を集約する。"
       },
-      "answer": "C",
+      "answer": "B",
       "explanation": {
         "focus": "コンテキストウィンドウ超過による不一致・切り捨て出力の解決",
-        "keyInsight": "セマンティックチャンキング(意味的境界で分割)+ RetrieveAndGenerate API で類似性スコアに基づき関連チャンクのみ動的選択し、一貫性と切り捨て問題を解決。",
+        "keyInsight": "階層的チャンキング（親チャンク/子チャンク）で章・節の構造を保ち、子チャンクで関連箇所を検索して親チャンクの文脈だけを生成に渡すことで、長大な技術文書の切り捨てと一貫性低下を解決。",
         "analysis": [
           {
             "choice": "A",
@@ -1501,16 +1501,16 @@
           {
             "choice": "B",
             "summary": "階層的チャンキング(親8,000/子2,000)+ナレッジベース取得",
-            "correct": false,
-            "type": "trap",
-            "reason": "階層的チャンキングは固定サイズベースで意味的境界を完全には考慮しない"
+            "correct": true,
+            "type": "key",
+            "reason": "50〜200ページの構造化文書に適した方式。子チャンクで検索粒度を確保し親チャンクで生成時の文脈量を制御できるため、コンテキストウィンドウ超過と文脈欠落の両方に効く。親8,000/子2,000・オーバーラップ設定はいずれも Bedrock Knowledge Bases の有効範囲内"
           },
           {
             "choice": "C",
             "summary": "95%パーセンタイル+3文バッファのセマンティックチャンキング+RetrieveAndGenerate で動的選択",
-            "correct": true,
-            "type": "key",
-            "reason": "意味的境界で分割しコンテキスト一貫性を維持、関連チャンクのみ動的選択で切り捨て回避"
+            "correct": false,
+            "type": "trap",
+            "reason": "semantic chunking の bufferSize は有効範囲 0〜1 で「3センテンスのバッファ」は設定できない（SemanticChunkingConfiguration の API 仕様）。方式としても章・節の階層は保持できない"
           },
           {
             "choice": "D",
@@ -1520,7 +1520,7 @@
             "reason": "等分割は意味的境界を無視するため一貫性のない出力の根本原因が残る"
           }
         ],
-        "pitfalls": "- 一貫性問題の根本原因は「意味的境界を無視した分割」。固定/等分割(A,B,D)では解決しない。\n- セマンティックチャンキングは意味のまとまりで分割し、文脈の一貫性を保つ。\n- RetrieveAndGenerate で関連チャンクのみ渡すことでコンテキストウィンドウ超過を回避。"
+        "pitfalls": "- チャンキング戦略のパラメータ範囲を押さえる。semantic は breakpointPercentileThreshold 50〜99・bufferSize 0〜1・maxTokens 1〜8192、hierarchical は親/子とも最大 8192 トークン・overlapTokens 1 以上。範囲外の数値が書かれた選択肢はそれだけで誤り。\n- 階層的チャンキングは「子チャンクで検索し、親チャンクを生成に渡す」方式。長文・ネスト構造の技術文書に対する AWS の推奨。\n- セマンティックチャンキングは明確な区切りのない文書向け。章・節構造を持つ長大文書では階層的チャンキングが優先される。\n- 固定サイズ分割(A)や Lambda での等分割(D)は論理的まとまりを無視するため、一貫性のない出力の根本原因が残る。"
       }
     },
     {
@@ -3504,10 +3504,10 @@
         "C": "Lambda関数URLを作成し、カスタムStreamable HTTPトランスポートとSigV4を有効にする。AWS IAM認証を実装する。認可されたユーザーとロールにInvokeFunctionUrl 権限を付与する。",
         "D": "Streamable HTTPトランスポートを持つAmazon API Gateway HTTP APIエンドポイントを通じてLambda関数を公開する。Amazon Cognitoを使用してOAuth認証を実装する。OAuthトークンを検証するようにAPI Gatewayを設定する。"
       },
-      "answer": "C",
+      "answer": "D",
       "explanation": {
         "focus": "MCPサーバーをLambdaで公開し内部/外部に厳格な認証・認可を最小運用負荷で適用",
-        "keyInsight": "Lambda関数URL＋カスタムStreamable HTTPトランスポート＋SigV4/IAM認証で、API Gateway不要のHTTP公開と細かいアクセス制御を実現し、InvokeFunctionUrl権限で主体を制御する。",
+        "keyInsight": "社外パートナーを含む公開先に厳格な認証認可を最小運用負荷で適用するには、API Gateway HTTP API + Streamable HTTP + Cognito の OAuth（JWT オーソライザー）が適する。MCP の認可モデルは OAuth ベースであり、SigV4 は AWS 認証情報を持たない外部クライアントには使えない。",
         "analysis": [
           {
             "choice": "A",
@@ -3526,19 +3526,19 @@
           {
             "choice": "C",
             "summary": "Lambda関数URL + Streamable HTTPトランスポート + SigV4/IAM認証 + InvokeFunctionUrl権限",
-            "correct": true,
-            "type": "key",
-            "reason": "API Gateway不要でHTTP公開し、SigV4/IAMで厳格な認証認可を最小負荷で実現"
+            "correct": false,
+            "type": "trap",
+            "reason": "社内向けなら成立するが、SigV4 は AWS 認証情報での署名が前提。サードパーティパートナーにはクロスアカウントの IAM 設計かローカルプロキシが必要になり、運用オーバーヘッドは逆に増える"
           },
           {
             "choice": "D",
             "summary": "API Gateway HTTP API + Cognito OAuth認証 + トークン検証",
-            "correct": false,
-            "type": "trap",
-            "reason": "実現可能だがAPI Gateway/Cognito構成が増える。関数URL+SigV4+IAMの方が運用負荷が少ない"
+            "correct": true,
+            "type": "key",
+            "reason": "内部アプリと外部パートナーの双方に標準的な Bearer トークンでアクセスさせられる。JWT オーソライザーによる検証は API Gateway のマネージド機能で、AWS 公式ガイダンス「Deploying Model Context Protocol Servers on AWS」も Cognito OAuth + トークン検証の構成を採る"
           }
         ],
-        "pitfalls": "- 「最小運用オーバーヘッド」で Lambda を HTTP 公開する場合、API Gateway を追加するより Lambda 関数URL が軽量。\n- Streamable HTTP トランスポートが MCP の通信方式に対応し、SigV4＋IAM で厳格な認証認可を実現。\n- API キーは厳格な認証認可としては不十分。\n- 補足: 非AWS/外部クライアントには SigV4 署名実装の負担が生じる。MCP 標準の認可は OAuth 2.1 で、SigV4 は AWS 固有方式（外部連携では MCP Proxy 等が必要）。"
+        "pitfalls": "- 公開先に「認可されたサードパーティパートナー」が含まれるかどうかが分岐点。社内限定なら Lambda 関数URL + SigV4 が最軽量だが、外部が入ると OAuth が前提になる。\n- MCP の認可仕様は OAuth ベース。SigV4 は AWS 固有方式で、AWS 認証情報を持たない MCP クライアントはローカルプロキシを挟む必要がある。\n- Streamable HTTP トランスポート自体は C も D も満たす。差がつくのは認証方式。\n- API キーは厳格な認証認可としては不十分。MCP プロトコルを使わせない B は要件そのものを外している。\n- 補足: Cognito が実装するのは OAuth 2.0 で、MCP 仕様が参照する OAuth 2.1 に厳密準拠ではない。ただし選択肢の中では唯一の標準的な外部認可方式。"
       }
     },
     {
@@ -3834,17 +3834,17 @@
         "C": "Amazon API Gateway WebSocket APIを、コンテナ化された推論サーバーをホストするAmazon ECSサービスに接続する。WebSocketプロトコルを使用してレスポンスをストリーミングする。Amazon ECS内でトークン制限を強制する。ECSタスクライフサイクルフックと再起動ポリシーを使用してモデルタイムアウトを処理する。",
         "D": "Amazon API Gateway REST API を、Amazon Bedrock を呼び出す AWS Lambda 関数と統合する。Lambda response streaming を使用してレスポンスをストリーミングする。 Lambda関数内でトークン制限を強制する。LambdaとAPI Gatewayのタイムアウト設定を使用して再試行ロジックを実装する。"
       },
-      "answer": "A",
+      "answer": "D",
       "explanation": {
         "focus": "マネージドモデルサービス（Bedrock）利用 API の設計（ストリーミング + トークン制限 + 再試行）を最小運用負荷で実現",
-        "keyInsight": "API Gateway HTTP API + Lambda response streaming のサーバーレス構成で、追加のコンテナ基盤なしに要件を満たせる。",
+        "keyInsight": "API Gateway の response streaming は REST API のみ対応。REST API + Lambda response streaming のサーバーレス構成で、追加のコンテナ基盤なしに真のストリーミング・トークン制限・再試行を満たせる。",
         "analysis": [
           {
             "choice": "A",
             "summary": "HTTP API + Lambda + Lambda response streaming、Lambda 内でトークン制限/再試行",
-            "correct": true,
-            "type": "key",
-            "reason": "サーバーレスで真のストリーミング・トークン制限・再試行を最小運用負荷で実現"
+            "correct": false,
+            "type": "trap",
+            "reason": "構成自体は軽量だが、API Gateway の response streaming は REST API 専用で HTTP API は非対応。HTTP API ではレスポンスがバッファされ真のストリーミングにならない"
           },
           {
             "choice": "B",
@@ -3863,12 +3863,12 @@
           {
             "choice": "D",
             "summary": "REST API + Lambda + Lambda response streaming",
-            "correct": false,
-            "type": "trap",
-            "reason": "REST API より HTTP API の方がシンプル・低コストで最小運用負荷に合う"
+            "correct": true,
+            "type": "key",
+            "reason": "API Gateway で response streaming を使える唯一の構成（2025-11 に REST API 向けにリリース）。統合タイムアウトも最大 15 分に延長され、トークン制限と再試行は Lambda 内で強制できる"
           }
         ],
-        "pitfalls": "- HTTP API と REST API の違い: 一般に最小運用負荷・低コストなら HTTP API が優先。\n- ⚠️ 注記: 公式仕様では response streaming は REST API のみサポート（HTTP API 非対応）。現行 AWS 仕様で真のストリーミングを満たすのは D（REST API）または Lambda Function URL。出題意図上の正答は A だが、HTTP API + response streaming は現行仕様と乖離がある点に注意。\n- クライアント側ポーリングは「ストリーミングのシミュレート」であり真のストリーミングではない。\n- トークン制限はフロントエンドではなくバックエンド（Lambda）で強制しないと改ざんされる。"
+        "pitfalls": "- 一般論では「最小運用負荷・低コストなら HTTP API」だが、response streaming が要件に入ると REST API しか選べない。機能サポートの有無が先に効く。\n- Lambda response streaming の公開経路は Lambda 関数URL（InvokeMode を RESPONSE_STREAM に変更）、InvokeWithResponseStream API、API Gateway REST API のプロキシ統合の3つ。\n- クライアント側ポーリングは「ストリーミングのシミュレート」であり真のストリーミングではない。\n- トークン制限はフロントエンドではなくバックエンド（Lambda）で強制しないと改ざんされる。"
       }
     },
     {

@@ -1,0 +1,65 @@
+/* 学習ページ共通スタイル。quiz/style.css の配色に合わせる */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', 'Hiragino Sans', sans-serif;
+  background: #f0f4f8;
+  color: #1a202c;
+  padding: 1rem;
+  line-height: 1.8;
+}
+
+.learn-page { max-width: 800px; margin: 0 auto; }
+
+.learn-page h1 { font-size: 1.4rem; color: #2d3748; margin: 1rem 0 0.5rem; }
+.learn-page h2 { font-size: 1.1rem; color: #4a5568; margin: 0 0 0.75rem; }
+.learn-page h3 { font-size: 1rem; color: #4a5568; margin: 1rem 0 0.5rem; }
+.learn-page p { margin-bottom: 0.75rem; }
+
+.learn-meta { color: #4a5568; font-size: 0.875rem; margin-bottom: 1rem; }
+
+.learn-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.learn-lead { font-size: 1.05rem; font-weight: 600; color: #2d3748; }
+
+.learn-figure { margin: 1rem 0; }
+.learn-figure svg { width: 100%; height: auto; display: block; }
+.learn-figure figcaption {
+  font-size: 0.875rem; color: #4a5568; margin-top: 0.5rem; text-align: center;
+}
+
+.learn-table-wrap { overflow-x: auto; }
+.learn-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+.learn-table th, .learn-table td {
+  border: 1px solid #e2e8f0; padding: 0.5rem 0.6rem; text-align: left; vertical-align: top;
+}
+.learn-table th { background: #edf2f7; color: #4a5568; white-space: nowrap; }
+
+.learn-qids { font-size: 0.9rem; color: #4a5568; word-break: break-all; }
+
+.learn-footer {
+  font-size: 0.8rem; color: #4a5568; margin-top: 1.5rem;
+  padding-top: 1rem; border-top: 1px solid #e2e8f0;
+}
+.learn-footer ul { margin: 0.5rem 0 0 1.2rem; }
+.learn-footer a { color: #4299e1; word-break: break-all; }
+
+.learn-nav { margin-bottom: 0.5rem; }
+.learn-nav a { color: #4299e1; text-decoration: none; font-size: 0.9rem; }
+.learn-nav a:hover { text-decoration: underline; }
+
+.learn-index-domain { margin-bottom: 1rem; }
+.learn-index-list { list-style: none; }
+.learn-index-list li { padding: 0.4rem 0; border-bottom: 1px solid #edf2f7; }
+.learn-index-list li:last-child { border-bottom: none; }
+.learn-index-list a { color: #2d3748; text-decoration: none; }
+.learn-index-list a:hover { color: #4299e1; }
+.learn-index-count { color: #4a5568; font-size: 0.85rem; }
+
+[hidden] { display: none !important; }

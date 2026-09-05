@@ -1,7 +1,157 @@
 {
   "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集 268問",
   "total": 268,
-  "version": "20260905165327",
+  "version": "20260905202251",
+  "categories": {
+    "examGuide": {
+      "code": "AIP-C01",
+      "title": "AWS Certified Generative AI Developer - Professional",
+      "source": "https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01.html",
+      "retrieved": "2026-09-05"
+    },
+    "domains": [
+      {
+        "id": "1",
+        "weight": 31,
+        "title": "Foundation Model Integration, Data Management, and Compliance",
+        "titleJa": "基盤モデルの統合・データ管理・コンプライアンス",
+        "tasks": [
+          {
+            "id": "1.1",
+            "title": "Analyze requirements and design GenAI solutions.",
+            "titleJa": "要件分析と GenAI ソリューション設計"
+          },
+          {
+            "id": "1.2",
+            "title": "Select and configure FMs.",
+            "titleJa": "基盤モデルの選定と構成"
+          },
+          {
+            "id": "1.3",
+            "title": "Implement data validation and processing pipelines for FM consumption.",
+            "titleJa": "基盤モデル入力向けのデータ検証・処理パイプライン"
+          },
+          {
+            "id": "1.4",
+            "title": "Design and implement vector store solutions.",
+            "titleJa": "ベクトルストアの設計と実装"
+          },
+          {
+            "id": "1.5",
+            "title": "Design retrieval mechanisms for FM augmentation.",
+            "titleJa": "検索拡張（RAG）の検索機構の設計"
+          },
+          {
+            "id": "1.6",
+            "title": "Implement prompt engineering strategies and governance for FM interactions.",
+            "titleJa": "プロンプトエンジニアリングとガバナンス"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "weight": 26,
+        "title": "Implementation and Integration",
+        "titleJa": "実装と統合",
+        "tasks": [
+          {
+            "id": "2.1",
+            "title": "Implement agentic AI solutions and tool integrations.",
+            "titleJa": "エージェント型 AI とツール連携"
+          },
+          {
+            "id": "2.2",
+            "title": "Implement model deployment strategies.",
+            "titleJa": "モデルのデプロイ戦略"
+          },
+          {
+            "id": "2.3",
+            "title": "Design and implement enterprise integration architectures.",
+            "titleJa": "エンタープライズ統合アーキテクチャ"
+          },
+          {
+            "id": "2.4",
+            "title": "Implement FM API integrations.",
+            "titleJa": "基盤モデル API の統合"
+          },
+          {
+            "id": "2.5",
+            "title": "Implement application integration patterns and development tools.",
+            "titleJa": "アプリ統合パターンと開発ツール"
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "weight": 20,
+        "title": "AI Safety, Security, and Governance",
+        "titleJa": "AI の安全性・セキュリティ・ガバナンス",
+        "tasks": [
+          {
+            "id": "3.1",
+            "title": "Implement input and output safety controls.",
+            "titleJa": "入出力の安全制御"
+          },
+          {
+            "id": "3.2",
+            "title": "Implement data security and privacy controls.",
+            "titleJa": "データセキュリティとプライバシー制御"
+          },
+          {
+            "id": "3.3",
+            "title": "Implement AI governance and compliance mechanisms.",
+            "titleJa": "AI ガバナンスとコンプライアンス"
+          },
+          {
+            "id": "3.4",
+            "title": "Implement responsible AI principles.",
+            "titleJa": "責任ある AI の実践"
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "weight": 12,
+        "title": "Operational Efficiency and Optimization for GenAI Applications",
+        "titleJa": "GenAI アプリの運用効率と最適化",
+        "tasks": [
+          {
+            "id": "4.1",
+            "title": "Implement cost optimization and resource efficiency strategies.",
+            "titleJa": "コスト最適化とリソース効率"
+          },
+          {
+            "id": "4.2",
+            "title": "Optimize application performance.",
+            "titleJa": "アプリケーション性能の最適化"
+          },
+          {
+            "id": "4.3",
+            "title": "Implement monitoring systems for GenAI applications.",
+            "titleJa": "監視・オブザーバビリティ"
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "weight": 11,
+        "title": "Testing, Validation, and Troubleshooting",
+        "titleJa": "テスト・検証・トラブルシューティング",
+        "tasks": [
+          {
+            "id": "5.1",
+            "title": "Implement evaluation systems for GenAI.",
+            "titleJa": "GenAI の評価システム"
+          },
+          {
+            "id": "5.2",
+            "title": "Troubleshoot GenAI applications.",
+            "titleJa": "GenAI アプリのトラブルシューティング"
+          }
+        ]
+      }
+    ]
+  },
   "questions": [
     {
       "id": 1,
@@ -47,7 +197,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.4"
     },
     {
       "id": 2,
@@ -109,7 +260,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 3,
@@ -155,7 +307,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 4,
@@ -201,7 +354,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 5,
@@ -247,7 +401,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 6,
@@ -293,7 +448,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 7,
@@ -339,7 +495,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 8,
@@ -385,7 +542,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 9,
@@ -431,7 +589,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 10,
@@ -477,7 +636,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 11,
@@ -523,7 +683,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 12,
@@ -577,7 +738,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 13,
@@ -623,7 +785,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 14,
@@ -677,7 +840,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 15,
@@ -723,7 +887,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 16,
@@ -769,7 +934,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 17,
@@ -823,7 +989,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 18,
@@ -869,7 +1036,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 19,
@@ -915,7 +1083,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 20,
@@ -961,7 +1130,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 21,
@@ -1007,7 +1177,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.2"
     },
     {
       "id": 22,
@@ -1053,7 +1224,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 23,
@@ -1099,7 +1271,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 24,
@@ -1145,7 +1318,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.2"
     },
     {
       "id": 25,
@@ -1191,7 +1365,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.4"
     },
     {
       "id": 26,
@@ -1237,7 +1412,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 27,
@@ -1283,7 +1459,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 28,
@@ -1329,7 +1506,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 29,
@@ -1375,7 +1553,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 30,
@@ -1429,7 +1608,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 31,
@@ -1475,7 +1655,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 32,
@@ -1529,7 +1710,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 33,
@@ -1575,7 +1757,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 34,
@@ -1621,7 +1804,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 35,
@@ -1667,7 +1851,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 36,
@@ -1713,7 +1898,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 37,
@@ -1759,7 +1945,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.2"
     },
     {
       "id": 38,
@@ -1813,7 +2000,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 39,
@@ -1859,7 +2047,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 40,
@@ -1921,7 +2110,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 41,
@@ -1967,7 +2157,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 42,
@@ -2013,7 +2204,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 43,
@@ -2059,7 +2251,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 44,
@@ -2105,7 +2298,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 45,
@@ -2151,7 +2345,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.5"
     },
     {
       "id": 46,
@@ -2197,7 +2392,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 47,
@@ -2243,7 +2439,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 48,
@@ -2289,7 +2486,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 49,
@@ -2335,7 +2533,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 50,
@@ -2381,7 +2580,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 51,
@@ -2427,7 +2627,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 52,
@@ -2473,7 +2674,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 53,
@@ -2519,7 +2721,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 54,
@@ -2565,7 +2768,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.2"
     },
     {
       "id": 55,
@@ -2611,7 +2815,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 56,
@@ -2657,7 +2862,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 57,
@@ -2703,7 +2909,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 58,
@@ -2749,7 +2956,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.5"
     },
     {
       "id": 59,
@@ -2795,7 +3003,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 60,
@@ -2841,7 +3050,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 61,
@@ -2887,7 +3097,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 62,
@@ -2933,7 +3144,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 63,
@@ -2979,7 +3191,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 64,
@@ -3025,7 +3238,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 65,
@@ -3071,7 +3285,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 66,
@@ -3117,7 +3332,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.4"
     },
     {
       "id": 67,
@@ -3163,7 +3379,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 68,
@@ -3209,7 +3426,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 69,
@@ -3255,7 +3473,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 70,
@@ -3309,7 +3528,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 71,
@@ -3363,7 +3583,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.2"
     },
     {
       "id": 72,
@@ -3409,7 +3630,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.1"
     },
     {
       "id": 73,
@@ -3455,7 +3677,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 74,
@@ -3501,7 +3724,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 75,
@@ -3547,7 +3771,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 76,
@@ -3593,7 +3818,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.1"
     },
     {
       "id": 77,
@@ -3639,7 +3865,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 78,
@@ -3685,7 +3912,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 79,
@@ -3731,7 +3959,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 80,
@@ -3777,7 +4006,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 81,
@@ -3823,7 +4053,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 82,
@@ -3869,7 +4100,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 83,
@@ -3915,7 +4147,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 84,
@@ -3969,7 +4202,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 85,
@@ -4015,7 +4249,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.5"
     },
     {
       "id": 86,
@@ -4061,7 +4296,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 87,
@@ -4107,7 +4343,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 88,
@@ -4153,7 +4390,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 89,
@@ -4199,7 +4437,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 90,
@@ -4245,7 +4484,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 91,
@@ -4291,7 +4531,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 92,
@@ -4337,7 +4578,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 93,
@@ -4383,7 +4625,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 94,
@@ -4429,7 +4672,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 95,
@@ -4475,7 +4719,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 96,
@@ -4521,7 +4766,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 97,
@@ -4567,7 +4813,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 98,
@@ -4613,7 +4860,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 99,
@@ -4659,7 +4907,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 100,
@@ -4705,7 +4954,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 101,
@@ -4751,7 +5001,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 102,
@@ -4797,7 +5048,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 103,
@@ -4843,7 +5095,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 104,
@@ -4889,7 +5142,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 105,
@@ -4935,7 +5189,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 106,
@@ -4981,7 +5236,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 107,
@@ -5027,7 +5283,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 108,
@@ -5073,7 +5330,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 109,
@@ -5119,7 +5377,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 110,
@@ -5165,7 +5424,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 111,
@@ -5211,7 +5471,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 112,
@@ -5257,7 +5518,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 113,
@@ -5303,7 +5565,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 114,
@@ -5349,7 +5612,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 115,
@@ -5395,7 +5659,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 116,
@@ -5441,7 +5706,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 117,
@@ -5487,7 +5753,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 118,
@@ -5533,7 +5800,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 119,
@@ -5579,7 +5847,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 120,
@@ -5625,7 +5894,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 121,
@@ -5679,7 +5949,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 122,
@@ -5725,7 +5996,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 123,
@@ -5771,7 +6043,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.5"
     },
     {
       "id": 124,
@@ -5817,7 +6090,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 125,
@@ -5863,7 +6137,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 126,
@@ -5909,7 +6184,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 127,
@@ -5963,7 +6239,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 128,
@@ -6009,7 +6286,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 129,
@@ -6055,7 +6333,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 130,
@@ -6101,7 +6380,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 131,
@@ -6147,7 +6427,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 132,
@@ -6193,7 +6474,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 133,
@@ -6239,7 +6521,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.5"
     },
     {
       "id": 134,
@@ -6285,7 +6568,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 135,
@@ -6331,7 +6615,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 136,
@@ -6377,7 +6662,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 137,
@@ -6423,7 +6709,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 138,
@@ -6469,7 +6756,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 139,
@@ -6515,7 +6803,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 140,
@@ -6561,7 +6850,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 141,
@@ -6607,7 +6897,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 142,
@@ -6653,7 +6944,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 143,
@@ -6699,7 +6991,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 144,
@@ -6745,7 +7038,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 145,
@@ -6791,7 +7085,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 146,
@@ -6837,7 +7132,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 147,
@@ -6883,7 +7179,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 148,
@@ -6929,7 +7226,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 149,
@@ -6975,7 +7273,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 150,
@@ -7021,7 +7320,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 151,
@@ -7067,7 +7367,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 152,
@@ -7113,7 +7414,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 153,
@@ -7159,7 +7461,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 154,
@@ -7205,7 +7508,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.1"
     },
     {
       "id": 155,
@@ -7251,7 +7555,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 156,
@@ -7297,7 +7602,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 157,
@@ -7343,7 +7649,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 158,
@@ -7389,7 +7696,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 159,
@@ -7435,7 +7743,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 160,
@@ -7489,7 +7798,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 161,
@@ -7543,7 +7853,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 162,
@@ -7589,7 +7900,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.2"
     },
     {
       "id": 163,
@@ -7635,7 +7947,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 164,
@@ -7681,7 +7994,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 165,
@@ -7735,7 +8049,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 166,
@@ -7781,7 +8096,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 167,
@@ -7827,7 +8143,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 168,
@@ -7881,7 +8198,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 169,
@@ -7927,7 +8245,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 170,
@@ -7973,7 +8292,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 171,
@@ -8019,7 +8339,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 172,
@@ -8065,7 +8386,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 173,
@@ -8119,7 +8441,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 174,
@@ -8165,7 +8488,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.3"
     },
     {
       "id": 175,
@@ -8211,7 +8535,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 176,
@@ -8257,7 +8582,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 177,
@@ -8303,7 +8629,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 178,
@@ -8349,7 +8676,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 179,
@@ -8403,7 +8731,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 180,
@@ -8449,7 +8778,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 181,
@@ -8495,7 +8825,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 182,
@@ -8541,7 +8872,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 183,
@@ -8587,7 +8919,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 184,
@@ -8633,7 +8966,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 185,
@@ -8679,7 +9013,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 186,
@@ -8725,7 +9060,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 187,
@@ -8771,7 +9107,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 188,
@@ -8817,7 +9154,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 189,
@@ -8863,7 +9201,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 190,
@@ -8909,7 +9248,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 191,
@@ -8955,7 +9295,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 192,
@@ -9009,7 +9350,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 193,
@@ -9055,7 +9397,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.1"
     },
     {
       "id": 194,
@@ -9101,7 +9444,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 195,
@@ -9147,7 +9491,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 196,
@@ -9193,7 +9538,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 197,
@@ -9239,7 +9585,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 198,
@@ -9285,7 +9632,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 199,
@@ -9331,7 +9679,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 200,
@@ -9385,7 +9734,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 201,
@@ -9431,7 +9781,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 202,
@@ -9477,7 +9828,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 203,
@@ -9523,7 +9875,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 204,
@@ -9569,7 +9922,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 205,
@@ -9615,7 +9969,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 206,
@@ -9661,7 +10016,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 207,
@@ -9723,7 +10079,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 208,
@@ -9769,7 +10126,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 209,
@@ -9815,7 +10173,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 210,
@@ -9861,7 +10220,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 211,
@@ -9907,7 +10267,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 212,
@@ -9953,7 +10314,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 213,
@@ -9999,7 +10361,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 214,
@@ -10053,7 +10416,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 215,
@@ -10099,7 +10463,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "4.1"
     },
     {
       "id": 216,
@@ -10145,7 +10510,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 217,
@@ -10199,7 +10565,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "5.2"
     },
     {
       "id": 218,
@@ -10245,7 +10612,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.4"
     },
     {
       "id": 219,
@@ -10291,7 +10659,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 220,
@@ -10345,7 +10714,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 221,
@@ -10399,7 +10769,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 222,
@@ -10445,7 +10816,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 223,
@@ -10491,7 +10863,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 224,
@@ -10537,7 +10910,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 225,
@@ -10591,7 +10965,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 226,
@@ -10637,7 +11012,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 227,
@@ -10683,7 +11059,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 228,
@@ -10737,7 +11114,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.1"
     },
     {
       "id": 229,
@@ -10783,7 +11161,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 230,
@@ -10829,7 +11208,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.6"
     },
     {
       "id": 231,
@@ -10875,7 +11255,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 232,
@@ -10921,7 +11302,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 233,
@@ -10967,7 +11349,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 234,
@@ -11013,7 +11396,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 235,
@@ -11059,7 +11443,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 236,
@@ -11105,7 +11490,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 237,
@@ -11167,7 +11553,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 238,
@@ -11213,7 +11600,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 239,
@@ -11267,7 +11655,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 240,
@@ -11313,7 +11702,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 241,
@@ -11367,7 +11757,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 242,
@@ -11413,7 +11804,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 243,
@@ -11459,7 +11851,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 244,
@@ -11505,7 +11898,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 245,
@@ -11551,7 +11945,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 246,
@@ -11597,7 +11992,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 247,
@@ -11643,7 +12039,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 248,
@@ -11697,7 +12094,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 249,
@@ -11743,7 +12141,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.4"
     },
     {
       "id": 250,
@@ -11789,7 +12188,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 251,
@@ -11835,7 +12235,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 252,
@@ -11881,7 +12282,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 253,
@@ -11927,7 +12329,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 254,
@@ -11973,7 +12376,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 255,
@@ -12019,7 +12423,8 @@
           }
         ],
         "pitfalls": ""
-      }
+      },
+      "category": "2.1"
     },
     {
       "id": 256,
@@ -12065,7 +12470,8 @@
           }
         ],
         "pitfalls": "- ML の再トレーニング/再デプロイは長時間処理のため Step Functions「Standard」（Express ではない）。\n- リアルタイム推論エンドポイントは「予測」用であり、再トレーニング自動化の役割ではない。\n- Pipelines は適切だが、Webhook/EventBridge バスの追加は不要な複雑性を生む（Bの罠）。"
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 257,
@@ -12111,7 +12517,8 @@
           }
         ],
         "pitfalls": "- AWS WAF は Web アプリ保護であり、生成 AI 出力の安全性制御には使わない（guardrails が担当）。\n- ⚠️ 注記: Amazon Bedrock Model Evaluation はデプロイ前の非同期バッチ評価ジョブで、200ms のリアルタイム hallucination 検出には使えない。リアルタイム検出は Guardrails の contextual grounding check（grounding/relevance スコアで推論時にブロック）が担う。出題意図上の正答は A だが、選択肢に grounding check が無く Model Evaluation でのリアルタイム検出という記述は現行仕様と乖離がある。\n- 低レイテンシー（200ms）かつ TTL 付き保存には DynamoDB が適する。"
-      }
+      },
+      "category": "3.3"
     },
     {
       "id": 258,
@@ -12157,7 +12564,8 @@
           }
         ],
         "pitfalls": "- 列レベル・属性ベースの一元アクセス制御は Lake Formation の LF-Tag が定石。\n- S3 バケット単位の制御では列レベルの PII 編集を表現できない。\n- データアクセスの監査証跡は CloudTrail。"
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 259,
@@ -12203,7 +12611,8 @@
           }
         ],
         "pitfalls": "- C（Rerank API + 独自検索パイプライン）と D（KB 内 reranking 設定）の違いに注意。既存の RetrieveAndGenerateStream を活かせる D が低運用負荷。\n- 独自ランキングモデルの SageMaker ホスティングは運用負荷が高い。\n- 「意味的に近いが文脈的に無関係」な文書は reranking で順位を下げる。"
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 260,
@@ -12249,7 +12658,8 @@
           }
         ],
         "pitfalls": "- PII は「検出」だけでなく「エンティティ編集（redaction）」まで行わないとプライバシー保護にならない。\n- 逐次処理はレイテンシーを増やす。並列処理が応答時間維持に有効。\n- 「安全なプロンプトにのみ toxicity 検出」は不快コンテンツ検出の網羅性を下げる。"
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 261,
@@ -12295,7 +12705,8 @@
           }
         ],
         "pitfalls": "- 構造化データ（RDS）の正確な取得はベクトル/セマンティック検索より text-to-SQL が適する。\n- B と D はどちらも text-to-SQL。違いは hallucination 低減手段（B: Step Functions/Lambda 検証 / D: 信頼スコアリング+類似検索）。要件に合うのは D。\n- guardrails はレスポンスのフィルタリングを担う。"
-      }
+      },
+      "category": "3.1"
     },
     {
       "id": 262,
@@ -12341,7 +12752,8 @@
           }
         ],
         "pitfalls": "- データレジデンシー（同一リージョン処理）要件下ではクロスリージョン guardrail は不可。各リージョンへコピー展開する。\n- detect モードは検出のみでマスク/ブロックしない（ガードレール有効性の評価用途）。実際にマスク結果を確認しながら評価するなら mask、本番適用は block。\n- PII 検出は「機密情報フィルター」。単語フィルター単独では不十分。"
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 263,
@@ -12387,7 +12799,8 @@
           }
         ],
         "pitfalls": "- 意味的類似検索は埋め込みベクトル検索が必要。トピック抽出（Comprehend）では代替できない。\n- 埋め込みモデルはマネージドの Titan Embeddings を使う方が SageMaker 自前ホストより低運用負荷。\n- 100 万未満の規模なら Aurora PostgreSQL Serverless + pgvector が管理負荷を抑えやすい（D は Serverless 指定）。"
-      }
+      },
+      "category": "1.5"
     },
     {
       "id": 264,
@@ -12441,7 +12854,8 @@
           }
         ],
         "pitfalls": "- Step Functions は AWS SDK 統合で Bedrock を直接呼べる。要約/感情分析のためだけに Lambda を挟むのは不要。\n- S3 イベントは EventBridge ルール経由で Step Functions を起動するのが定石（D が正、E は不適）。\n- 出力は「構造化（JSON）形式」で生成する点を押さえる。"
-      }
+      },
+      "category": "1.3"
     },
     {
       "id": 265,
@@ -12487,7 +12901,8 @@
           }
         ],
         "pitfalls": "- ロール別の PII 表示は「元データ編集」ではなく「出力時（レスポンス）の制御」で行う。元データを編集すると外科医にも PII を出せなくなる。\n- ロール別出力制御は Cognito グループ + ApplyGuardrail が定石（KB を 2 つ作る必要はない）。\n- 3 年未満限定は S3 Lifecycle で古いオブジェクトを削除して実現。"
-      }
+      },
+      "category": "3.2"
     },
     {
       "id": 266,
@@ -12533,7 +12948,8 @@
           }
         ],
         "pitfalls": "- A と D の差は「異常検出」の有無。運用メトリクス劣化の自動検出には複合アラーム + 異常検出（D）。\n- 「自動修復（Lambda）」は要件にない。求められているのは「自動アラート」。\n- リアルタイムなアラート通知は CloudWatch + SNS が直接的。QuickSight/EventBridge 構成は分析寄りで複雑。"
-      }
+      },
+      "category": "4.3"
     },
     {
       "id": 267,
@@ -12579,7 +12995,8 @@
           }
         ],
         "pitfalls": "- 選定 FM が許可外リージョン（eu-central-1/eu-west-3）にあるため、SCP を「ヨーロッパ内推論プロファイル許可」に拡張する必要がある。\n- 主因は SCP が eu-north-1/eu-west-1 のみ許可しており eu-central-1/eu-west-3 でのリソース作成が SCP 違反になる点。VPC エンドポイントがリージョン単位で別リージョン FM に直接使えない（Bedrock の PrivateLink はクロスリージョン非対応）のは補強理由。クロスリージョン推論プロファイルで対応。\n- Bedrock の FM を EC2/SageMaker に再デプロイする選択肢は要件から外れる。"
-      }
+      },
+      "category": "1.2"
     },
     {
       "id": 268,
@@ -12625,7 +13042,8 @@
           }
         ],
         "pitfalls": "- 複雑クエリの分解（semantic dilution 低減）は Bedrock ナレッジベースの query decomposition で実現でき自前実装は不要。これは RetrieveAndGenerate API の orchestrationConfiguration.queryTransformationConfiguration.type=QUERY_DECOMPOSITION でリクエスト単位に指定する（KB への永続設定ではない）。\n- カスタム ML（SageMaker）や複数 Lambda による分解は運用負荷とレイテンシーを増やす。\n- ドメイン固有用語の参照は参照医療文書をナレッジベースに保存して根拠化する。"
-      }
+      },
+      "category": "1.5"
     }
   ]
 }

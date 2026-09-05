@@ -69,6 +69,10 @@ function renderStart() {
   const { answered, rate } = window.QuizLogic.getLatestOverallStats(data.progress);
   document.getElementById('summary-text').innerHTML =
     `<strong>${allQuestions.length}</strong>問中 <strong>${answered}</strong>問回答済み ／ 正答率 <strong>${rate}%</strong>`;
+
+  // 学習資料へのリンクは分類データを持つ試験でのみ表示する
+  document.getElementById('learn-link')
+    .classList.toggle('hidden', !window._quizCategories);
 }
 
 function showStartMessage(text) {
@@ -612,6 +616,7 @@ async function selectExam(examId) {
     const data = await res.json();
     allQuestions = data.questions;
     window._quizTitle = data.title;
+    window._quizCategories = data.categories || null;
 
     // バージョン表示
     const ver = data.version || '';

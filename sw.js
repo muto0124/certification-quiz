@@ -1,5 +1,5 @@
 ﻿// Service Worker — キャッシュファースト戦略
-const CACHE_VERSION = '20260905202251';
+const CACHE_VERSION = '20260905211959';
 const CACHE_NAME = `quiz-cache-${CACHE_VERSION}`;
 const ASSETS = [
   './',
@@ -11,7 +11,11 @@ const ASSETS = [
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './learn/index.html',
+  './learn/style.css',
+  './learn/learn.js',
+  './learn/learn-logic.js'
 ];
 
 // インストール: 静的アセットをプリキャッシュ
@@ -40,8 +44,11 @@ self.addEventListener('fetch', event => {
     caches.match(event.request).then(cached => {
       if (cached) return cached;
       return fetch(event.request).then(response => {
-        // data/ 配下の JSON はキャッシュに追加（オンデマンドキャッシュ）
-        if (event.request.url.includes('/data/') && event.request.url.endsWith('.json')) {
+        // data/ 配下の JSON と learn/ 配下のページはキャッシュに追加（オンデマンドキャッシュ）
+        const url = event.request.url;
+        const isDataJson = url.includes('/data/') && url.endsWith('.json');
+        const isLearnPage = url.includes('/learn/');
+        if (isDataJson || isLearnPage) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }

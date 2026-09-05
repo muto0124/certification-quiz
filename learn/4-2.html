@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.2 アプリケーション性能の最適化 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="4.2">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>4.2 アプリケーション性能の最適化</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">速くする手は大きく3方向あります。待ち時間そのものを削る、同時に流す、まとめて後で流す。どれを選ぶかは「その応答が今すぐ要るか」で決まります。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="性能改善の3方向。待ち時間を削る、同時に流す、まとめて後で流す。それぞれ効く場面が違う">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">待ち時間を削る</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">小さいモデル、短い入力</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">ストリーミングで先に返す</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">同時に流す</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">独立した処理を並列化</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">合計時間が最長の1本に</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">まとめて後で</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">即時性が要らない処理</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">バッチ推論へ逃がす</text>
+          </g>
+        </svg>
+        <figcaption>3つは競合しない。同じシステムの別の場所に、それぞれ効く。</figcaption>
+      </figure>
+
+      <p>厨房で考えると分かりやすくなります。一皿を早く出したいなら手数の少ない料理にする。前菜とスープとメインは別のコンロで同時に作る。仕込みは前の晩にまとめて済ませておく。速さの正体は3つとも違います。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>タイムアウトを短くすれば速くなると思ってしまう。</strong> 45 秒かかる処理を 10 秒以内にしたいとき、呼び出しのタイムアウトを縮めても失敗が増えるだけです。順次で回している複数の分析を並列にする、という構造の変更でしか届きません。</p>
+      <p><strong>容量の確保を高速化と取り違える。</strong> プロビジョンドスループットが買うのは処理できる量であって、1 回の応答が返るまでの時間ではありません。レイテンシの問題に容量で答えると噛み合いません。</p>
+      <p><strong>即時性が要らない処理までオンライン経路に載せる。</strong> 夜間に数百万件を作り直すような仕事は、対話用の経路から外すだけで、混雑もコストも同時に軽くなります。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>同じ入力に複数の分析</td>
+              <td>Step Functions の Parallel</td>
+              <td>順次を並列にして縮める</td>
+            </tr>
+            <tr>
+              <td>最初の一文字を早く見せたい</td>
+              <td>ストリーミング応答</td>
+              <td>完成を待たずに返し始める</td>
+            </tr>
+            <tr>
+              <td>p95 も予算も守りたい</td>
+              <td>低レイテンシ推論とキャッシュ</td>
+              <td>単独の手では届かない</td>
+            </tr>
+            <tr>
+              <td>ピークが読める、複数リージョン</td>
+              <td>クロスリージョン推論プロファイル</td>
+              <td>容量を地理的に散らす</td>
+            </tr>
+            <tr>
+              <td>夜間に大量、即時応答は不要</td>
+              <td>バッチ推論</td>
+              <td>オンライン経路を空ける</td>
+            </tr>
+            <tr>
+              <td>検索の待ち時間が長い</td>
+              <td>インデックス最適化とクエリ前処理</td>
+              <td>生成前の段で詰まっている</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>バッチ推論はプロビジョンドモデルに対応していない。</strong> 容量を買っている状態でバッチへ逃がす、という組み合わせは取れない。</li>
+        <li>バッチ推論は tool calling（function calling）と structured output（<code>response_format</code>）にも対応していない。入力ファイルの各行が独立に処理されるため、多段のやり取りが要る機能は使えない。</li>
+        <li>プロビジョンドスループットが確保するのは容量。1 回あたりの応答時間は縮まらない。</li>
+        <li>並列化で縮むのは、処理どうしが独立している場合だけ。前の結果を次が使う連鎖は並列にできない。</li>
+        <li><strong>temperature、top-k、top-p は速度のパラメータではない。</strong> 出力の揺れ幅を決めるもので、下げても応答は速くならない。再現性が要る場面では下げ、多様性が要る場面では上げる。性能の問題に対する答えとして選択肢に出てきたら疑う。</li>
+      </ul>
+      <p>「45 秒を 10 秒に」のような具体的な数字が出たら、まず順次処理が並列にできないかを見ます。モデルを変えるより効き幅が大きいことが多い場所です。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="レイテンシとスループットの違い。レイテンシは1件が返るまでの時間、スループットは単位時間に処理できる件数で、効く手が異なる">
+          <rect width="400" height="280" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="124" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">レイテンシ</text>
+            <text x="24" y="66" font-size="17" fill="#1a202c">1 件が返るまでの時間</text>
+            <text x="24" y="94" font-size="17" fill="#4a5568">小さいモデル、短い入力</text>
+            <text x="24" y="122" font-size="17" fill="#4a5568">ストリーミング、キャッシュ</text>
+
+            <rect x="6" y="146" width="388" height="124" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="176" font-size="20" fill="#2d3748">スループット</text>
+            <text x="24" y="206" font-size="17" fill="#1a202c">単位時間に捌ける件数</text>
+            <text x="24" y="234" font-size="17" fill="#4a5568">並列化、バッチ、容量確保</text>
+            <text x="24" y="262" font-size="17" fill="#4a5568">クロスリージョン推論</text>
+          </g>
+        </svg>
+        <figcaption>「遅い」と言われたら、1 件が遅いのか、捌ききれないのかをまず分ける。</figcaption>
+      </figure>
+      <p>問題文が「p95」「応答時間」と言っていればレイテンシ、「毎時◯件」「ピーク時に処理しきれない」と言っていればスループットです。両方が同時に条件になっている問題では、片方だけを解決する選択肢は落ちます。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-05</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain4.html">AIP-C01 試験ガイド Content Domain 4</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/batch-inference.html">Amazon Bedrock User Guide — Process multiple prompts with batch inference</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

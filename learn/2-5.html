@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.5 アプリ統合パターンと開発ツール — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="2.5">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>2.5 アプリ統合パターンと開発ツール</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">GenAI を業務システムのどこに差し込むかを扱います。判断の軸はひとつ、その場で返せる処理か、受け付けて後で返す処理か。この線引きを誤るとタイムアウトします。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="同期と非同期の分かれ道。短い処理はその場で返し、長い処理は受け付けてからキューとワークフローに渡す">
+          <rect width="400" height="300" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="120" y="6" width="160" height="46" rx="8" fill="#4299e1"/>
+            <text x="200" y="35" text-anchor="middle" font-size="19" fill="#ffffff">リクエスト</text>
+            <path d="M200,52 V70 H100 V88 M94,80 L100,90 L106,80" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <path d="M200,52 V70 H300 V88 M294,80 L300,90 L306,80" fill="none" stroke="#4a5568" stroke-width="2"/>
+
+            <rect x="6" y="94" width="188" height="90" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="100" y="124" text-anchor="middle" font-size="19" fill="#2d3748">短い処理</text>
+            <text x="100" y="152" text-anchor="middle" font-size="17" fill="#1a202c">その場で返す</text>
+            <text x="100" y="180" text-anchor="middle" font-size="17" fill="#4a5568">Express</text>
+
+            <rect x="206" y="94" width="188" height="90" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="300" y="124" text-anchor="middle" font-size="19" fill="#2d3748">長い処理</text>
+            <text x="300" y="152" text-anchor="middle" font-size="17" fill="#1a202c">受付だけ返す</text>
+            <text x="300" y="180" text-anchor="middle" font-size="17" fill="#4a5568">SQS + Standard</text>
+
+            <path d="M300,184 V208 M294,200 L300,210 L306,200" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="206" y="214" width="188" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="300" y="244" text-anchor="middle" font-size="17" fill="#1a202c">抽出・生成・人手確認</text>
+            <text x="300" y="272" text-anchor="middle" font-size="17" fill="#4a5568">完了は EventBridge で</text>
+          </g>
+        </svg>
+        <figcaption>分かれ目は処理時間。長い側を同期に載せるとタイムアウトと重複処理が起きる。</figcaption>
+      </figure>
+
+      <p>役所の窓口と同じです。住民票の写しはその場で渡せますが、審査が要る申請は受付番号を渡して後日連絡になります。どちらも窓口で待たせようとすると、行列が止まります。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>長時間処理を同期リクエストに載せてしまう。</strong> 200 ページの契約書を読み、モデルに要約させ、外部システムに問い合わせ、人の確認まで待つ。これを API Gateway の一往復で終わらせようとすると、タイムアウトし、クライアントの再送で重複処理まで起きます。</p>
+      <p><strong>ジョブの完了をポーリングで待つ。</strong> 状態を何度も問い合わせると、管理用のトラフィックが増えるうえ、気づくのも遅れます。ジョブの状態変化はイベントとして受け取れます。</p>
+      <p><strong>ストリーミングを HTTP API でやろうとする。</strong> 軽くて安いほうを選びたくなりますが、API Gateway の response streaming は REST API のみの対応です。機能の有無が先に効きます。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>決まった入出力の軽い処理</td>
+              <td>Step Functions Express</td>
+              <td>実装の手数が少ない</td>
+            </tr>
+            <tr>
+              <td>長文処理と人手確認を含む</td>
+              <td>SQS と Standard ワークフロー</td>
+              <td>受付と処理を切り離す</td>
+            </tr>
+            <tr>
+              <td>ジョブの完了を知りたい</td>
+              <td>EventBridge の状態イベント</td>
+              <td>ポーリングより軽い</td>
+            </tr>
+            <tr>
+              <td>逐次表示とトークン制御</td>
+              <td>REST API の response streaming</td>
+              <td>HTTP API は非対応</td>
+            </tr>
+            <tr>
+              <td>社内標準をコード提案に反映</td>
+              <td>Q Developer のカスタマイズ</td>
+              <td>各案件を変えずに済む</td>
+            </tr>
+            <tr>
+              <td>画面をすぐ用意したい</td>
+              <td>Amplify の UI コンポーネント</td>
+              <td>宣言的に組み立てられる</td>
+            </tr>
+            <tr>
+              <td>コードを書かずに流れを組む</td>
+              <td>Bedrock Prompt Flows</td>
+              <td>ノーコードで連鎖を作れる</td>
+            </tr>
+            <tr>
+              <td>多様な文書から構造化データ</td>
+              <td>Bedrock Data Automation</td>
+              <td>抽出をマネージドに寄せる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>API Gateway の response streaming は REST API のみ対応</strong>（2025 年 11 月のリリース）。HTTP API では応答がバッファされ、真のストリーミングにならない。</li>
+        <li>Lambda response streaming を外へ出す経路は3つ。Lambda 関数 URL（<code>InvokeMode</code> を <code>RESPONSE_STREAM</code> に変更）、<code>InvokeWithResponseStream</code> API、API Gateway REST API のプロキシ統合。</li>
+        <li>API Gateway REST API の response streaming では、統合タイムアウトが最大 15 分まで延び、10 MB を超えるペイロードも扱える。</li>
+        <li>Bedrock Data Automation のジョブ状態は EventBridge のイベントとして受け取れる。ポーリングは要らない。</li>
+        <li>入口を早く用意する手段は目的で分かれる。画面は Amplify の宣言的コンポーネント、API 先行の設計は OpenAPI 仕様、処理の流れをコードなしで組むなら Prompt Flows。</li>
+      </ul>
+      <p>一般論では「軽くて安いから HTTP API」ですが、ストリーミングが要件に入った瞬間に REST API しか残りません。運用負荷の比較より、機能の対応可否を先に見ます。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="Step Functions の Express と Standard の違い。Express は短時間の軽い処理向け、Standard は長時間で人手確認を挟む処理向け">
+          <rect width="400" height="280" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="124" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">Express</text>
+            <text x="24" y="66" font-size="17" fill="#1a202c">短時間で終わる定型処理</text>
+            <text x="24" y="94" font-size="17" fill="#4a5568">取得して、呼んで、保存する</text>
+            <text x="24" y="122" font-size="17" fill="#4a5568">同期で返せる範囲</text>
+
+            <rect x="6" y="146" width="388" height="124" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="176" font-size="20" fill="#2d3748">Standard</text>
+            <text x="24" y="206" font-size="17" fill="#1a202c">長時間・人手確認あり</text>
+            <text x="24" y="234" font-size="17" fill="#4a5568">承認待ちで止められる</text>
+            <text x="24" y="262" font-size="17" fill="#4a5568">受付は別に返す</text>
+          </g>
+        </svg>
+        <figcaption>人の承認を挟む、あるいは分単位で待つなら Standard を選ぶ。</figcaption>
+      </figure>
+      <p>問題文に「人が確認する」「数分かかる」「大量のページ」が出たら Standard と非同期の組み合わせです。逆に「S3 から取って、モデルに渡して、S3 に戻す」だけなら Express で足ります。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-05</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain2.html">AIP-C01 試験ガイド Content Domain 2</a></li>
+        <li><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/response-transfer-mode-lambda.html">Amazon API Gateway — Set up a Lambda proxy integration with payload response streaming</a></li>
+        <li><a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-response-streaming.html">AWS Lambda — Response streaming for Lambda functions</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.4 責任ある AI の実践 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="3.4">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>3.4 責任ある AI の実践</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">作れることと、出してよいことは別です。根拠を見せる、偏りを測る、決めた方針どおりかを確かめる。この3つを仕組みとして組み込むのがこのタスクです。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="責任ある AI の3本柱。透明性は根拠を見せること、公平性は偏りを測ること、方針遵守は決めた線を守ることを指す">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">透明性</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">何を根拠に答えたかを見せる</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">引用・推論トレース・確信度</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">公平性</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">グループ間の差を測り続ける</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">メトリクス化して監視する</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">方針遵守</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">決めた線を越えさせない</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">Guardrails・モデルカード</text>
+          </g>
+        </svg>
+        <figcaption>3本柱はどれも「仕組みとして残す」ことが要件になる。心がけでは要件を満たせない。</figcaption>
+      </figure>
+
+      <p>診断書に似ています。医者は結論だけを渡しません。どの検査値から そう判断したかを添えます（透明性）。特定の年齢層で誤診が偏っていないかを定期的に見直します（公平性）。そして院内の規定から外れた処方はしません（方針遵守）。AI アプリに求められているのも同じ3つです。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>公平性の監視に SageMaker Clarify を選んでしまう。</strong> バイアス検出の専用サービスなので飛びつきたくなりますが、Clarify のバイアスドリフト監視は SageMaker エンドポイントを対象にスケジュール実行する処理ジョブです。Bedrock アプリをリアルタイムに監視する用途には使えません。</p>
+      <p><strong>Guardrails のメトリクスで公平性を測ろうとする。</strong> <code>InvocationsIntervened</code> は安全ポリシーが介入した回数であって、人口統計グループ間の推薦の偏りとは無関係です。名前が監視っぽいだけで、測っているものが違います。</p>
+      <p><strong>引用とトレースを混同する。</strong> 引用は利用者に根拠を見せるもの、トレースは運用者が推論経路を追うものです。求められている相手が違うので、片方でもう片方は代替できません。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>根拠を利用者に見せたい</td>
+              <td>Knowledge Bases の出典情報</td>
+              <td>引用付きで返せる</td>
+            </tr>
+            <tr>
+              <td>推論経路を運用者が追いたい</td>
+              <td>Bedrock Agents のトレース</td>
+              <td>ツール選択まで見える</td>
+            </tr>
+            <tr>
+              <td>グループ間の公平性を測る</td>
+              <td>ログ→Lambda→CloudWatch</td>
+              <td>Bedrock を測る他の手がない</td>
+            </tr>
+            <tr>
+              <td>判断の記録を監査に残す</td>
+              <td>引用と応答を S3 へ保存</td>
+              <td>後から再現できる</td>
+            </tr>
+            <tr>
+              <td>モデルの限界を明示する</td>
+              <td>モデルカード</td>
+              <td>用途外の利用を抑える</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>SageMaker Clarify のバイアスドリフト監視は、SageMaker エンドポイント（または batch transform）を対象にしたスケジュール実行の処理ジョブ。</strong> 時間単位や日単位で回るため、Bedrock アプリのリアルタイム監視には使えない。</li>
+        <li>さらに <strong>SageMaker Model Monitor は新規顧客の受付を終了している</strong>。これから作るシステムの選択肢には入らない。</li>
+        <li>Guardrails の <code>InvocationsIntervened</code> は安全ポリシーによる介入回数。公平性の指標ではない。</li>
+        <li>Bedrock Agents の推論トレースは <code>InvokeAgent</code> で <code>enableTrace=true</code> を指定すると応答に含まれる。外形監視では代替できない。</li>
+      </ul>
+      <p>公平性を測れと言われたら、Bedrock には専用の指標がありません。応答ログにグループ属性と評価ラベルを残し、自分で差分を計算して CloudWatch カスタムメトリクスに出す、という組み立てが基本形になります。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="引用とトレースの違い。引用は利用者に根拠文書を見せるもの、トレースは運用者が推論経路とツール選択を追うもの">
+          <rect width="400" height="280" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="124" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">引用 — 見る人は利用者</text>
+            <text x="24" y="66" font-size="17" fill="#1a202c">どの文書に基づく回答か</text>
+            <text x="24" y="94" font-size="17" fill="#4a5568">Knowledge Bases の出典情報</text>
+            <text x="24" y="122" font-size="17" fill="#4a5568">応答と一緒に返る</text>
+
+            <rect x="6" y="146" width="388" height="124" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="176" font-size="20" fill="#2d3748">トレース — 見る人は運用者</text>
+            <text x="24" y="206" font-size="17" fill="#1a202c">どう考え、何を呼んだか</text>
+            <text x="24" y="234" font-size="17" fill="#4a5568">Agents の trace、X-Ray</text>
+            <text x="24" y="262" font-size="17" fill="#4a5568">調査と改善のために使う</text>
+          </g>
+        </svg>
+        <figcaption>同じ「根拠を示す」でも、見る相手が違えば必要な機能も違う。</figcaption>
+      </figure>
+      <p>問題文が「利用者に示す」と言っていれば引用、「運用チームが調べる」と言っていればトレースです。両方を求めている問題もあり、その場合は Knowledge Bases の出典情報とエージェントのトレースを組み合わせる選択肢が正解になります。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-05</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain3.html">AIP-C01 試験ガイド Content Domain 3</a></li>
+        <li><a href="https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-bias-drift.html">Amazon SageMaker AI — Bias drift for models in production</a></li>
+        <li><a href="https://docs.aws.amazon.com/sagemaker/latest/dg/clarify-model-monitor-bias-drift-schedule.html">Amazon SageMaker AI — Schedule Bias Drift Monitoring Jobs</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

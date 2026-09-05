@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.1 要件分析と GenAI ソリューション設計 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="1.1">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>1.1 要件分析と GenAI ソリューション設計</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">作り始める前に決めることを扱います。既製品で足りるのか、データをどこに置けるのか、部門をまたいで品質をどう揃えるのか。ここを外すと後から直せません。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="着手前に決める3つのこと。既製品と自前構築の選択、データの置き場所の境界、部門横断での標準化">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">何で作るか</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">既製品で足りるか、自前か</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">早さと自由度は交換関係</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">どこに置くか</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">データが出てよい範囲</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">経路すべてが境界内か</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">どう揃えるか</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">部門をまたいだ設計品質</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">レビュー観点と実装の型</text>
+          </g>
+        </svg>
+        <figcaption>3つとも、書き始めてからでは変えにくい判断。</figcaption>
+      </figure>
+
+      <p>家を建てる前の話に似ています。まず建売にするか設計を起こすかを決め、次に建てられる土地の範囲を確かめ、最後に社内で使いまわす標準図面を用意する。基礎を打ってから土地の境界が違うと分かっても、もう動かせません。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>Bedrock で作ることを前提にしてしまう。</strong> 社内利用者向けのアシスタントで、既成のデータソース接続と権限に基づく回答制御が要り、短期間で出したい。この条件なら Amazon Q Business のほうが早く着きます。部品を組み合わせる自由が要らない場面まで自前構築を選ぶと、要件の「短期間」を落とします。</p>
+      <p><strong>データの境界を生成の段だけで考える。</strong> 「データを地域外に出せない」という要件は、モデル呼び出しだけの話ではありません。文書を置く S3、ナレッジベース、ベクトルストア、そして推論。この経路のどこか一つでも外に出れば要件は崩れます。</p>
+      <p><strong>いきなり本番規模で作り始める。</strong> 生成 AI は、動かしてみるまで応答品質もレイテンシも読めません。実現性、性能特性、事業価値の3つを小さく確かめてから広げる、という段取りが要件に入っていることがあります。Bedrock なら基盤モデルを選んで呼ぶだけで検証を始められるので、この段を飛ばす理由がありません。</p>
+      <p><strong>標準化を文書だけで済ませる。</strong> 設計の観点を揃えるレビューと、実装を揃えるテンプレートは別物です。片方だけでは、部門ごとの出来のばらつきは止まりません。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>社内向け、短期間で出したい</td>
+              <td>Amazon Q Business</td>
+              <td>接続と権限が用意済み</td>
+            </tr>
+            <tr>
+              <td>独自の体験や細かい制御</td>
+              <td>Bedrock で自前構築</td>
+              <td>部品を組み合わせられる</td>
+            </tr>
+            <tr>
+              <td>データを地域外に出せない</td>
+              <td>保存・検索・推論を域内で完結</td>
+              <td>経路全体が境界に入る</td>
+            </tr>
+            <tr>
+              <td>部門横断で設計品質を比べる</td>
+              <td>WA Tool の GenAI Lens</td>
+              <td>レビュー観点が揃う</td>
+            </tr>
+            <tr>
+              <td>承認済みの構成を配りたい</td>
+              <td>Service Catalog / IaC</td>
+              <td>実装の型を配れる</td>
+            </tr>
+            <tr>
+              <td>応答品質が読めない、まず試す</td>
+              <td>Bedrock で小さく検証する</td>
+              <td>実現性と性能を先に測る</td>
+            </tr>
+            <tr>
+              <td>標準からの逸脱を止めたい</td>
+              <td>CI/CD の CloudFormation Guard</td>
+              <td>機械で検査できる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li>Amazon Q Business は IAM Identity Center と連携し、データソース側のアクセス制御に従って回答を絞る。誰が聞いたかで答えが変わる仕組みが最初から入っている。</li>
+        <li>AWS Well-Architected Tool の <strong>Generative AI Lens はレビューの観点</strong>、<strong>Service Catalog や IaC テンプレートは実装の型</strong>。役割が違うので、両方を求める問題では片方だけの選択肢は落ちる。</li>
+        <li>CloudFormation Guard は CI/CD に組み込んでテンプレートを検査する。中央リポジトリで管理し、パイプラインで強制するのが定番の組み合わせ。</li>
+        <li>データレジデンシーの要件では、S3・ナレッジベース・ベクトルストア・モデル呼び出しの4つすべてが同じ境界に入っているかを見る。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 250" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="データレジデンシーの考え方。保存・検索・推論のすべてが境界内にあれば成立し、どれか一つでも境界外に出ると成立しない">
+          <rect width="400" height="250" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="10" y="26" width="256" height="76" rx="8" fill="none" stroke="#4299e1" stroke-width="2" stroke-dasharray="6 4"/>
+            <text x="14" y="20" font-size="17" fill="#4299e1">地域の境界</text>
+            <rect x="22" y="42" width="72" height="44" rx="6" fill="#4299e1"/>
+            <text x="58" y="70" text-anchor="middle" font-size="17" fill="#ffffff">S3</text>
+            <rect x="102" y="42" width="72" height="44" rx="6" fill="#4299e1"/>
+            <text x="138" y="70" text-anchor="middle" font-size="17" fill="#ffffff">検索</text>
+            <rect x="182" y="42" width="72" height="44" rx="6" fill="#4299e1"/>
+            <text x="218" y="70" text-anchor="middle" font-size="17" fill="#ffffff">推論</text>
+            <text x="278" y="70" font-size="18" fill="#2d3748">成立</text>
+
+            <rect x="10" y="158" width="176" height="76" rx="8" fill="none" stroke="#4299e1" stroke-width="2" stroke-dasharray="6 4"/>
+            <text x="14" y="152" font-size="17" fill="#4299e1">地域の境界</text>
+            <rect x="22" y="174" width="72" height="44" rx="6" fill="#4299e1"/>
+            <text x="58" y="202" text-anchor="middle" font-size="17" fill="#ffffff">S3</text>
+            <rect x="102" y="174" width="72" height="44" rx="6" fill="#4299e1"/>
+            <text x="138" y="202" text-anchor="middle" font-size="17" fill="#ffffff">検索</text>
+            <rect x="206" y="174" width="72" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="242" y="202" text-anchor="middle" font-size="17" fill="#2d3748">推論</text>
+            <text x="298" y="202" font-size="18" fill="#e53e3e">不成立</text>
+          </g>
+        </svg>
+        <figcaption>経路のどれか一つが外に出れば、他がいくら域内でも要件は満たせない。</figcaption>
+      </figure>
+      <p>試験では「短期間で」「既存のコネクタで」が Q Business の合図、「独自の」「細かく制御する」が自前構築の合図です。データレジデンシーが絡む問題では、選択肢のうち経路を一つでも域外に置いているものから消していくと速く絞れます。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-05</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain1.html">AIP-C01 試験ガイド Content Domain 1</a></li>
+        <li><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html">AWS Well-Architected Generative AI Lens</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.3 エンタープライズ統合アーキテクチャ — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="2.3">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>2.3 エンタープライズ統合アーキテクチャ</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">既存の社内システムに GenAI を差し込む話です。鍵は、誰が何を見てよいかを自前で作り直さず、既存の ID 基盤とアクセス制御に委ねることです。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="既存システムと接する3つの面。ID と権限、環境の昇格、イベント連携。いずれも既存の仕組みに乗せる">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">ID と権限</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">既存の ID 基盤に委ねる</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">誰が聞いたかで答えが変わる</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">環境の昇格</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">設定を外に出して1本化</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">自動テストと切り戻し</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">イベント連携</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">状態変化を受け取る</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">ポーリングを減らす</text>
+          </g>
+        </svg>
+        <figcaption>3つとも、新しく作るのではなく既存の仕組みに接続するのが基本方針。</figcaption>
+      </figure>
+
+      <p>会社に新しい部署を置くのに似ています。入館証は既存のものを流用し、稟議は既存のルートに乗せ、連絡は社内便を使う。全部を新設すると、部署は動いても会社が回らなくなります。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>権限を GenAI 側で作り直す。</strong> 部門ごとに見える文書を変えたいとき、アプリの中に独自のアクセス制御を書きたくなります。しかし正解は、IAM Identity Center のグループとデータソース側のアクセス制御に委ねることです。二重管理はいずれ食い違います。</p>
+      <p><strong>IAM のアクション名を API 名から推測する。</strong> 非同期の動画生成を始める API は <code>StartAsyncInvoke</code> ですが、同名の IAM アクションはありません。必要なのはモデル呼び出しの権限です。API 名とアクション名が一致するとは限りません。</p>
+      <p><strong>環境ごとにコードやパイプラインを増やす。</strong> 開発と本番で違うモデルを試したいだけなら、アプリケーションは1本のまま、モデル ID を環境別の設定として外に出せば済みます。分岐を構造に持ち込むと、以後ずっと二重に保守することになります。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>部門ごとに見える範囲が違う</td>
+              <td>Identity Center のグループ</td>
+              <td>既存の ID 基盤に委ねる</td>
+            </tr>
+            <tr>
+              <td>外部 ISV に一部だけ渡す</td>
+              <td>Q Business の data accessor</td>
+              <td>範囲を顧客側で決める</td>
+            </tr>
+            <tr>
+              <td>環境ごとに違うモデルを試す</td>
+              <td>CDK と設定の外部化</td>
+              <td>パイプラインは1本で済む</td>
+            </tr>
+            <tr>
+              <td>昇格に自動テストと切り戻し</td>
+              <td>CodePipeline と CodeBuild</td>
+              <td>canary で戻せる</td>
+            </tr>
+            <tr>
+              <td>ジョブ状態を知りたい</td>
+              <td>EventBridge の状態イベント</td>
+              <td>ポーリングを減らせる</td>
+            </tr>
+            <tr>
+              <td>フローの実行権限を絞る</td>
+              <td>Flow の service role</td>
+              <td>実行主体はロール側</td>
+            </tr>
+            <tr>
+              <td>エージェントの認証を既存 IdP に</td>
+              <td>AgentCore Identity</td>
+              <td>入口と出口をまとめる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>API 名と IAM アクション名は別物。</strong> <code>StartAsyncInvoke</code> で非同期ジョブを始める場合でも、IAM で要るのは <code>bedrock:InvokeModel</code>。同名のアクションを探しても見つからない。</li>
+        <li><strong>Prompt Flows の実行主体は Flow に紐づけた service role。</strong> 開発者個人の IAM 権限では、Lambda ノードやナレッジベースノードが参照するリソースにアクセスできない。ロール側へ最小権限を付ける。</li>
+        <li>Amazon Q Business は IAM Identity Center と連携し、データソース側のアクセス制御に従って回答を絞る。外部 ISV へ渡す範囲は data accessor で顧客が決める。</li>
+        <li>Bedrock のバッチ推論ジョブは、開始・完了・失敗・停止といった状態変化を EventBridge のイベントとして受け取れる。<code>GetModelInvocationJob</code> のポーリングだけに頼らない。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 268" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="実行時の主体の違い。開発者の IAM 権限で動くのではなく、フローに紐づけたサービスロールが各ノードのリソースへアクセスする">
+          <rect width="400" height="268" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">よくある誤解</text>
+            <rect x="14" y="40" width="150" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="89" y="68" text-anchor="middle" font-size="17" fill="#2d3748">開発者の権限</text>
+            <path d="M170,62 H214 M206,56 L216,62 L206,68" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="222" y="40" width="164" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="304" y="68" text-anchor="middle" font-size="17" fill="#2d3748">各ノードの資源</text>
+            <text x="14" y="110" font-size="17" fill="#e53e3e">実行時には使われない</text>
+
+            <text x="14" y="164" font-size="18" fill="#2d3748">実際の経路</text>
+            <rect x="14" y="178" width="150" height="44" rx="6" fill="#4299e1"/>
+            <text x="89" y="206" text-anchor="middle" font-size="17" fill="#ffffff">service role</text>
+            <path d="M170,200 H214 M206,194 L216,200 L206,206" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="222" y="178" width="164" height="44" rx="6" fill="#4299e1"/>
+            <text x="304" y="206" text-anchor="middle" font-size="17" fill="#ffffff">各ノードの資源</text>
+            <text x="14" y="248" font-size="17" fill="#4a5568">最小権限はこちらに付ける</text>
+          </g>
+        </svg>
+        <figcaption>権限の話が出たら「実行時に誰として動くのか」を先に確かめる。</figcaption>
+      </figure>
+      <p>試験では「開発者には権限があるのに実行時に失敗する」という筋書きが出ます。答えはたいてい、実行主体であるサービスロールに権限が足りていない、です。同じ考え方が Knowledge Base の取り込みロールやエージェントのロールにも当てはまります。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain2.html">AIP-C01 試験ガイド Content Domain 2</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/batch-inference.html">Amazon Bedrock User Guide — Process multiple prompts with batch inference</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

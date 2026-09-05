@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.3 監視・オブザーバビリティ — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="4.3">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>4.3 監視・オブザーバビリティ</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">動いているかではなく、期待どおりかを見ます。GenAI では CPU やエラー率より、トークン・応答品質・推論経路のほうが効きます。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="監視の3層。インフラ層は動いているか、呼び出し層は何を送って何が返ったか、品質層は答えが妥当かを見る">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#cbd5e0"/>
+            <text x="24" y="34" font-size="21" fill="#4a5568">インフラ層</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">動いているか</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">これだけでは足りない</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">呼び出し層</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">何を送り、何が返ったか</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">トークン・経路・ツール</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">品質層</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">答えが妥当か</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">接地性・業務指標</text>
+          </g>
+        </svg>
+        <figcaption>青い2層が GenAI 固有。インフラが正常でもハルシネーションは起きる。</figcaption>
+      </figure>
+
+      <p>健康診断に似ています。体温だけ見ても分かることは限られます。血液検査で数値を取り（呼び出しログ）、問診で自覚症状を聞く（品質評価）。3つ揃って初めて、どこが悪いのかに近づけます。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>インフラ監視で足りると思ってしまう。</strong> CPU もエラー率も正常なのに、回答が事実と違う、という状況が普通に起きます。GenAI では応答の中身を見る層を別に用意しないと、劣化に気づけません。</p>
+      <p><strong>平均値のダッシュボードで遅延を追う。</strong> 特定の顧客セッションだけが遅いとき、その 1 本は平均に埋もれます。サービス境界をまたいで 1 リクエストを追うには分散トレーシングが要ります。</p>
+      <p><strong>有効化を忘れる。</strong> モデル呼び出しログもエージェントのトレースも、既定では取られていません。「後から調べる」と言われた時点で、先に有効化しておく必要があります。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>何を送り何が返ったか見たい</td>
+              <td>モデル呼び出しログ</td>
+              <td>中身がログに残る</td>
+            </tr>
+            <tr>
+              <td>遅い 1 セッションを追う</td>
+              <td>X-Ray の分散トレーシング</td>
+              <td>平均では見えない</td>
+            </tr>
+            <tr>
+              <td>エージェントの推論経路</td>
+              <td>InvokeAgent のトレース</td>
+              <td>標準機能で追える</td>
+            </tr>
+            <tr>
+              <td>トークン急増の原因を特定</td>
+              <td>呼び出しログと requestMetadata</td>
+              <td>アプリ別に切り分けられる</td>
+            </tr>
+            <tr>
+              <td>いつもと違う動きを捕まえる</td>
+              <td>CloudWatch 異常検出</td>
+              <td>しきい値を決めずに済む</td>
+            </tr>
+            <tr>
+              <td>キャッシュが効いているか</td>
+              <td>キャッシュのトークン指標</td>
+              <td>体感でなく数字で見る</td>
+            </tr>
+            <tr>
+              <td>技術指標と業務指標を並べる</td>
+              <td>複合アラームと統合ダッシュボード</td>
+              <td>相関した劣化を捕まえる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>Bedrock のモデル呼び出しログは既定で無効。</strong> 有効にして CloudWatch Logs か S3 へ配信する。<code>requestMetadata</code> にアプリ名やリリース版を入れておくと、後からリクエスト単位で切り分けられる。</li>
+        <li>エージェントの推論経路は <code>InvokeAgent</code> で <code>enableTrace=true</code> を指定すると応答に含まれる。外形監視では代替できない。</li>
+        <li><strong>AgentCore では閲覧側と送信側の両方が要る。</strong> CloudWatch Transaction Search を有効にするだけでは見えず、ADOT などでエージェントのコードを計装して trace と span を出す必要がある。</li>
+        <li>プロンプトキャッシュが効いているかは <code>CacheReadInputTokens</code> と <code>CacheWriteInputTokens</code> で見る。読み取り側が伸びていれば再利用されている。</li>
+        <li>ナレッジベースの取り込みログは <code>APPLICATION_LOGS</code>。ジョブ全体だけでなく<strong>文書ごとの状態</strong>も記録される。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 258" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="集計と個別追跡の違い。ダッシュボードの平均では遅い1件が埋もれるが、分散トレーシングは1リクエストを最初から最後まで追える">
+          <rect width="400" height="258" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">集計 — 全体の傾向</text>
+            <line x1="14" y1="104" x2="386" y2="104" stroke="#4a5568" stroke-width="1.5"/>
+            <rect x="30" y="80" width="46" height="24" fill="#4299e1"/>
+            <rect x="90" y="74" width="46" height="30" fill="#4299e1"/>
+            <rect x="150" y="84" width="46" height="20" fill="#4299e1"/>
+            <rect x="210" y="76" width="46" height="28" fill="#4299e1"/>
+            <rect x="270" y="46" width="46" height="58" fill="#cbd5e0"/>
+            <rect x="330" y="82" width="46" height="22" fill="#4299e1"/>
+            <text x="14" y="132" font-size="17" fill="#4a5568">遅い 1 件は平均に埋もれる</text>
+
+            <text x="14" y="180" font-size="18" fill="#2d3748">追跡 — 1 本の経路</text>
+            <rect x="14" y="194" width="80" height="26" rx="4" fill="#4299e1"/>
+            <rect x="98" y="194" width="60" height="26" rx="4" fill="#4299e1"/>
+            <rect x="162" y="194" width="140" height="26" rx="4" fill="#e53e3e"/>
+            <rect x="306" y="194" width="80" height="26" rx="4" fill="#4299e1"/>
+            <text x="14" y="246" font-size="17" fill="#4a5568">どの区間で詰まったか分かる</text>
+          </g>
+        </svg>
+        <figcaption>「特定の利用者だけ遅い」と書かれていたら、集計ではなく追跡を選ぶ。</figcaption>
+      </figure>
+      <p>問題文が「全体の傾向」「使用量の可視化」と言っていれば Logs Insights とメトリクス、「特定のセッション」「どこで時間を使っているか」と言っていれば X-Ray です。エージェントの内部まで追う話なら、さらにトレースの有効化が要ります。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain4.html">AIP-C01 試験ガイド Content Domain 4</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-managed-observability.html">Amazon Bedrock User Guide — Observability for managed knowledge bases</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-bases-logging.html">Amazon Bedrock User Guide — Monitor knowledge bases using CloudWatch Logs</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

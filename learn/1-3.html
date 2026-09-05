@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.3 基盤モデル入力向けのデータ検証・処理パイプライン — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="1.3">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>1.3 データ検証・処理パイプライン</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">モデルに渡す前の工程を扱います。ここでの取りこぼしや汚れは、後段の検索でも生成でも取り返せません。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 348" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="前処理パイプラインの4段。媒体ごとの抽出、品質の検証、共通スキーマへの整形、ベクトルストアへの投入という順に進む">
+          <rect width="400" height="348" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="40" font-size="19" fill="#4a5568">媒体ごとに文字を取り出す</text>
+
+            <path d="M200,60 V76 M194,70 L200,78 L206,70" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="82" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="116" font-size="19" fill="#2d3748">品質を検証する</text>
+
+            <path d="M200,136 V152 M194,146 L200,154 L206,146" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="158" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="192" font-size="19" fill="#2d3748">共通スキーマへ整える</text>
+
+            <path d="M200,212 V228 M194,222 L200,230 L206,222" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="234" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="268" font-size="19" fill="#4a5568">埋め込んで投入する</text>
+
+            <path d="M200,288 V304 M194,298 L200,306 L206,298" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="310" width="388" height="34" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="334" font-size="17" fill="#4a5568">ここから先は 1.5 の領域</text>
+          </g>
+        </svg>
+        <figcaption>青い2段がこのタスクの中心。検証は埋め込みより前に置く。</figcaption>
+      </figure>
+
+      <p>料理の下ごしらえです。魚は骨を抜き、乾物は戻し、野菜は皮をむく。素材が違えば下処理も違いますが、済ませたあとは同じまな板の上で扱えるように揃えます。ここを飛ばすと、どれだけ腕のいい料理人でも仕上がりません。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>生のデータをそのままモデルへ渡す。</strong> スキャンされた PDF も、通話録音も、点検写真も、まずテキストと構造化データにしてからでないと扱えません。媒体に合った抽出サービスを選ぶところが最初の分岐です。</p>
+      <p><strong>品質の検証を埋め込みの後ろに置く。</strong> 契約番号の欠落や日付形式の乱れは、ベクトル化されてしまえば索引の中に残り続けます。品質ゲートは埋め込みの前に置き、通らなかったレコードは隔離します。</p>
+      <p><strong>媒体ごとにバラバラのスキーマで保存する。</strong> PDF から取った結果と音声から取った結果を別々の形で持つと、横断した検索も引用もできません。抽出後に共通の text と metadata へ正規化してから取り込みます。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>スキャン PDF から文字を取る</td>
+              <td>Amazon Textract</td>
+              <td>表や帳票の構造ごと読む</td>
+            </tr>
+            <tr>
+              <td>通話録音から文字を取る</td>
+              <td>Amazon Transcribe</td>
+              <td>音声に合う抽出を使う</td>
+            </tr>
+            <tr>
+              <td>画像・音声・動画をまとめて</td>
+              <td>Bedrock Data Automation</td>
+              <td>マネージドに寄せられる</td>
+            </tr>
+            <tr>
+              <td>埋め込み前に品質を守る</td>
+              <td>Glue Data Quality</td>
+              <td>失敗レコードを隔離できる</td>
+            </tr>
+            <tr>
+              <td>数十 GB を時間内に処理</td>
+              <td>Step Functions と分散処理</td>
+              <td>単一の関数では届かない</td>
+            </tr>
+            <tr>
+              <td>PII を落としてから投入</td>
+              <td>Comprehend や Guardrails</td>
+              <td>索引に載る前に消す</td>
+            </tr>
+            <tr>
+              <td>S3 への到着で動かしたい</td>
+              <td>EventBridge から起動</td>
+              <td>ポーリングが要らない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>品質ゲートは埋め込みの前。</strong> 後ろに置くと、汚れたデータから作ったベクトルが索引に残る。Glue Data Quality で検証し、通らなかったレコードは隔離して、品質指標を CloudWatch で追う。</li>
+        <li>媒体が違っても、抽出したあとは <strong>共通スキーマ（text と metadata）に正規化してから</strong> Knowledge Base に取り込む。引用と検索を横断させるための前提。</li>
+        <li>Bedrock Data Automation のジョブ状態は EventBridge のイベントで受け取れる。ポーリングは不要。</li>
+        <li>個別サービスとまとめ役の使い分け。媒体ごとに細かく制御したいなら Textract や Transcribe、多様な媒体をまとめて任せたいなら Bedrock Data Automation。</li>
+      </ul>
+      <p>大量データを時間内に処理する条件が出たら、単一の Lambda で回す選択肢は落ちます。Step Functions で分散処理を束ね、PII 除去と埋め込み生成まで一続きにする組み立てが基本形です。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 258" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="品質ゲートを置く位置の違い。埋め込みの前に置けば汚れたデータを弾けるが、後ろに置くと索引に残ってしまう">
+          <rect width="400" height="258" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">前に置く — 弾ける</text>
+            <rect x="14" y="40" width="104" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="66" y="66" text-anchor="middle" font-size="17" fill="#2d3748">抽出</text>
+            <rect x="128" y="40" width="104" height="40" rx="6" fill="#4299e1"/>
+            <text x="180" y="66" text-anchor="middle" font-size="17" fill="#ffffff">検証</text>
+            <rect x="242" y="40" width="144" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="314" y="66" text-anchor="middle" font-size="17" fill="#2d3748">埋め込み</text>
+            <text x="14" y="106" font-size="17" fill="#4a5568">不良は隔離され、索引は汚れない</text>
+
+            <text x="14" y="158" font-size="18" fill="#2d3748">後ろに置く — 手遅れ</text>
+            <rect x="14" y="172" width="104" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="66" y="198" text-anchor="middle" font-size="17" fill="#2d3748">抽出</text>
+            <rect x="128" y="172" width="144" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="200" y="198" text-anchor="middle" font-size="17" fill="#2d3748">埋め込み</text>
+            <rect x="282" y="172" width="104" height="40" rx="6" fill="#4299e1"/>
+            <text x="334" y="198" text-anchor="middle" font-size="17" fill="#ffffff">検証</text>
+            <text x="14" y="238" font-size="17" fill="#e53e3e">汚れたベクトルが索引に残る</text>
+          </g>
+        </svg>
+        <figcaption>同じ検証でも、置く場所で効き目がまるで変わる。</figcaption>
+      </figure>
+      <p>問題文に「検索品質が安定しない」「取り込んだデータに欠落がある」が出たら、前処理の順序を疑います。選択肢のうち、検証を埋め込みの後ろに置いているものは落とせます。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain1.html">AIP-C01 試験ガイド Content Domain 1</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-setup.html">Amazon Bedrock User Guide — Prerequisites for using a vector store you created</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

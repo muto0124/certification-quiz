@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.2 GenAI アプリのトラブルシューティング — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="5.2">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>5.2 トラブルシューティング</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">症状から原因の層をたどる技術です。取り込み、検索、プロンプト、生成のどこで壊れているのかを切り分けます。1.5 が設計なら、こちらは故障の診断です。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 348" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="切り分けの4層。取り込み、検索、プロンプト、生成の順に上流から確かめると原因にたどり着く">
+          <rect width="400" height="348" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="36" font-size="19" fill="#2d3748">取り込みは終わったか</text>
+            <text x="24" y="64" font-size="17" fill="#4a5568">文書ごとの状態を見る</text>
+
+            <path d="M200,82 V98 M194,92 L200,100 L206,92" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="104" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="134" font-size="19" fill="#2d3748">検索は当たっているか</text>
+            <text x="24" y="162" font-size="17" fill="#4a5568">Retrieve 単独で試す</text>
+
+            <path d="M200,180 V196 M194,190 L200,198 L206,190" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="202" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="232" font-size="19" fill="#2d3748">プロンプトは渡ったか</text>
+            <text x="24" y="260" font-size="17" fill="#4a5568">テンプレートの指定を見る</text>
+
+            <path d="M200,278 V294 M194,288 L200,296 L206,288" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="300" width="388" height="44" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="330" font-size="19" fill="#2d3748">ここまで来て初めて生成を疑う</text>
+          </g>
+        </svg>
+        <figcaption>上流から順に潰す。モデルを替えるのはいちばん最後。</figcaption>
+      </figure>
+
+      <p>蛇口から水が出ないとき、いきなり蛇口を交換する人はいません。元栓は開いているか、配管は詰まっていないか、そもそも断水していないか。上流から順に見ていくほうが、結局は早く直ります。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>まずモデルを替えようとする。</strong> 回答が的外れなとき、原因の多くは生成より上流にあります。層を切り分けずに一番下流から手を付けると、時間だけが過ぎます。</p>
+      <p><strong>ジョブ全体が完了なら成功だと思う。</strong> 取り込みジョブのステータスが完了でも、個別の文書は失敗していることがあります。「一部の文書だけ検索に出てこない」はこの典型です。</p>
+      <p><strong>検索は当たっているのに検索側を疑い続ける。</strong> 単体で試すと妥当なチャンクが返るのに、生成された回答は一般論に寄る。この場合の原因は、取得結果が生成プロンプトに注入されていないことです。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>症状</th><th>疑うところ</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>一部の文書だけ出てこない</td>
+              <td>取り込みの文書単位のログ</td>
+              <td>ジョブ完了でも個別は失敗する</td>
+            </tr>
+            <tr>
+              <td>大規模同期のときだけ失敗</td>
+              <td>ベクトルストアの取り込み能力</td>
+              <td>少量では出ない負荷の問題</td>
+            </tr>
+            <tr>
+              <td>同期が一向に進まない</td>
+              <td>ベクトルインデックスのエンジン</td>
+              <td>前提が合っていない</td>
+            </tr>
+            <tr>
+              <td>引用の脚注が消えた</td>
+              <td>出力形式の指定</td>
+              <td>プレースホルダーの削除</td>
+            </tr>
+            <tr>
+              <td>検索は妥当だが回答が一般論</td>
+              <td>検索結果のプレースホルダー</td>
+              <td>取得結果が渡っていない</td>
+            </tr>
+            <tr>
+              <td>返却件数が要求より少ない</td>
+              <td>親子チャンクの集約</td>
+              <td>子ヒットが親に置き換わる</td>
+            </tr>
+            <tr>
+              <td>長文で後半が落ちる</td>
+              <td>コンテキスト上限</td>
+              <td>段階要約に分ける</td>
+            </tr>
+            <tr>
+              <td>複雑な入力だけ品質が崩れる</td>
+              <td>プロンプトの版比較</td>
+              <td>同じ条件で差分を見る</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>取り込みジョブが完了でも、文書単位では失敗しうる。</strong> <code>APPLICATION_LOGS</code> を CloudWatch Logs へ配信すると、ジョブの状態に加えて<strong>処理された文書ごとの状態</strong>が記録される。リソース単位のログには文書の場所、状態、<code>status_reasons</code> が入る。</li>
+        <li>Knowledge Bases で使う OpenSearch Serverless のベクトルインデックスは、公式手順でエンジンに <strong>faiss</strong> を選ぶよう指定されている。別のエンジンで作った既存インデックスをそのまま使おうとすると同期が進まない。</li>
+        <li>生成プロンプトから <code>$search_results$</code> を消すと、取得したチャンクがモデルへ渡らない。検索は正常でも回答が一般論になる。</li>
+        <li><code>$output_format_instructions$</code> を消すと、脚注形式の引用が出なくなる。</li>
+        <li>階層的チャンキングでは、子チャンクのヒットが親チャンクに置き換わる。検索要求の件数と最終的な返却件数は一致しないことがある。設定不備とは限らない。</li>
+      </ul>
+      <p>取り込みの調査ログを配信するには、対象のナレッジベースに対する <code>bedrock:AllowVendedLogDeliveryForResource</code> の権限が要ります。障害が起きてから慌てないよう、先に有効にしておく類のものです。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 258" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="検索で止まっているのか生成で崩れているのかの切り分け。Retrieve を単独で呼んで妥当なチャンクが返るかどうかで判断する">
+          <rect width="400" height="258" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">Retrieve 単独で試す</text>
+
+            <rect x="14" y="46" width="176" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="102" y="76" text-anchor="middle" font-size="17" fill="#2d3748">妥当でない</text>
+            <text x="102" y="104" text-anchor="middle" font-size="17" fill="#4a5568">検索側の問題</text>
+
+            <rect x="210" y="46" width="176" height="76" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="298" y="76" text-anchor="middle" font-size="17" fill="#2d3748">妥当</text>
+            <text x="298" y="104" text-anchor="middle" font-size="17" fill="#4a5568">生成側の問題</text>
+
+            <text x="14" y="158" font-size="17" fill="#4a5568">検索側: チャンキング、埋め込み、</text>
+            <text x="14" y="184" font-size="17" fill="#4a5568">フィルター、インデックスの前提</text>
+            <text x="14" y="216" font-size="17" fill="#4a5568">生成側: プロンプトテンプレート、</text>
+            <text x="14" y="242" font-size="17" fill="#4a5568">出力形式の指定、推論パラメータ</text>
+          </g>
+        </svg>
+        <figcaption>この一手で、調べる範囲が半分になる。</figcaption>
+      </figure>
+      <p>問題文が症状だけを述べているときは、どの層まで正常だったかを読み取ります。「関連チャンクは返っている」「ジョブは完了している」といった記述は、そこまでは正常だという意味で、原因はその下流にあります。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain5.html">AIP-C01 試験ガイド Content Domain 5</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/kb-managed-observability.html">Amazon Bedrock User Guide — Observability for managed knowledge bases</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-bases-logging.html">Amazon Bedrock User Guide — Monitor knowledge bases using CloudWatch Logs</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-setup.html">Amazon Bedrock User Guide — Prerequisites for using a vector store you created</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

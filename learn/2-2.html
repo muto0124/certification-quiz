@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.2 モデルのデプロイ戦略 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="2.2">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>2.2 モデルのデプロイ戦略</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">同じモデルでも、呼び出し方をどれにするかで、料金の形と「混んでいるときに使えるか」が変わります。それを選び分けるのがデプロイ戦略です。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="基盤モデルを呼び出す3つの経路。オンデマンド、プロビジョンドスループット、SageMaker AI エンドポイントを、課金と容量と注意点で比較した図">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">オンデマンド</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">使った分だけ課金・容量の保証なし</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">混雑時はスロットリングされる</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">プロビジョンド</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">時間あたり固定・買った分を確保</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">バッチ推論には使えない</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">SageMaker</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">インスタンス時間で課金</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">容量も運用も自分持ち</text>
+          </g>
+        </svg>
+        <figcaption>同じモデルでも、呼び出し方によって課金の形と容量の保証が変わる。</figcaption>
+      </figure>
+
+      <p>タクシーで考えると分かりやすくなります。オンデマンドは流しのタクシーで、乗った分だけ払えばよい代わりに、雨の日は捕まりません。プロビジョンドスループットは専用車の月極契約で、毎月同じ額を払うかわりに、いつでも必ず乗れます。SageMaker AI エンドポイントは車を自分で買うようなもので、好きに改造できますが車検も洗車も自分の仕事です。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>「プロビジョンドにすると速くなる」と思ってしまう。</strong> 買っているのは容量であって速度ではありません。1 回の応答が速くなるわけではなく、混雑時にスロットリングされずに済む、という保証を買っています。レイテンシを縮めたいなら、モデルを小さくする、プロンプトを短くする、ストリーミングで返し始める、といった別の手を打つことになります。</p>
+      <p><strong>容量を買ったのに使えていない。</strong> プロビジョンドスループットを購入しても、コード側の <code>modelId</code> が基盤モデル ID のままなら、リクエストは従量課金の経路に流れます。買った容量を使うには <code>modelId</code> をプロビジョンドモデルの ARN に差し替える必要があります。</p>
+      <p><strong>プロビジョンドなら何でもできると思ってしまう。</strong> 容量を確保すると制約がなくなる気がしますが、逆に使えなくなる機能があります。代表がバッチ推論です。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>トラフィックが読めない、試作段階</td>
+              <td>オンデマンド（基盤モデル ID か推論プロファイル）</td>
+              <td>事前契約が要らず、使った分だけの課金で済む</td>
+            </tr>
+            <tr>
+              <td>一定量の負荷が常時ある、スロットリングを避けたい</td>
+              <td>プロビジョンドスループット</td>
+              <td>モデルユニットを購入して容量を確保できる</td>
+            </tr>
+            <tr>
+              <td>ファインチューニング済みモデルを本番で使う（Amazon Nova 以外）</td>
+              <td>プロビジョンドスループット</td>
+              <td>専用の Provisioned Model ARN を作らないと呼び出せない</td>
+            </tr>
+            <tr>
+              <td>夜間に大量処理、応答は即時でなくてよい</td>
+              <td>バッチ推論（オンデマンド）</td>
+              <td>S3 の入出力で非同期に処理できる。プロビジョンドとは併用できない</td>
+            </tr>
+            <tr>
+              <td>独自コンテナ、GPU、自前モデルが必要</td>
+              <td>SageMaker AI エンドポイント</td>
+              <td>Bedrock の枠外。自由度と引き換えに運用を持つ</td>
+            </tr>
+            <tr>
+              <td>単純な問い合わせが大半を占める</td>
+              <td>小型モデルとモデルカスケード</td>
+              <td>定型は安いモデルで受け、難しいものだけ大型モデルへ回す</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><code>InvokeModel</code> の <code>modelId</code> に何を渡すかは呼び出し方で変わる。基盤モデルはモデル ID か ARN、推論プロファイルは ID か ARN、<strong>プロビジョンドモデルは Provisioned Throughput の ARN</strong>、インポートしたモデルはインポートモデルの ARN。</li>
+        <li><strong>バッチ推論はプロビジョンドモデルに対応していない。</strong> 容量を買っている状態でバッチを流そうとしても使えない。</li>
+        <li>バッチ推論は tool calling（function calling）と structured output（<code>response_format</code>）にも対応していない。入力ファイルの各行は独立して処理され、多段のやり取りができないため。</li>
+        <li>ファインチューニング済みモデル（Amazon Nova 以外）は Provisioned Throughput を購入して Provisioned Model ARN を作る必要がある。元のモデル ARN を渡すと <code>ValidationException</code> になる。</li>
+        <li>購入したプロビジョンドモデルは <code>InService</code> になってから呼び出す。状態は <code>GetProvisionedModelThroughput</code> で確認できる。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 330" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="同じ負荷に対するオンデマンドとプロビジョンドスループットの違い。オンデマンドは使った分だけ課金されるが混雑時に待たされ、プロビジョンドは買った容量ぶん常に課金され超過分は流せない">
+          <rect width="400" height="330" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="24" font-size="18" fill="#2d3748">オンデマンド：使った分だけ課金</text>
+            <text x="200" y="48" text-anchor="middle" font-size="16" fill="#e53e3e">混雑時は待たされる</text>
+            <line x1="14" y1="150" x2="386" y2="150" stroke="#4a5568" stroke-width="1.5"/>
+            <rect x="30" y="110" width="50" height="40" fill="#4299e1"/>
+            <rect x="98" y="95" width="50" height="55" fill="#4299e1"/>
+            <rect x="166" y="124" width="50" height="26" fill="#4299e1"/>
+            <rect x="234" y="60" width="50" height="90" fill="#4299e1"/>
+            <rect x="302" y="98" width="50" height="52" fill="#4299e1"/>
+
+            <text x="14" y="196" font-size="18" fill="#2d3748">プロビジョンド：買った容量ぶん課金</text>
+            <line x1="14" y1="310" x2="386" y2="310" stroke="#4a5568" stroke-width="1.5"/>
+            <rect x="30" y="270" width="50" height="40" fill="#4299e1"/>
+            <rect x="98" y="255" width="50" height="55" fill="#4299e1"/>
+            <rect x="166" y="284" width="50" height="26" fill="#4299e1"/>
+            <rect x="234" y="250" width="50" height="60" fill="#4299e1"/>
+            <rect x="234" y="220" width="50" height="30" fill="#cbd5e0"/>
+            <rect x="302" y="258" width="50" height="52" fill="#4299e1"/>
+            <line x1="14" y1="250" x2="386" y2="250" stroke="#e53e3e" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <text x="228" y="240" text-anchor="end" font-size="16" fill="#4a5568">超過分</text>
+            <text x="386" y="242" text-anchor="end" font-size="16" fill="#e53e3e">買った容量</text>
+          </g>
+        </svg>
+        <figcaption>負荷は同じでも、課金の形と上限の扱いが違う。オンデマンドは山なりに課金され、プロビジョンドは谷でも同じ額を払う。</figcaption>
+      </figure>
+      <p>試験では「予測可能な定常負荷」「スロットリングを避けたい」がプロビジョンドの合図で、「変動が大きい」「試験的に始める」がオンデマンドの合図になります。両方が必要なときは、平常時をプロビジョンドで支え、あふれた分をクロスリージョン推論のオンデマンドへ逃がす構成が定番です。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-05</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain2.html">AIP-C01 試験ガイド Content Domain 2</a></li>
+        <li><a href="https://docs.aws.amazon.com/cli/latest/reference/bedrock-runtime/invoke-model.html">AWS CLI Reference — bedrock-runtime invoke-model（<code>modelId</code> に何を渡すか）</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/batch-inference.html">Amazon Bedrock User Guide — Process multiple prompts with batch inference</a></li>
+        <li><a href="https://repost.aws/knowledge-center/bedrock-fine-tuning-errors">AWS re:Post — How do I resolve errors when I fine-tune models on Amazon Bedrock?</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

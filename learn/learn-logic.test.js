@@ -66,4 +66,43 @@ const big = {
 };
 assert.equal(getTaskStats(big, '1.5').share, 16.4);
 
+// --- 整合テスト: 全ページの data-exam / data-task が実データと一致すること ---
+const learnDir = __dirname;
+const pages = fs.readdirSync(learnDir)
+  .filter(f => f.endsWith('.html') && f !== 'index.html');
+
+assert.ok(pages.length > 0, '学習ページが 1 つも見つかりません');
+
+const examCache = {};
+function loadExam(examId) {
+  if (!examCache[examId]) {
+    const p = path.join(learnDir, '..', 'data', `${examId}.json`);
+    examCache[examId] = JSON.parse(fs.readFileSync(p, 'utf8'));
+  }
+  return examCache[examId];
+}
+
+for (const file of pages) {
+  const html = fs.readFileSync(path.join(learnDir, file), 'utf8');
+  const body = html.match(/<body([^>]*)>/);
+  assert.ok(body, `${file}: <body> タグが見つかりません`);
+
+  const exam = body[1].match(/data-exam="([^"]+)"/);
+  const task = body[1].match(/data-task="([^"]+)"/);
+  assert.ok(exam, `${file}: data-exam がありません`);
+  assert.ok(task, `${file}: data-task がありません`);
+
+  const known = getKnownTaskIds(loadExam(exam[1]));
+  assert.ok(
+    known.includes(task[1]),
+    `${file}: data-task="${task[1]}" は ${exam[1]} に存在しないタスクIDです`
+  );
+
+  // ファイル名とタスクIDが対応していること（1.5 -> 1-5.html）
+  assert.equal(
+    file, task[1].replace('.', '-') + '.html',
+    `${file}: ファイル名が data-task="${task[1]}" と対応していません`
+  );
+}
+
 console.log('learn-logic tests passed');

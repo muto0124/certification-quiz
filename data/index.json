@@ -1,5 +1,5 @@
 {
-  "version": "20260614151813",
+  "version": "20260905160613",
   "exams": [
     {
       "id": "google_network",
@@ -15,6 +15,11 @@
       "id": "AIP",
       "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集",
       "total": 97
+    },
+    {
+      "id": "API2",
+      "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集 255問",
+      "total": 255
     }
   ]
 }

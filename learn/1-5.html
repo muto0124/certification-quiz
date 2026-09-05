@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.5 検索拡張（RAG）の検索機構の設計 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="1.5">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>1.5 検索拡張（RAG）の検索機構の設計</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">RAG の精度は、生成モデルの賢さではなく「モデルに何を渡すか」で決まります。文書をどう切り、どう探し、どう絞るか。その設計がこのタスクです。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 372" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="RAG の処理経路。文書の取り込み、チャンク分割、埋め込みへの変換、ベクトル検索と絞り込み、生成への受け渡しという5段階のうち、分割と検索がこのタスクの中心">
+          <rect width="400" height="372" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="40" font-size="19" fill="#4a5568">文書を取り込む</text>
+
+            <path d="M200,60 V76 M194,70 L200,78 L206,70" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="82" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="116" font-size="19" fill="#2d3748">チャンクに切る</text>
+
+            <path d="M200,136 V152 M194,146 L200,154 L206,146" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="158" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="192" font-size="19" fill="#4a5568">埋め込みに変換する</text>
+
+            <path d="M200,212 V228 M194,222 L200,230 L206,222" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="234" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="268" font-size="19" fill="#2d3748">検索して絞り、並べ替える</text>
+
+            <path d="M200,288 V304 M194,298 L200,306 L206,298" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="310" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="344" font-size="19" fill="#4a5568">文脈だけを生成へ渡す</text>
+          </g>
+        </svg>
+        <figcaption>青く囲った2段がこのタスクの守備範囲。精度が出ないときは、まずここを疑う。</figcaption>
+      </figure>
+
+      <p>図書館で考えてみてください。質問されたときに本を丸ごと差し出す人はいません。必要なページだけを抜いて持ってきます。このとき本をどう切り分けておくか、章ごとか、話題ごとか、何ページかおきかで、持ってきたページが役に立つかどうかが決まります。RAG のチャンキングはこの「切り方」そのものです。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>精度が出ないとき、モデルを大きくしようとしてしまう。</strong> 回答が的外れなとき、原因の多くは生成側ではなく検索側にあります。渡した文脈に答えが入っていなければ、どんなモデルでも当てられません。検索が正しく当たっているかを先に切り分けます。</p>
+      <p><strong>設定値の有効範囲を知らない。</strong> チャンキングのパラメータには決まった範囲があります。範囲外の数値が書かれた選択肢は、内容を読むまでもなく誤りです。ここは知っていれば一瞬で切れる場所です。</p>
+      <p><strong>「意味が近い」で足りると思ってしまう。</strong> 型番、条項番号、承認番号のような記号列は、ベクトルの類似度では取りこぼします。完全一致が要る場面ではキーワード検索を組み合わせます。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>章や節のある長い技術文書</td>
+              <td>階層的チャンキング</td>
+              <td>子で検索し親で文脈を渡す</td>
+            </tr>
+            <tr>
+              <td>区切りが曖昧な文書</td>
+              <td>セマンティックチャンキング</td>
+              <td>文の類似度で境界を決める</td>
+            </tr>
+            <tr>
+              <td>条項単位など独自の切り方</td>
+              <td>チャンキングなし＋Lambda</td>
+              <td>取り込み時に自前で切る</td>
+            </tr>
+            <tr>
+              <td>型番の完全一致も要る</td>
+              <td>ハイブリッド検索</td>
+              <td>ベクトルは記号を取りこぼす</td>
+            </tr>
+            <tr>
+              <td>順位だけが悪い</td>
+              <td>リランカー</td>
+              <td>候補を関連度で並べ替える</td>
+            </tr>
+            <tr>
+              <td>比較や時制を含む複合質問</td>
+              <td>クエリ分解</td>
+              <td>観点ごとに分けて取得する</td>
+            </tr>
+            <tr>
+              <td>国や年度で絞りたい</td>
+              <td>メタデータフィルター</td>
+              <td>検索前に候補を減らす</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <p>ここは範囲を覚えているだけで選択肢を切れます。</p>
+      <ul>
+        <li><strong>セマンティックチャンキング</strong>: <code>breakpointPercentileThreshold</code> は 50〜99、<strong><code>bufferSize</code> は 0〜1</strong>、<code>maxTokens</code> は 1〜8192。バッファは「前後の文を含めて埋め込むか」の指定なので、2 以上は取れない。</li>
+        <li><strong>階層的チャンキング</strong>: レベルは<strong>必ず 2 つ</strong>（親と子）。各レベルの <code>maxTokens</code> は 1〜8192、<code>overlapTokens</code> は 1 以上。</li>
+        <li>階層的チャンキングの推奨値は親 1,500 トークン、子 300 トークン、オーバーラップは子の 20% ほど。親チャンクは埋め込まれないため、埋め込みモデルのコンテキスト長とは独立に決められる。</li>
+        <li><code>chunkingStrategy</code> に指定できるのは <code>FIXED_SIZE</code> / <code>HIERARCHICAL</code> / <code>SEMANTIC</code> / <code>NONE</code> の 4 つ。<code>NONE</code> はファイル 1 つを 1 チャンクとして扱う。</li>
+      </ul>
+      <p>実際、この <code>bufferSize</code> の範囲が正解の分かれ目になった問題があります。「バッファサイズ 3 文」と書かれた選択肢は、内容の良し悪し以前に設定できません。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 292" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="同じ文書を3つの方式で切った場合の違い。固定長は同じ長さで機械的に、セマンティックは話題の切れ目で、階層的は親と子の二層で切る">
+          <rect width="400" height="292" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="24" font-size="18" fill="#2d3748">固定長 ── 同じ長さで機械的に切る</text>
+            <rect x="14" y="36" width="91" height="26" fill="#4299e1"/>
+            <rect x="107" y="36" width="91" height="26" fill="#4299e1"/>
+            <rect x="200" y="36" width="91" height="26" fill="#4299e1"/>
+            <rect x="293" y="36" width="93" height="26" fill="#4299e1"/>
+
+            <text x="14" y="110" font-size="18" fill="#2d3748">セマンティック ── 話題の切れ目で切る</text>
+            <rect x="14" y="122" width="60" height="26" fill="#4299e1"/>
+            <rect x="76" y="122" width="130" height="26" fill="#4299e1"/>
+            <rect x="208" y="122" width="90" height="26" fill="#4299e1"/>
+            <rect x="300" y="122" width="86" height="26" fill="#4299e1"/>
+
+            <text x="14" y="196" font-size="18" fill="#2d3748">階層的 ── 親で文脈、子で検索</text>
+            <rect x="14" y="208" width="182" height="24" fill="#bee3f8"/>
+            <rect x="198" y="208" width="188" height="24" fill="#bee3f8"/>
+            <text x="105" y="226" text-anchor="middle" font-size="17" fill="#2d3748">親</text>
+            <text x="292" y="226" text-anchor="middle" font-size="17" fill="#2d3748">親</text>
+            <rect x="14" y="240" width="58" height="22" fill="#4299e1"/>
+            <rect x="76" y="240" width="58" height="22" fill="#4299e1"/>
+            <rect x="138" y="240" width="58" height="22" fill="#4299e1"/>
+            <rect x="198" y="240" width="60" height="22" fill="#4299e1"/>
+            <rect x="262" y="240" width="60" height="22" fill="#4299e1"/>
+            <rect x="326" y="240" width="60" height="22" fill="#4299e1"/>
+            <text x="14" y="284" font-size="17" fill="#4a5568">子で当てて、親を渡す</text>
+          </g>
+        </svg>
+        <figcaption>同じ文書でも切り方が違えば、検索で当たる単位も、生成に渡る文脈の広さも変わる。</figcaption>
+      </figure>
+      <p>試験では「章・節・手順といった構造がある」「長大な技術文書」が階層的チャンキングの合図、「区切りが明確でない」「話題が移り変わる」がセマンティックチャンキングの合図になります。どちらも技術文書に使えるので、決め手は文書に構造があるかどうかです。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-05</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain1.html">AIP-C01 試験ガイド Content Domain 1</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_ChunkingConfiguration.html">Amazon Bedrock API Reference — ChunkingConfiguration</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_SemanticChunkingConfiguration.html">Amazon Bedrock API Reference — SemanticChunkingConfiguration</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_HierarchicalChunkingConfiguration.html">Amazon Bedrock API Reference — HierarchicalChunkingConfiguration</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_agent_HierarchicalChunkingLevelConfiguration.html">Amazon Bedrock API Reference — HierarchicalChunkingLevelConfiguration</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

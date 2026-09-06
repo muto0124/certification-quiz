@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.4 ベクトルストアの設計と実装 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="1.4">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>1.4 ベクトルストアの設計と実装</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">どこに置くか、どう新しく保つか。探し方を扱う 1.5 の土台にあたる部分です。置き場所を間違えると、あとの検索設計で取り返せません。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="ベクトルストアを選ぶ3つの軸。必要な機能の幅、扱う規模と応答速度、運用にかけられる手間">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">機能の幅</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">意味検索だけで足りるか</text>
+            <text x="24" y="92" font-size="17" fill="#4a5568">絞り込みや厳密一致も要るか</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">規模と速さ</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">件数とレイテンシの要求</text>
+            <text x="24" y="200" font-size="17" fill="#4a5568">ホットパスに置くのか</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">運用の手間</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">既存の資産を活かせるか</text>
+            <text x="24" y="308" font-size="17" fill="#4a5568">鮮度をどう保つか</text>
+          </g>
+        </svg>
+        <figcaption>3つの軸で候補が絞られる。高機能なものが常に正解ではない。</figcaption>
+      </figure>
+
+      <p>書庫を選ぶのに似ています。蔵書が何冊になるのか、著者や年代で棚を分ける必要があるのか、司書を雇うのか自分で並べるのか。当面 100 冊で著者名だけ分かればよいのに、いきなり大学図書館の設備を入れる必要はありません。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>最初から高機能な基盤を選ぶ。</strong> 意味検索だけで始められる段階なら、サーバーレスの軽い構成で足ります。厳密一致や複雑なメタデータ条件が当面要らないなら、運用の軽さを優先できます。</p>
+      <p><strong>既存の検索資産を捨てて作り直す。</strong> すでにコネクタや関連度の調整、アクセス制御を作り込んだ索引があるなら、それを接続先として使えます。文書を別基盤へ移し替える案は、投資を捨てることになります。</p>
+      <p><strong>鮮度を生成側で補おうとする。</strong> 日中に更新される資料が検索に出てこないとき、プロンプトで工夫しても直りません。取り込み側に変更を反映させる話です。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>意味検索だけ、低運用で開始</td>
+              <td>S3 Vectors</td>
+              <td>サーバーレスで始めやすい</td>
+            </tr>
+            <tr>
+              <td>大規模かつ絞り込みも要る</td>
+              <td>OpenSearch Serverless</td>
+              <td>機能が一通り揃う</td>
+            </tr>
+            <tr>
+              <td>インメモリで低レイテンシ</td>
+              <td>ElastiCache for Valkey</td>
+              <td>ホットパス向け</td>
+            </tr>
+            <tr>
+              <td>既存の RDB に寄せたい</td>
+              <td>Aurora の pgvector</td>
+              <td>運用を集約できる</td>
+            </tr>
+            <tr>
+              <td>既存の検索索引がある</td>
+              <td>その索引を接続先にする</td>
+              <td>再取り込みが要らない</td>
+            </tr>
+            <tr>
+              <td>更新を数分で反映したい</td>
+              <td>S3 イベントで同期起動</td>
+              <td>増分で追随する</td>
+            </tr>
+            <tr>
+              <td>SaaS のデータを供給</td>
+              <td>連携サービス経由で S3 へ</td>
+              <td>完了イベントで同期</td>
+            </tr>
+            <tr>
+              <td>少数文書を即時反映</td>
+              <td>カスタムデータソース</td>
+              <td>内容を直接渡せる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>非公開のコレクションを使うなら、データアクセス権限とネットワークアクセスポリシーは別物。</strong> 権限を付けただけでは到達できない。ナレッジベース側を接続元として許可する経路の設定が要る。</li>
+        <li>細粒度のアクセス制御を有効にしたクラスターでは、ナレッジベースのサービスロール ARN を backend role にマッピングし、クラスターとインデックスの権限を付ける。IAM だけでは通らない。</li>
+        <li>メタデータはチャンク単位で持たせ、<strong>検索時の絞り込みと回答時の表示の両方</strong>に使う。有効期間、出典の URI、文書の責任者などを載せておくと、最新版の提示と根拠表示が安定する。</li>
+        <li>S3 データソースは文書とメタデータを S3 の場所で扱う。カスタムデータソースは内容とメタデータを直接渡すことも、S3 の場所を指すこともできる。少数文書の即時反映では後者が効く。</li>
+        <li>更新の反映は取り込みジョブの実行で行う。夜間の一括同期だけでは日中の改訂が反映されないので、変更イベントを起点に増分で回す。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 292" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="1.4 と 1.5 の守備範囲の違い。1.4 はどこに置きどう新しく保つか、1.5 はどう探して絞るかを扱う">
+          <rect width="400" height="292" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="124" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">1.4 — 置き場所と鮮度</text>
+            <text x="24" y="66" font-size="17" fill="#1a202c">どの基盤に置くか</text>
+            <text x="24" y="94" font-size="17" fill="#4a5568">権限と到達経路</text>
+            <text x="24" y="122" font-size="17" fill="#4a5568">更新をどう反映するか</text>
+
+            <rect x="6" y="146" width="388" height="124" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="176" font-size="20" fill="#2d3748">1.5 — 探し方</text>
+            <text x="24" y="206" font-size="17" fill="#1a202c">どう切って埋め込むか</text>
+            <text x="24" y="234" font-size="17" fill="#4a5568">絞り込みと再順位付け</text>
+            <text x="24" y="262" font-size="17" fill="#4a5568">クエリの加工</text>
+          </g>
+        </svg>
+        <figcaption>同じ RAG の話でも、基盤の選定と検索の設計は別の問題として出る。</figcaption>
+      </figure>
+      <p>問題文が「どのサービスに保存するか」「同期が反映されない」「権限で到達できない」と言っていれば 1.4 の側です。「チャンクの切り方」「絞り込みの条件」「順位付け」なら 1.5 の側になります。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain1.html">AIP-C01 試験ガイド Content Domain 1</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-setup.html">Amazon Bedrock User Guide — Prerequisites for using a vector store you created</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

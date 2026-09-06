@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3.2 データセキュリティとプライバシー制御 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="3.2">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>3.2 データセキュリティとプライバシー制御</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">守る場所は3つあります。経路（外に出さない）、保管（誰が見られるか）、実行時（何を通すか）。道具はそれぞれ違います。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="データを守る3つの場所。通信経路、保管されたデータ、実行時の入出力。それぞれ使う道具が異なる">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">経路</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">インターネットへ出さない</text>
+            <text x="24" y="92" font-size="17" fill="#4a5568">用途ごとの VPC エンドポイント</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">保管</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">誰がどの列を見られるか</text>
+            <text x="24" y="200" font-size="17" fill="#4a5568">Lake Formation と Macie</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">実行時</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">入出力で何を通すか</text>
+            <text x="24" y="308" font-size="17" fill="#4a5568">Guardrails のフィルター</text>
+          </g>
+        </svg>
+        <figcaption>3つは代替関係ではない。問題文がどの場所の話をしているかを読む。</figcaption>
+      </figure>
+
+      <p>金庫のある建物を思い浮かべてください。外から見えない専用通路で出入りし、部屋ごとに鍵を分け、持ち出すときは中身を検める。どれか一つでは守れませんし、通路の話をしているときに部屋の鍵を持ち出しても噛み合いません。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>保管と実行時を同じ道具で守ろうとする。</strong> すでに S3 に溜まっているログの機微情報を調べるのと、いま流れているチャットの入出力を止めるのとでは、使うサービスが違います。前者は保管側の走査、後者は実行時のフィルターです。</p>
+      <p><strong>バケットポリシーだけ直して暗号化キーを忘れる。</strong> 配信先の S3 が KMS で暗号化されている場合、バケット側の許可だけでは書き込めません。鍵の側にも許可が要ります。</p>
+      <p><strong>VPC エンドポイントを用途で取り違える。</strong> 素の推論と、ナレッジベースを介した検索付き生成とでは、呼ぶサービスが違います。片方だけ用意すると、もう片方がインターネット経由になります。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>保存済みデータの機微情報調査</td>
+              <td>Amazon Macie</td>
+              <td>保管側を走査する</td>
+            </tr>
+            <tr>
+              <td>実行時の入出力を守る</td>
+              <td>機密情報フィルター</td>
+              <td>その場で遮る、伏せる</td>
+            </tr>
+            <tr>
+              <td>社内独自の識別子パターン</td>
+              <td>カスタム正規表現</td>
+              <td>形式一致で検出する</td>
+            </tr>
+            <tr>
+              <td>列や行の単位で権限を分ける</td>
+              <td>Lake Formation</td>
+              <td>データ層で強制する</td>
+            </tr>
+            <tr>
+              <td>外へ出さずに接続する</td>
+              <td>用途別の VPC エンドポイント</td>
+              <td>API ごとに別に要る</td>
+            </tr>
+            <tr>
+              <td>別アカウントの S3 を使う</td>
+              <td>バケットと鍵の両方の許可</td>
+              <td>片方だけでは通らない</td>
+            </tr>
+            <tr>
+              <td>役割で見せる範囲を変える</td>
+              <td>ロール別のガードレール適用</td>
+              <td>応答から伏せられる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>VPC エンドポイントは用途ごとに別。</strong> Converse などの推論は <code>bedrock-runtime</code>、RetrieveAndGenerate は <code>bedrock-agent-runtime</code>。エージェントの作成や更新は <code>bedrock-agent</code>。S3 へは gateway エンドポイントを併せて用意する。</li>
+        <li><strong>SSE-KMS で暗号化した S3 へログを配信するには、バケットポリシーに加えて KMS キーポリシーで <code>kms:GenerateDataKey</code> を許可する。</strong> バケット側だけ直しても書き込めない。</li>
+        <li>別アカウントの S3 をナレッジベースのデータソースにする場合、こちら側のサービスロールに権限を付けるだけでは足りない。相手側のバケットポリシーと KMS キーポリシーでも、そのロール ARN を明示的に許可する。</li>
+        <li>機密情報フィルターの動作は BLOCK と ANONYMIZE。開発とテストでは伏せる設定にして挙動を見て、本番では遮断に切り替える、という運用ができる。</li>
+        <li>ガードレールはリージョンをまたがない。データレジデンシーの要件があるなら、各リージョンに同じ設定のコピーを置く。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 292" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="保管データを調べる道具と実行時の入出力を守る道具の違い。前者は溜まったデータを走査し、後者はやり取りの途中で遮る">
+          <rect width="400" height="292" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="124" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">保管を調べる</text>
+            <text x="24" y="66" font-size="17" fill="#1a202c">すでに溜まったデータ</text>
+            <text x="24" y="94" font-size="17" fill="#4a5568">走査して見つける</text>
+            <text x="24" y="122" font-size="17" fill="#4a5568">後から気づける</text>
+
+            <rect x="6" y="146" width="388" height="124" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="176" font-size="20" fill="#2d3748">実行時に守る</text>
+            <text x="24" y="206" font-size="17" fill="#1a202c">いま流れている入出力</text>
+            <text x="24" y="234" font-size="17" fill="#4a5568">その場で遮る、伏せる</text>
+            <text x="24" y="262" font-size="17" fill="#4a5568">出る前に止められる</text>
+          </g>
+        </svg>
+        <figcaption>「すでに保存されている」か「これから流れる」かで、選ぶ道具が変わる。</figcaption>
+      </figure>
+      <p>両方を求める問題もあります。その場合は保管側の走査と実行時のフィルターを組み合わせた選択肢が正解になり、片方だけのものは落ちます。問題文に「既存のログ」と「ライブのチャット」が並んでいたら、この形です。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain3.html">AIP-C01 試験ガイド Content Domain 3</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-invocation-logging.html">Amazon Bedrock User Guide — Model invocation logging</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

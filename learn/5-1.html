@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5.1 GenAI の評価システム — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="5.1">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>5.1 GenAI の評価システム</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">何を測るかを先に分けます。検索の良さ、生成の良さ、主観の良さ、エージェントの手際。混ぜて総合点にすると、どこを直せばいいか分からなくなります。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 348" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="評価の4つの切り口。根拠が取れているか、回答まで妥当か、主観的な品質はどうか、エージェントの手順は正しいか">
+          <rect width="400" height="348" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">根拠は取れているか</text>
+            <text x="24" y="66" font-size="17" fill="#4a5568">検索側だけを見る</text>
+
+            <rect x="6" y="94" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="94" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="124" font-size="20" fill="#2d3748">回答まで妥当か</text>
+            <text x="24" y="154" font-size="17" fill="#4a5568">生成側を含めて見る</text>
+
+            <rect x="6" y="182" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="182" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="212" font-size="20" fill="#2d3748">主観的な品質はどうか</text>
+            <text x="24" y="242" font-size="17" fill="#4a5568">人が採点する</text>
+
+            <rect x="6" y="270" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="270" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="300" font-size="20" fill="#2d3748">手順は正しかったか</text>
+            <text x="24" y="330" font-size="17" fill="#4a5568">経路と道具の使い方</text>
+          </g>
+        </svg>
+        <figcaption>4つは測る対象が違う。要件がどれを指しているかで使う仕組みが決まる。</figcaption>
+      </figure>
+
+      <p>料理コンテストの採点に似ています。材料の質、調理の腕、味の好み、段取りの良さ。総合点だけを出しても、次に何を練習すればいいのかは分かりません。項目を分けて初めて改善につながります。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>検索と生成を1つの点数にまとめる。</strong> チャンク戦略を変えたのか、モデルを変えたのか、どちらが効いたのか分からなくなります。RAG の評価は、根拠を取れているかと、答えまで妥当かを分けて測ります。</p>
+      <p><strong>主観品質を自動評価だけで測る。</strong> ブランドのトーン、謝罪の言い回し、緊張した場面での落ち着き。こうした軸は自動採点になじまず、人が観点ごとに採点する仕組みが要ります。</p>
+      <p><strong>評価ジョブが失敗する原因を権限だけで探す。</strong> 評価する側とされる側で2つのモデルを使う場合、その両方が使えるリージョンで作る必要があります。権限やデータ形式より先に確かめる場所です。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>根拠が取れているかだけ見る</td>
+              <td>検索のみの評価</td>
+              <td>生成の影響を除ける</td>
+            </tr>
+            <tr>
+              <td>回答まで含めて比べる</td>
+              <td>検索と生成の評価</td>
+              <td>両方の質を測れる</td>
+            </tr>
+            <tr>
+              <td>トーンや安心感を測る</td>
+              <td>人による評価</td>
+              <td>主観は人が採点する</td>
+            </tr>
+            <tr>
+              <td>観点ごとに点を分けたい</td>
+              <td>カスタム評価指標</td>
+              <td>総合点では見えない</td>
+            </tr>
+            <tr>
+              <td>大量を自動で採点</td>
+              <td>モデルによる採点</td>
+              <td>人手を絞れる</td>
+            </tr>
+            <tr>
+              <td>基準未達を昇格させない</td>
+              <td>CI/CD の品質ゲート</td>
+              <td>自動で止まる</td>
+            </tr>
+            <tr>
+              <td>本番の劣化を継続監視</td>
+              <td>合成監視のカナリア</td>
+              <td>デプロイ後も見る</td>
+            </tr>
+            <tr>
+              <td>エージェントの手際</td>
+              <td>期待経路とアサーション</td>
+              <td>結果だけを見ない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>RAG の評価は2種類ある。</strong> 検索のみの評価は根拠を回収できているかを見て、検索と生成の評価は回答生成まで含めて見る。改善候補を比べるときは、まず前者で検索側を確かめ、次に後者で生成側を比べる。</li>
+        <li><strong>モデルに採点させる評価ジョブは、生成側と評価側の両方のモデルが使える同一リージョンで作る。</strong> 権限やデータ形式の前に、リージョンでの利用可否を疑う。</li>
+        <li>人による評価では、観点ごとにカスタム指標を複数定義できる。名前、説明、採点方法をそれぞれ決められるので、分かりやすさと正確さとトーンを別々に点数化できる。自社の評価者に限定した作業チームも組める。</li>
+        <li>ナレッジベースの評価ジョブ用サービスロールには、入出力に使う S3、ナレッジベースの検索と生成、モデル呼び出し、必要な KMS の権限がまとめて要る。どれか一つ欠けても失敗する。</li>
+      </ul>
+      <p>評価はオフラインだけで完結しません。固定のデータセットで比べたうえで、本番トラフィックのカナリアと品質ゲートを組み合わせる、というのが移行時の定番の形です。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 268" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="総合点で測る場合と分けて測る場合の違い。総合点では改善対象が分からないが、検索側と生成側に分ければ原因が特定できる">
+          <rect width="400" height="268" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">総合点だけ</text>
+            <rect x="14" y="40" width="372" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="200" y="69" text-anchor="middle" font-size="18" fill="#2d3748">まとめて 72 点</text>
+            <text x="14" y="110" font-size="17" fill="#e53e3e">どちらを直せばいいか分からない</text>
+
+            <text x="14" y="162" font-size="18" fill="#2d3748">分けて測る</text>
+            <rect x="14" y="176" width="180" height="44" rx="6" fill="#4299e1"/>
+            <text x="104" y="205" text-anchor="middle" font-size="18" fill="#ffffff">検索 58 点</text>
+            <rect x="206" y="176" width="180" height="44" rx="6" fill="#4299e1"/>
+            <text x="296" y="205" text-anchor="middle" font-size="18" fill="#ffffff">生成 86 点</text>
+            <text x="14" y="246" font-size="17" fill="#4a5568">検索側を直せばよいと分かる</text>
+          </g>
+        </svg>
+        <figcaption>同じ改善作業でも、分けて測るかどうかで次の一手が変わる。</figcaption>
+      </figure>
+      <p>問題文に「チャンク戦略と生成モデルの両方を変えた」「どちらが原因か切り分けたい」と書かれていたら、分けて評価する選択肢を選びます。単一の総合スコアで比較する案は落とせます。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain5.html">AIP-C01 試験ガイド Content Domain 5</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/evaluation.html">Amazon Bedrock User Guide — Evaluate the performance of Amazon Bedrock resources</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

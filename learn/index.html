@@ -15,7 +15,50 @@
       公式試験ガイドにある 5 ドメイン × 20 タスクごとに、概念をつかむための資料をまとめています。
     </p>
 
+    <div class="learn-card">
+      <h2>まず全体像</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 268" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="5つの経路の関係。検索経路とエージェントが呼び出しと推論基盤へつながり、その全体を安全と統制の関門が囲み、観測と評価の配線が下から支える">
+          <rect width="400" height="268" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="10" y="10" width="380" height="164" rx="10" fill="none" stroke="#4299e1" stroke-width="2" stroke-dasharray="6 4"/>
+            <text x="20" y="32" font-size="14" fill="#4299e1">安全と統制の関門（全体を囲む）</text>
+
+            <rect x="24" y="46" width="160" height="48" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="104" y="76" text-anchor="middle" font-size="15" fill="#2d3748">検索経路</text>
+
+            <rect x="216" y="46" width="160" height="48" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="296" y="76" text-anchor="middle" font-size="15" fill="#2d3748">エージェント</text>
+
+            <path d="M104,94 V110 M98,104 L104,112 L110,104" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <path d="M296,94 V110 M290,104 L296,112 L302,104" fill="none" stroke="#4a5568" stroke-width="2"/>
+
+            <rect x="24" y="116" width="352" height="48" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="200" y="146" text-anchor="middle" font-size="15" fill="#2d3748">呼び出しと推論基盤</text>
+
+            <path d="M200,174 V196 M194,190 L200,198 L206,190" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="24" y="202" width="352" height="48" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="200" y="232" text-anchor="middle" font-size="15" fill="#2d3748">観測と評価の配線</text>
+          </g>
+        </svg>
+        <figcaption>どの経路もモデルの呼び出しに集まり、記録は下へ流れる。関門は全体を横切る。</figcaption>
+      </figure>
+      <p>問題文のシナリオがどの経路の話かを見分けてから、該当するタスクへ降りてください。要件そのものを問う問題（タスク 1.1）は、どの経路を選ぶかを問うています。</p>
+      <div id="learn-maps"></div>
+    </div>
+
+    <h2 class="learn-section-title">タスク別</h2>
     <div id="learn-index"></div>
+
+    <div class="learn-card">
+      <h2>サービスから引く</h2>
+      <p class="learn-meta" id="learn-service-count"></p>
+      <input type="search" id="learn-service-query" class="learn-search"
+             placeholder="サービス名を入力（例: Kendra、リランカー）"
+             autocomplete="off" aria-label="サービス名で検索">
+      <div id="learn-service-results"></div>
+    </div>
 
     <div id="learn-fallback" class="learn-card" hidden>
       <p>問題データを読み込めませんでした。オンラインで開き直すと一覧が表示されます。</p>

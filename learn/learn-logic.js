@@ -10,6 +10,15 @@
   // 図に出すサービスの単一の出所。label は逆引き欄の表示、match はテストの照合に使う。
   // 図は日本語、実データの主表記は英語なので両者を分ける
   //（例: 「リランカー」は API2.json に 4 件、「Rerank」は 129 件）
+  // マップページの定義。ページを作った順に足す。tasks は各ページの data-tasks と一致させる
+  const MAPS = [
+    { id: 'map-rag', title: '検索経路', subtitle: '文書が答えになるまで', tasks: ['1.3', '1.4', '1.5'] },
+  ];
+
+  function getMaps() {
+    return MAPS.map(m => ({ id: m.id, title: m.title, subtitle: m.subtitle, tasks: [...m.tasks] }));
+  }
+
   const SERVICES = [
     { label: 'Bedrock Data Automation', match: ['Bedrock Data Automation'], map: ['map-rag'] },
     { label: 'Textract', match: ['Textract'], map: ['map-rag'] },
@@ -117,5 +126,6 @@
     getKnownTaskIds, getTaskStats, getTaskQuestionIds,
     getTasksStats, getTasksQuestionIds,
     getAllServices, getServicesForMap, findServices,
+    getMaps,
   };
 });

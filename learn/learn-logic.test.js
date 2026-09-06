@@ -11,6 +11,7 @@ const {
   getAllServices,
   getServicesForMap,
   findServices,
+  getMaps,
 } = require('./learn-logic.js');
 
 // --- テスト用の最小データ ---
@@ -193,5 +194,44 @@ assert.deepEqual(findServices(''), []);
 assert.deepEqual(findServices('   '), []);
 assert.deepEqual(findServices(undefined), []);
 assert.deepEqual(findServices('該当なしのはず'), []);
+
+// --- マップ定義 ---
+
+const maps = getMaps();
+assert.ok(maps.length > 0, 'マップ定義が空です');
+
+const api2Tasks = getKnownTaskIds(loadExam('API2'));
+for (const m of maps) {
+  // ページが実在する
+  const file = path.join(learnDir, `${m.id}.html`);
+  assert.ok(fs.existsSync(file), `マップ定義 "${m.id}" に対応する HTML がありません`);
+
+  assert.ok(m.title && m.subtitle, `${m.id}: title か subtitle が空です`);
+
+  // 定義のタスクが実データに存在する
+  for (const t of m.tasks) {
+    assert.ok(api2Tasks.includes(t), `${m.id}: タスク "${t}" は API2 に存在しません`);
+  }
+
+  // 定義のタスクとページの data-tasks が一致する（ずれを防ぐ）
+  const html = fs.readFileSync(file, 'utf8');
+  const attr = html.match(/<body[^>]*data-tasks="([^"]+)"/);
+  assert.ok(attr, `${m.id}.html: data-tasks がありません`);
+  assert.deepEqual(
+    attr[1].split(',').map(s => s.trim()), m.tasks,
+    `${m.id}: 定数の tasks と HTML の data-tasks が食い違っています`
+  );
+}
+
+// マップ ID は重複しない
+const mapIds = maps.map(m => m.id);
+assert.equal(new Set(mapIds).size, mapIds.length, 'マップ ID が重複しています');
+
+// サービス定数が指すマップは、すべてマップ定義に存在する
+for (const s of getAllServices()) {
+  for (const mapId of s.map) {
+    assert.ok(mapIds.includes(mapId), `サービス "${s.label}" が未定義のマップ ${mapId} を指しています`);
+  }
+}
 
 console.log('learn-logic tests passed');

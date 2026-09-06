@@ -38,7 +38,78 @@ function renderTaskPage(examData, taskId) {
   if (qidsSection) qidsSection.hidden = false;
 }
 
+function renderMapPage(examData, taskIds) {
+  const stats = window.LearnLogic.getTasksStats(examData, taskIds);
+  if (!stats) throw new Error(`unknown tasks: ${taskIds.join(',')}`);
+
+  const meta = document.getElementById('learn-meta');
+  if (meta) {
+    meta.textContent =
+      `この問題集で ${stats.count} 問（${stats.share}%） ／ ` +
+      `タスク ${stats.taskIds.join('・')}`;
+    meta.hidden = false;
+  }
+
+  const ids = window.LearnLogic.getTasksQuestionIds(examData, taskIds);
+  const qids = document.getElementById('learn-qids');
+  if (qids) {
+    qids.textContent = ids.length ? ids.join(', ') : '（該当する問題はありません）';
+  }
+  const qidsSection = document.getElementById('learn-qids-section');
+  if (qidsSection) qidsSection.hidden = false;
+}
+
+function renderMapCards(examData) {
+  const root = document.getElementById('learn-maps');
+  if (!root) return;
+
+  root.innerHTML = window.LearnLogic.getMaps().map(m => {
+    const stats = window.LearnLogic.getTasksStats(examData, m.tasks);
+    const count = stats ? `${stats.count}問` : '';
+    return `<a class="learn-map-card" href="${m.id}.html">` +
+           `<span class="learn-map-title">${m.title}</span>` +
+           `<span class="learn-map-sub">${m.subtitle}</span>` +
+           `<span class="learn-index-count">${count}</span></a>`;
+  }).join('');
+}
+
+function renderServiceLookup() {
+  const input = document.getElementById('learn-service-query');
+  const results = document.getElementById('learn-service-results');
+  const countEl = document.getElementById('learn-service-count');
+  if (!input || !results) return;
+
+  const maps = window.LearnLogic.getMaps();
+  const titleOf = id => (maps.find(m => m.id === id) || {}).title || id;
+  const all = window.LearnLogic.getAllServices();
+
+  if (countEl) {
+    countEl.textContent = `${all.length} 件のサービスを登録しています。名前を入れると、どの経路の話か分かります。`;
+  }
+
+  input.addEventListener('input', () => {
+    if (!input.value.trim()) {
+      results.innerHTML = '';
+      return;
+    }
+    const hits = window.LearnLogic.findServices(input.value);
+    if (hits.length === 0) {
+      results.innerHTML = '<p class="learn-meta">一致するサービスがありません。</p>';
+      return;
+    }
+    results.innerHTML = '<ul class="learn-index-list">' + hits.map(s => {
+      const links = s.map
+        .map(id => `<a href="${id}.html">${titleOf(id)}</a>`)
+        .join(' / ');
+      return `<li>${s.label} <span class="learn-index-count">${links}</span></li>`;
+    }).join('') + '</ul>';
+  });
+}
+
 function renderIndexPage(examData) {
+  renderMapCards(examData);
+  renderServiceLookup();
+
   const root = document.getElementById('learn-index');
   if (!root) return;
 
@@ -66,6 +137,8 @@ function renderIndexPage(examData) {
     const examData = await loadExamData(examId);
     if (body.dataset.task) {
       renderTaskPage(examData, body.dataset.task);
+    } else if (body.dataset.tasks) {
+      renderMapPage(examData, body.dataset.tasks.split(',').map(s => s.trim()));
     } else {
       renderIndexPage(examData);
     }

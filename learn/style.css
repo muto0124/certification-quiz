@@ -54,6 +54,10 @@ body {
 .learn-nav a { color: #4299e1; text-decoration: none; font-size: 0.9rem; }
 .learn-nav a:hover { text-decoration: underline; }
 
+.learn-links { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem; }
+.learn-links a { color: #4299e1; text-decoration: none; font-size: 0.9rem; }
+.learn-links a:hover { text-decoration: underline; }
+
 .learn-index-domain { margin-bottom: 1rem; }
 .learn-index-list { list-style: none; }
 .learn-index-list li { padding: 0.4rem 0; border-bottom: 1px solid #edf2f7; }
@@ -61,5 +65,22 @@ body {
 .learn-index-list a { color: #2d3748; text-decoration: none; }
 .learn-index-list a:hover { color: #4299e1; }
 .learn-index-count { color: #4a5568; font-size: 0.85rem; }
+
+.learn-section-title { font-size: 1.1rem; color: #4a5568; margin: 1.5rem 0 0.75rem; }
+
+.learn-map-card {
+  display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
+  padding: 0.6rem 0; border-bottom: 1px solid #edf2f7; text-decoration: none;
+}
+.learn-map-card:last-child { border-bottom: none; }
+.learn-map-title { color: #2d3748; font-weight: 600; }
+.learn-map-sub { color: #4a5568; font-size: 0.85rem; }
+.learn-map-card:hover .learn-map-title { color: #4299e1; }
+
+.learn-search {
+  width: 100%; padding: 0.5rem 0.6rem; font-size: 1rem; font-family: inherit;
+  border: 1px solid #cbd5e0; border-radius: 8px; background: #fff; color: #1a202c;
+}
+.learn-search:focus { outline: 2px solid #4299e1; outline-offset: 1px; }
 
 [hidden] { display: none !important; }

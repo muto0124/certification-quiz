@@ -349,6 +349,11 @@ function renderQuiz() {
   } else {
     renderPendingAnswer(q, selectedLabels);
   }
+
+  if (pendingScrollToExplanation) {
+    pendingScrollToExplanation = false;
+    scrollToExplanation();
+  }
 }
 
 function onChoiceSelected(selected, q) {
@@ -634,6 +639,43 @@ function handleKeydown(e) {
 
 // --- 初期化 ---
 
+// --- 中断データからの復帰 ---
+const RESUME_HASH = '#resume';
+
+// 復帰した直後の 1 回だけ解説パネルへスクロールする。読者は解説の途中から
+// 学習資料へ抜けているので、問題文の頭に戻されると読んでいた場所を見失う。
+let pendingScrollToExplanation = false;
+
+function scrollToExplanation() {
+  const panel = document.getElementById('explanation-panel');
+  if (panel && !panel.classList.contains('hidden')) {
+    panel.scrollIntoView({ block: 'start' });
+  }
+}
+
+async function resumeFromSnapshot(snapshot) {
+  const described = window.QuizLogic.describeSnapshot(snapshot);
+  if (!described) return false;
+
+  const exams = (window._indexData && window._indexData.exams) || [];
+  if (!exams.some((exam) => exam.id === described.examId)) return false;
+
+  if (!(await loadExamData(described.examId))) return false;
+
+  const restored = window.QuizLogic.restoreSessionSnapshot(snapshot, allQuestions);
+  if (!restored) return false;
+
+  currentMode = restored.mode;
+  sessionQuestions = restored.questions;
+  currentIndex = restored.index;
+  sessionAnswers = restored.answers;
+
+  pendingScrollToExplanation = true;
+  renderQuiz();
+  showScreen('screen-quiz');
+  return true;
+}
+
 function migrateOldProgress() {
   const oldKey = 'quiz_progress';
   const oldData = localStorage.getItem(oldKey);
@@ -670,11 +712,13 @@ function renderSelectScreen(indexData) {
   }
 }
 
-async function selectExam(examId) {
-  currentExamId = examId;
+// 試験データの読み込みだけを行う。画面遷移は呼び出し側の責務。
+// スタート画面へ進む selectExam と、問題画面へ直行する復帰の両方から使う。
+async function loadExamData(examId) {
   try {
     const res = await fetch(`data/${examId}.json`);
     const data = await res.json();
+    currentExamId = examId;
     allQuestions = data.questions;
     window._quizTitle = data.title;
     window._quizCategories = data.categories || null;
@@ -685,13 +729,20 @@ async function selectExam(examId) {
       const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
       document.getElementById('app-version').textContent = formatted;
     }
-
-    renderStart();
+    return true;
   } catch (e) {
     console.error('Failed to load exam data:', e);
     currentExamId = null;
-    alert('試験データの読み込みに失敗しました。再度お試しください。');
+    return false;
   }
+}
+
+async function selectExam(examId) {
+  if (!(await loadExamData(examId))) {
+    alert('試験データの読み込みに失敗しました。再度お試しください。');
+    return;
+  }
+  renderStart();
 }
 
 async function init() {
@@ -744,6 +795,14 @@ async function init() {
   });
 
   document.addEventListener('keydown', handleKeydown);
+
+  // ハッシュは先に消す。#resume の付いた URL をブックマークされると
+  // 後日開いたときに意味が変わるため。replaceState なので履歴は増えず、
+  // ブラウザバックで学習ページへ戻る動きは保たれる。
+  if (location.hash === RESUME_HASH) {
+    history.replaceState(null, '', location.pathname + location.search);
+    await resumeFromSnapshot(loadSessionSnapshot());
+  }
 }
 
 init();

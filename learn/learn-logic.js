@@ -179,10 +179,30 @@
     return [...seen].sort((a, b) => a - b);
   }
 
+  // 中断データを読むためのキー。quiz-logic.js にも同じ定数がある。
+  // learn.js から quiz-logic.js を読み込まない方針のため、キー名だけは
+  // 二重に持つ。ずれを検知するテストを両側に置いている。
+  const SESSION_STORAGE_KEY = 'quiz_session';
+
+  function formatResumeLabel(snapshot, examId) {
+    if (!snapshot || typeof snapshot !== 'object') return null;
+    if (typeof examId !== 'string' || !examId) return null;
+    if (snapshot.examId !== examId) return null;
+
+    const { questionIds, index, answers } = snapshot;
+
+    if (!Array.isArray(questionIds) || questionIds.length === 0) return null;
+    if (!Array.isArray(answers) || answers.length !== questionIds.length) return null;
+    if (!Number.isInteger(index) || index < 0 || index >= questionIds.length) return null;
+
+    return `← 問題 ${questionIds[index]} に戻る（${index + 1}/${questionIds.length}問目）`;
+  }
+
   return {
     getKnownTaskIds, getTaskStats, getTaskQuestionIds,
     getTasksStats, getTasksQuestionIds,
     getAllServices, getServicesForMap, findServices,
     getMaps,
+    SESSION_STORAGE_KEY, formatResumeLabel,
   };
 });

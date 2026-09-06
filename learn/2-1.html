@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.1 エージェント型 AI とツール連携 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="2.1">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>2.1 エージェント型 AI とツール連携</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">エージェントは4つの部品でできています。記憶、道具、境界、人の介在。どれをマネージドに任せ、どれを自分で持つかで構成が決まります。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 348" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="エージェントの4つの部品。何を覚えるかの記憶、何ができるかの道具、どこまで許すかの境界、誰が承認するかの人の介在">
+          <rect width="400" height="348" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">記憶</text>
+            <text x="24" y="66" font-size="17" fill="#4a5568">会話の中と、会話をまたいで</text>
+
+            <rect x="6" y="94" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="94" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="124" font-size="20" fill="#2d3748">道具</text>
+            <text x="24" y="154" font-size="17" fill="#4a5568">既存 API とツールをつなぐ</text>
+
+            <rect x="6" y="182" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="182" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="212" font-size="20" fill="#2d3748">境界</text>
+            <text x="24" y="242" font-size="17" fill="#4a5568">実行前に止める仕組み</text>
+
+            <rect x="6" y="270" width="388" height="76" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="270" width="6" height="76" fill="#4299e1"/>
+            <text x="24" y="300" font-size="20" fill="#2d3748">人の介在</text>
+            <text x="24" y="330" font-size="17" fill="#4a5568">承認を待って進める</text>
+          </g>
+        </svg>
+        <figcaption>問題文がどの部品の話をしているかを見分けると、選択肢が絞れる。</figcaption>
+      </figure>
+
+      <p>新人に仕事を任せるのと同じです。何を覚えておいてもらうか、どの道具を使ってよいか、どこから先は勝手に進めないか、誰が最終確認をするか。この4つを決めずに「よろしく」とだけ言うと、事故が起きます。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>全部を1つのエージェントに詰め込む。</strong> 領域が増えるほど指示と道具の管理が複雑になります。専門ごとにエージェントを分け、入口となる1体が内容に応じて委任する構成のほうが、既存の作り込みも活きます。</p>
+      <p><strong>権限をモデルへの指示で守ろうとする。</strong> 「送金は 10 万円まで」と system prompt に書いても、それは指示であって制約ではありません。実行前に決定的に判定する仕組みが要ります。</p>
+      <p><strong>長い処理を同期で待たせる。</strong> 複数のソースを集めて解析するような仕事を、受付の応答と一緒に返そうとすると、接続がタイムアウトします。受付だけ返し、処理は非同期で続けます。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>専門エージェントが既にある</td>
+              <td>入口役と委任先の構成</td>
+              <td>既存を活かせる</td>
+            </tr>
+            <tr>
+              <td>会話の中で属性を保つ</td>
+              <td>セッション属性</td>
+              <td>同一会話で共有する</td>
+            </tr>
+            <tr>
+              <td>会話をまたぐ好みや履歴</td>
+              <td>長期の記憶</td>
+              <td>セッションを越える</td>
+            </tr>
+            <tr>
+              <td>既存 API を道具にしたい</td>
+              <td>Gateway で MCP 互換に</td>
+              <td>作り直さずに済む</td>
+            </tr>
+            <tr>
+              <td>軽い状態なしの道具</td>
+              <td>Lambda に置く</td>
+              <td>起動が軽い</td>
+            </tr>
+            <tr>
+              <td>依存が多く重い道具</td>
+              <td>ECS に置く</td>
+              <td>実行環境を持てる</td>
+            </tr>
+            <tr>
+              <td>実行前に確実に止めたい</td>
+              <td>事前判定のポリシー</td>
+              <td>指示では守れない</td>
+            </tr>
+            <tr>
+              <td>人の承認を挟む</td>
+              <td>トークン待ちのワークフロー</td>
+              <td>実行を止められる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>アクショングループの Lambda を呼ばせるには、Lambda 側のリソースベースポリシーで <code>bedrock.amazonaws.com</code> に <code>lambda:InvokeFunction</code> を許可する。</strong> エージェントのサービスロールに権限を付けるだけでは呼び出せない。</li>
+        <li>必須の入力は、関数定義か OpenAPI スキーマで <code>required</code> として宣言する。欠けていればエージェントが利用者へ追加で質問するので、同じ条件をアプリ側に重複実装しなくて済む。</li>
+        <li>Converse の <code>toolChoice</code> は <code>any</code> と <code>auto</code> で意味が違う。前者はどれか必ず使わせる、後者は使うかどうかもモデルに委ねる。</li>
+        <li>記憶は2種類。直近のやり取りは短期、製品シリーズや担当地域や回答形式の好みのようにセッションをまたぐ属性は長期に置く。</li>
+        <li>外部サイトの操作と、コードを走らせる処理は、それぞれ分離された別の環境で行う。同じ仕組みに押し込まない。</li>
+        <li><strong>Amazon Bedrock Agents は「Agents Classic」に改称され、新規顧客の受付を終了している。</strong> 既存利用者はそのまま使えるが、これから作るなら後継の AgentCore を見る。問題集にアクショングループと AgentCore の両方が出てくるのはこの過渡期のため。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 292" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="単一エージェントに機能を集約する構成と、入口役が専門エージェントへ委任する構成の違い">
+          <rect width="400" height="292" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">1 体に集約</text>
+            <rect x="120" y="40" width="160" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="200" y="68" text-anchor="middle" font-size="17" fill="#2d3748">全部入り</text>
+            <text x="14" y="110" font-size="17" fill="#e53e3e">指示と道具の管理が膨らむ</text>
+
+            <text x="14" y="158" font-size="18" fill="#2d3748">委任する</text>
+            <rect x="130" y="172" width="140" height="40" rx="6" fill="#4299e1"/>
+            <text x="200" y="199" text-anchor="middle" font-size="17" fill="#ffffff">入口役</text>
+            <path d="M200,212 V226 H70 V240" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <path d="M200,212 V240" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <path d="M200,212 V226 H330 V240" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="14" y="240" width="112" height="40" rx="6" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="70" y="267" text-anchor="middle" font-size="17" fill="#2d3748">請求</text>
+            <rect x="144" y="240" width="112" height="40" rx="6" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="200" y="267" text-anchor="middle" font-size="17" fill="#2d3748">配送</text>
+            <rect x="274" y="240" width="112" height="40" rx="6" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="330" y="267" text-anchor="middle" font-size="17" fill="#2d3748">返品</text>
+          </g>
+        </svg>
+        <figcaption>既存の専門エージェントがあるなら、集約ではなく委任を選ぶ。</figcaption>
+      </figure>
+      <p>問題文に「専門ごとのエージェントが既に本番で動いている」「それぞれにアクショングループとナレッジベースがある」と書かれていたら、機能を1体へ移し替える選択肢は落とせます。既存を活かしたまま入口を作るのが狙いです。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain2.html">AIP-C01 試験ガイド Content Domain 2</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html">Amazon Bedrock User Guide — Automate tasks in your application using AI agents</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

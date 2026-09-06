@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.2 基盤モデルの選定と構成 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="1.2">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>1.2 基盤モデルの選定と構成</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">どのモデルを使うかを、コードの外に出す話です。切り替えも、地域の制約も、モデルの寿命も、設定として扱えば再デプロイが要らなくなります。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="モデル構成で管理する3つのこと。どのモデルを使うか、どの地域で動かすか、いつまで使えるか">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">どのモデルか</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">切り替えを設定で行う</text>
+            <text x="24" y="92" font-size="17" fill="#4a5568">再デプロイを伴わない</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">どこで動くか</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">地理の境界を保つ</text>
+            <text x="24" y="200" font-size="17" fill="#4a5568">推論プロファイルで指定</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">いつまで使えるか</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">世代交代に備える</text>
+            <text x="24" y="308" font-size="17" fill="#4a5568">EOL を待たずに移る</text>
+          </g>
+        </svg>
+        <figcaption>3つとも、コードに埋めると身動きが取れなくなる種類の情報。</figcaption>
+      </figure>
+
+      <p>社用車の管理に似ています。車種は業務に合わせて入れ替えられるようにし、走ってよい地域は規則で決め、車検が切れる前に手を打つ。どれも車に乗る人が個別に判断することではなく、台帳で管理する事柄です。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>モデル ID をコードに書く。</strong> 規制やコストで使い分けたい、A/B で比べたい、そのたびに再デプロイが必要になります。設定として外に出せば、配布と切り戻しも仕組みに乗せられます。</p>
+      <p><strong>クロスリージョン推論を速くなる仕組みだと思う。</strong> これは容量と耐障害性を得る手段であり、同時に地理の境界を保つ手段でもあります。レイテンシを縮める道具ではありません。</p>
+      <p><strong>モデルの寿命を気にしない。</strong> Legacy や提供終了予定と表示されているモデル ID を埋めたままにすると、ある日突然動かなくなります。後継版の評価と段階的な移行を、日常の運用として組み込みます。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>コード変更なしで切り替え</td>
+              <td>AppConfig の動的設定</td>
+              <td>再デプロイが要らない</td>
+            </tr>
+            <tr>
+              <td>段階配布と自動切り戻し</td>
+              <td>検証・配布戦略・アラーム連動</td>
+              <td>事故を小さく抑える</td>
+            </tr>
+            <tr>
+              <td>地理の境界を保って分散</td>
+              <td>地理プレフィックス付きプロファイル</td>
+              <td>域内だけで散らせる</td>
+            </tr>
+            <tr>
+              <td>制約なく広域の容量を使う</td>
+              <td>グローバルなプロファイル</td>
+              <td>最も広く取れる</td>
+            </tr>
+            <tr>
+              <td>提供終了の前に移行したい</td>
+              <td>モデルのライフサイクル情報</td>
+              <td>事前に気づける</td>
+            </tr>
+            <tr>
+              <td>承認済みの版だけ本番へ</td>
+              <td>Model Registry と段階昇格</td>
+              <td>版と承認を管理できる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>地理プレフィックス付きの推論プロファイルを許可するには、プロファイル自体、呼び出し元リージョンの対象モデル、そして<em>すべての</em>宛先リージョンの対象モデルに API 権限が要る。</strong> あわせて SCP が宛先リージョンを拒否していないことも確認する。</li>
+        <li>データレジデンシーの制約がなく、広域のオンデマンド容量を使いたいならグローバルなプロファイル。制約があるなら地理単位のプロファイルを選ぶ。</li>
+        <li>モデルのライフサイクル情報を監視し、提供終了の前に後継版を評価してカナリアや A/B で段階導入する。本番の設定は明示的に更新する。</li>
+        <li>取り込んだモデルが Converse に対応していれば、オンデマンドのスループットで InvokeModel 系と Converse 系の両方から呼べる。既存のチャット画面にも接続しやすい。</li>
+      </ul>
+      <p>2.2 との違いは、こちらが「どのモデルを選び、どう切り替えるか」で、2.2 が「選んだモデルをどう配置するか」です。同じ推論プロファイルでも、選定の文脈で出るか配置の文脈で出るかで、問われている点が変わります。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 262" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="モデル指定をコードに埋める場合と設定に出す場合の違い。埋めると切り替えのたびに再デプロイが必要になる">
+          <rect width="400" height="262" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">コードに埋める</text>
+            <rect x="14" y="40" width="170" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="99" y="68" text-anchor="middle" font-size="17" fill="#2d3748">コード＋モデル ID</text>
+            <path d="M190,62 H232 M224,56 L234,62 L224,68" fill="none" stroke="#e53e3e" stroke-width="2"/>
+            <rect x="242" y="40" width="144" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="314" y="68" text-anchor="middle" font-size="17" fill="#2d3748">再デプロイ</text>
+            <text x="14" y="110" font-size="17" fill="#e53e3e">切り替えのたびに必要</text>
+
+            <text x="14" y="162" font-size="18" fill="#2d3748">設定に出す</text>
+            <rect x="14" y="176" width="170" height="44" rx="6" fill="#cbd5e0"/>
+            <text x="99" y="204" text-anchor="middle" font-size="17" fill="#2d3748">コード</text>
+            <path d="M190,198 H232 M224,192 L234,198 L224,204" fill="none" stroke="#4299e1" stroke-width="2"/>
+            <rect x="242" y="176" width="144" height="44" rx="6" fill="#4299e1"/>
+            <text x="314" y="204" text-anchor="middle" font-size="17" fill="#ffffff">設定を読む</text>
+            <text x="14" y="246" font-size="17" fill="#4a5568">段階配布と切り戻しも仕組みに乗る</text>
+          </g>
+        </svg>
+        <figcaption>設定に出すと、切り替えだけでなく検証と切り戻しまで自動化できる。</figcaption>
+      </figure>
+      <p>問題文に「コードを変更せずに」「再デプロイなしで」が出たら設定の外出しです。さらに「安全なロールアウト」「検証」「ロールバック」が並んでいたら、単なる設定保存ではなく、配布戦略とアラーム連動まで持つ選択肢を選びます。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain1.html">AIP-C01 試験ガイド Content Domain 1</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/cross-region-inference.html">Amazon Bedrock User Guide — Route model inference requests across AWS Regions with cross-Region inference</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

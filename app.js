@@ -98,6 +98,8 @@ function renderStart() {
   // 学習資料へのリンクは分類データを持つ試験でのみ表示する
   document.getElementById('learn-link')
     .classList.toggle('hidden', !window._quizCategories);
+
+  renderResumeCard('resume-card-start', currentExamId);
 }
 
 function showStartMessage(text) {
@@ -678,6 +680,53 @@ async function resumeFromSnapshot(snapshot) {
   return true;
 }
 
+// 復帰カード。expectedExamId が null なら試験を問わず出し、文言に試験名を含める
+//（試験選択画面。AIP と API2 はほぼ同名なので試験名が無いと区別できない）。
+// 文字列を渡した場合はその試験の中断データのときだけ出す（スタート画面）。
+function renderResumeCard(cardId, expectedExamId) {
+  const card = document.getElementById(cardId);
+  const snapshot = loadSessionSnapshot();
+  const described = window.QuizLogic.describeSnapshot(snapshot);
+  const exams = (window._indexData && window._indexData.exams) || [];
+  const exam = described ? exams.find((item) => item.id === described.examId) : null;
+  const wanted = expectedExamId === null || (described && described.examId === expectedExamId);
+
+  // スタート画面は試験データを読み込み済みなので、問題 ID が現在のデータに
+  // 存在するかまで確かめる。試験選択画面はまだデータを持たないので形だけを見て、
+  // 押された時点で復帰に失敗したら中断データを捨てる（下の go ハンドラ）。
+  const restorable = expectedExamId === null
+    || Boolean(window.QuizLogic.restoreSessionSnapshot(snapshot, allQuestions));
+
+  if (!described || !exam || !wanted || !restorable) {
+    card.innerHTML = '';
+    card.classList.add('hidden');
+    return;
+  }
+
+  const where = expectedExamId === null
+    ? `${window.QuizLogic.escapeHtml(exam.title)} ／ 問題 ${described.questionId}`
+    : `問題 ${described.questionId}`;
+
+  card.innerHTML =
+    `<button class="btn btn-primary btn-sm resume-card-go">` +
+    `▶ 中断した出題に戻る — ${where}（${described.position}/${described.total}問目）</button>` +
+    `<button class="btn btn-secondary btn-sm resume-card-dismiss">✕</button>`;
+  card.classList.remove('hidden');
+
+  card.querySelector('.resume-card-go').addEventListener('click', async () => {
+    if (await resumeFromSnapshot(loadSessionSnapshot())) return;
+
+    // 復帰できない中断データは残しておいても押すたびに黙って失敗するだけなので捨てる
+    clearSessionSnapshot();
+    renderSelectScreen(window._indexData);
+  });
+  card.querySelector('.resume-card-dismiss').addEventListener('click', () => {
+    clearSessionSnapshot();
+    card.innerHTML = '';
+    card.classList.add('hidden');
+  });
+}
+
 function migrateOldProgress() {
   const oldKey = 'quiz_progress';
   const oldData = localStorage.getItem(oldKey);
@@ -712,6 +761,8 @@ function renderSelectScreen(indexData) {
     const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
     document.getElementById('app-version-select').textContent = formatted;
   }
+
+  renderResumeCard('resume-card-select', null);
 }
 
 // 試験データの読み込みだけを行う。画面遷移は呼び出し側の責務。

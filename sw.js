@@ -1,5 +1,5 @@
 ﻿// Service Worker — キャッシュファースト戦略
-const CACHE_VERSION = '20260906171129';
+const CACHE_VERSION = '20260906171317';
 const CACHE_NAME = `quiz-cache-${CACHE_VERSION}`;
 const ASSETS = [
   './',
@@ -27,7 +27,9 @@ const ASSETS = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(ASSETS))
+      // HTTP キャッシュを迂回して取得する。既定のままだと、再訪ユーザーのブラウザに
+      // 残る古い応答をそのまま新しいキャッシュへ書き込み、次の版更新まで居座る
+      .then(cache => cache.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' }))))
       .then(() => self.skipWaiting())
   );
 });

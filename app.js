@@ -671,8 +671,10 @@ async function resumeFromSnapshot(snapshot) {
   sessionAnswers = restored.answers;
 
   pendingScrollToExplanation = true;
-  renderQuiz();
+  // #screen-quiz は hidden の間 display:none で、scrollIntoView は
+  // 非表示祖先の中では何もしない。先に画面を表示してから描画する。
   showScreen('screen-quiz');
+  renderQuiz();
   return true;
 }
 

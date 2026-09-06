@@ -38,6 +38,27 @@ function renderTaskPage(examData, taskId) {
   if (qidsSection) qidsSection.hidden = false;
 }
 
+function renderMapPage(examData, taskIds) {
+  const stats = window.LearnLogic.getTasksStats(examData, taskIds);
+  if (!stats) throw new Error(`unknown tasks: ${taskIds.join(',')}`);
+
+  const meta = document.getElementById('learn-meta');
+  if (meta) {
+    meta.textContent =
+      `この問題集で ${stats.count} 問（${stats.share}%） ／ ` +
+      `タスク ${stats.taskIds.join('・')}`;
+    meta.hidden = false;
+  }
+
+  const ids = window.LearnLogic.getTasksQuestionIds(examData, taskIds);
+  const qids = document.getElementById('learn-qids');
+  if (qids) {
+    qids.textContent = ids.length ? ids.join(', ') : '（該当する問題はありません）';
+  }
+  const qidsSection = document.getElementById('learn-qids-section');
+  if (qidsSection) qidsSection.hidden = false;
+}
+
 function renderIndexPage(examData) {
   const root = document.getElementById('learn-index');
   if (!root) return;
@@ -66,6 +87,8 @@ function renderIndexPage(examData) {
     const examData = await loadExamData(examId);
     if (body.dataset.task) {
       renderTaskPage(examData, body.dataset.task);
+    } else if (body.dataset.tasks) {
+      renderMapPage(examData, body.dataset.tasks.split(',').map(s => s.trim()));
     } else {
       renderIndexPage(examData);
     }

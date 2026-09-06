@@ -115,21 +115,35 @@ for (const file of pages) {
   assert.ok(body, `${file}: <body> タグが見つかりません`);
 
   const exam = body[1].match(/data-exam="([^"]+)"/);
-  const task = body[1].match(/data-task="([^"]+)"/);
   assert.ok(exam, `${file}: data-exam がありません`);
-  assert.ok(task, `${file}: data-task がありません`);
-
   const known = getKnownTaskIds(loadExam(exam[1]));
-  assert.ok(
-    known.includes(task[1]),
-    `${file}: data-task="${task[1]}" は ${exam[1]} に存在しないタスクIDです`
-  );
 
-  // ファイル名とタスクIDが対応していること（1.5 -> 1-5.html）
-  assert.equal(
-    file, task[1].replace('.', '-') + '.html',
-    `${file}: ファイル名が data-task="${task[1]}" と対応していません`
-  );
+  // data-tasks="..." は data-task="..." の正規表現に一致しない（task の直後が s のため）
+  const task = body[1].match(/data-task="([^"]+)"/);
+  const tasks = body[1].match(/data-tasks="([^"]+)"/);
+  assert.ok(task || tasks, `${file}: data-task も data-tasks もありません`);
+
+  if (tasks) {
+    assert.ok(file.startsWith('map-'), `${file}: data-tasks はマップページ（map-*.html）専用です`);
+    const ids = tasks[1].split(',').map(s => s.trim());
+    assert.ok(ids.length > 0, `${file}: data-tasks が空です`);
+    for (const id of ids) {
+      assert.ok(known.includes(id), `${file}: data-tasks の "${id}" は ${exam[1]} に存在しないタスクIDです`);
+    }
+  } else {
+    assert.ok(!file.startsWith('map-'), `${file}: マップページは data-task でなく data-tasks を使ってください`);
+    assert.ok(known.includes(task[1]), `${file}: data-task="${task[1]}" は ${exam[1]} に存在しないタスクIDです`);
+    assert.equal(
+      file, task[1].replace('.', '-') + '.html',
+      `${file}: ファイル名が data-task="${task[1]}" と対応していません`
+    );
+  }
 }
+
+// マップページが 1 枚以上あること
+assert.ok(
+  pages.some(f => f.startsWith('map-')),
+  'マップページ（map-*.html）が 1 つも見つかりません'
+);
 
 console.log('learn-logic tests passed');

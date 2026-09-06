@@ -426,7 +426,7 @@ function renderExplanation(exp) {
 // learn/1-3.html に対応する。
 
 function taskIdToLearnHref(taskId) {
-  return learn/${String(taskId).replace('.', '-')}.html;
+  return `learn/${String(taskId).replace('.', '-')}.html`;
 }
 
 function findTaskTitleJa(taskId) {
@@ -449,8 +449,8 @@ function renderLearnLinkForQuestion(q) {
     return;
   }
 
-  const label = 📘 このタスクの学習資料を読む — ${q.category} ${window.QuizLogic.escapeHtml(titleJa)};
-  box.innerHTML = <a class="btn btn-secondary" href="${taskIdToLearnHref(q.category)}">${label}</a>;
+  const label = `📘 このタスクの学習資料を読む — ${q.category} ${window.QuizLogic.escapeHtml(titleJa)}`;
+  box.innerHTML = `<a class="btn btn-secondary" href="${taskIdToLearnHref(q.category)}">${label}</a>`;
   box.classList.remove('hidden');
 }
 // --- 進捗一覧画面 ---

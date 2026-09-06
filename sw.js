@@ -1,5 +1,5 @@
 ﻿// Service Worker — キャッシュファースト戦略
-const CACHE_VERSION = '20260906113333';
+const CACHE_VERSION = '20260906171129';
 const CACHE_NAME = `quiz-cache-${CACHE_VERSION}`;
 const ASSETS = [
   './',
@@ -15,7 +15,12 @@ const ASSETS = [
   './learn/index.html',
   './learn/style.css',
   './learn/learn.js',
-  './learn/learn-logic.js'
+  './learn/learn-logic.js',
+  './learn/map-rag.html',
+  './learn/map-agent.html',
+  './learn/map-invoke.html',
+  './learn/map-guard.html',
+  './learn/map-ops.html'
 ];
 
 // インストール: 静的アセットをプリキャッシュ

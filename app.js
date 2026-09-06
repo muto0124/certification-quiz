@@ -45,6 +45,31 @@ function getQuestionProgress(questionId) {
   return data.progress[questionId] || { history: [] };
 }
 
+// --- 中断データ ---
+// sessionStorage はプライベートモードなどで例外を投げる。中断データは
+// 無くても出題そのものは成立するので、失敗は握りつぶして先へ進める。
+
+function saveSessionSnapshot() {
+  try {
+    const snapshot = window.QuizLogic.buildSessionSnapshot(
+      currentExamId, currentMode, sessionQuestions, currentIndex, sessionAnswers,
+    );
+    sessionStorage.setItem(window.QuizLogic.SESSION_STORAGE_KEY, JSON.stringify(snapshot));
+  } catch { /* 中断データを諦める */ }
+}
+
+function loadSessionSnapshot() {
+  try {
+    return JSON.parse(sessionStorage.getItem(window.QuizLogic.SESSION_STORAGE_KEY));
+  } catch { return null; }
+}
+
+function clearSessionSnapshot() {
+  try {
+    sessionStorage.removeItem(window.QuizLogic.SESSION_STORAGE_KEY);
+  } catch { /* 中断データを諦める */ }
+}
+
 // --- 画面切り替え ---
 
 function showScreen(id) {
@@ -175,6 +200,7 @@ function goToPrevQuestion() {
 function goToNextQuestion() {
   const nextState = window.QuizLogic.getNextQuestionState(currentIndex, sessionQuestions.length);
   if (nextState.isLast) {
+    clearSessionSnapshot();
     renderStart();
     showScreen('screen-start');
     return;
@@ -285,11 +311,13 @@ function submitCurrentAnswer() {
 
 function renderQuiz() {
   if (currentIndex >= sessionQuestions.length) {
+    clearSessionSnapshot();
     renderStart();
     showScreen('screen-start');
     showCompletionMessage();
     return;
   }
+  saveSessionSnapshot();
 
   const q = sessionQuestions[currentIndex];
   const answerState = sessionAnswers[currentIndex];

@@ -250,6 +250,7 @@ function renderSubmittedAnswer(q, answerState) {
   });
 
   renderExplanation(q.explanation);
+  renderLearnLinkForQuestion(q);
   document.getElementById('explanation-panel').classList.remove('hidden');
   document.getElementById('btn-skip').classList.add('hidden');
   document.getElementById('btn-submit').classList.add('hidden');
@@ -420,6 +421,38 @@ function renderExplanation(exp) {
   } else { pitfallsDiv.innerHTML = ''; }
 }
 
+// --- 学習資料へのリンク ---
+// categories を持つ試験（現状 API2 のみ）でだけ出す。タスク ID の "1.3" が
+// learn/1-3.html に対応する。
+
+function taskIdToLearnHref(taskId) {
+  return learn/${String(taskId).replace('.', '-')}.html;
+}
+
+function findTaskTitleJa(taskId) {
+  const domains = (window._quizCategories && window._quizCategories.domains) || [];
+  for (const domain of domains) {
+    for (const task of (domain.tasks || [])) {
+      if (task.id === taskId) return task.titleJa;
+    }
+  }
+  return null;
+}
+
+function renderLearnLinkForQuestion(q) {
+  const box = document.getElementById('exp-learn-link');
+  const titleJa = q.category ? findTaskTitleJa(q.category) : null;
+
+  if (!titleJa) {
+    box.innerHTML = '';
+    box.classList.add('hidden');
+    return;
+  }
+
+  const label = 📘 このタスクの学習資料を読む — ${q.category} ${window.QuizLogic.escapeHtml(titleJa)};
+  box.innerHTML = <a class="btn btn-secondary" href="${taskIdToLearnHref(q.category)}">${label}</a>;
+  box.classList.remove('hidden');
+}
 // --- 進捗一覧画面 ---
 
 let currentFilter = 'all';

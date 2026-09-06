@@ -56,5 +56,31 @@
     };
   }
 
-  return { getKnownTaskIds, getTaskStats, getTaskQuestionIds };
+  function getTasksStats(examData, taskIds) {
+    if (!Array.isArray(taskIds) || taskIds.length === 0) return null;
+
+    const stats = taskIds.map(id => getTaskStats(examData, id));
+    if (stats.some(s => s === null)) return null;
+
+    const total = ((examData && examData.questions) || []).length;
+    const count = stats.reduce((sum, s) => sum + s.count, 0);
+    const share = total ? Math.round((count / total) * 1000) / 10 : 0;
+
+    return { taskIds: stats.map(s => s.taskId), count, share };
+  }
+
+  function getTasksQuestionIds(examData, taskIds) {
+    if (!Array.isArray(taskIds)) return [];
+
+    const seen = new Set();
+    for (const id of taskIds) {
+      for (const qid of getTaskQuestionIds(examData, id)) seen.add(qid);
+    }
+    return [...seen].sort((a, b) => a - b);
+  }
+
+  return {
+    getKnownTaskIds, getTaskStats, getTaskQuestionIds,
+    getTasksStats, getTasksQuestionIds,
+  };
 });

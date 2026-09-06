@@ -6,6 +6,8 @@ const {
   getKnownTaskIds,
   getTaskStats,
   getTaskQuestionIds,
+  getTasksStats,
+  getTasksQuestionIds,
 } = require('./learn-logic.js');
 
 // --- テスト用の最小データ ---
@@ -65,6 +67,31 @@ const big = {
   questions: Array.from({ length: 268 }, (_, i) => ({ id: i + 1, category: i < 44 ? '1.5' : '9.9' })),
 };
 assert.equal(getTaskStats(big, '1.5').share, 16.4);
+
+// --- 複数タスクの合算 ---
+
+// 合算した問題数と構成比を返す
+assert.deepEqual(getTasksStats(sample, ['1.1', '2.1']), {
+  taskIds: ['1.1', '2.1'], count: 4, share: 100,
+});
+
+// 問題が 0 件のタスクを含んでも合算できる
+assert.deepEqual(getTasksStats(sample, ['1.1', '1.2']), {
+  taskIds: ['1.1', '1.2'], count: 2, share: 50,
+});
+
+// 未知のタスクIDが 1 つでも混じれば null
+assert.equal(getTasksStats(sample, ['1.1', '9.9']), null);
+
+// 空配列と非配列は null（data-tasks の書き忘れを黙って通さない）
+assert.equal(getTasksStats(sample, []), null);
+assert.equal(getTasksStats(sample, undefined), null);
+
+// 問題番号は昇順・重複なし
+assert.deepEqual(getTasksQuestionIds(sample, ['1.1', '2.1']), [1, 2, 3, 4]);
+assert.deepEqual(getTasksQuestionIds(sample, ['1.1', '1.1']), [1, 3]);
+assert.deepEqual(getTasksQuestionIds(sample, []), []);
+assert.deepEqual(getTasksQuestionIds(sample, ['9.9']), []);
 
 // --- 整合テスト: 全ページの data-exam / data-task が実データと一致すること ---
 const learnDir = __dirname;

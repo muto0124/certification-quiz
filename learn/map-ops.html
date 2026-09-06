@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>観測と評価の配線 — AIP-C01 サービス関係マップ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-tasks="4.3,5.1,5.2">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>観測と評価の配線 — 壊れたとき何を見るか</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <div class="learn-card">
+      <p class="learn-lead">ログの置き場所は 1 つではありません。アプリの動きか、API の監査証跡か、サービスをまたぐ経路か。見たいものごとに道具が違います。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 372" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="観測の経路。集める、見る、気づく、追う、測る・直すの5段。集めると追うと測る・直すの3段で候補が分かれる">
+          <rect width="400" height="372" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="40" font-size="19" fill="#2d3748">集める</text>
+            <text x="376" y="40" text-anchor="end" font-size="15" fill="#4a5568">CloudWatch Logs</text>
+            <path d="M200,60 V76 M194,70 L200,78 L206,70" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="82" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="116" font-size="19" fill="#4a5568">見る</text>
+            <text x="376" y="116" text-anchor="end" font-size="15" fill="#4a5568">Logs Insights</text>
+            <path d="M200,136 V152 M194,146 L200,154 L206,146" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="158" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="192" font-size="19" fill="#4a5568">気づく</text>
+            <text x="376" y="192" text-anchor="end" font-size="15" fill="#4a5568">CloudWatch アラーム</text>
+            <path d="M200,212 V228 M194,222 L200,230 L206,222" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="234" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="268" font-size="19" fill="#2d3748">追う</text>
+            <text x="376" y="268" text-anchor="end" font-size="15" fill="#4a5568">X-Ray</text>
+            <path d="M200,288 V304 M194,298 L200,306 L206,298" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="310" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="344" font-size="19" fill="#2d3748">測る・直す</text>
+            <text x="376" y="344" text-anchor="end" font-size="15" fill="#4a5568">モデル評価</text>
+          </g>
+        </svg>
+        <figcaption>4 枚のマップすべてがこの経路に流れ込む。原因の切り分けはここから始まる。</figcaption>
+      </figure>
+      <p>上から下へ、記録を集めて気づき、原因を追い、直すまでの5段です。ここには検索・エージェント・呼び出し・関門の 4 経路すべてから記録が流れ込みます。</p>
+      <p class="learn-links">
+        <a href="map-rag.html">検索の精度を直すなら → 検索経路</a>
+        <a href="map-agent.html">エージェントの挙動を直すなら → エージェントとツール連携</a>
+        <a href="map-invoke.html">呼び出しを直すなら → 呼び出しと推論基盤</a>
+        <a href="map-guard.html">検査を直すなら → 安全と統制の関門</a>
+      </p>
+    </div>
+
+    <div class="learn-card">
+      <h2>同じ段を争うもの</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 224" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="同じ段を争うサービス。集めるはアプリログか監査証跡かで、追うはサービスをまたぐ経路で、測るは何の良し悪しを測るかで分かれる">
+          <rect width="400" height="224" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+
+            <text x="14" y="24" font-size="16" fill="#2d3748">集める ── アプリログか監査証跡か</text>
+            <rect x="14" y="36" width="114" height="26" rx="4" fill="#4299e1"/>
+            <text x="71" y="54" text-anchor="middle" font-size="13" fill="#ffffff">CloudWatch Logs</text>
+            <rect x="136" y="36" width="81" height="26" rx="4" fill="#bee3f8"/>
+            <text x="176" y="54" text-anchor="middle" font-size="13" fill="#2d3748">CloudTrail</text>
+            <rect x="225" y="36" width="55" height="26" rx="4" fill="#bee3f8"/>
+            <text x="252" y="54" text-anchor="middle" font-size="13" fill="#2d3748">Athena</text>
+
+            <text x="14" y="96" font-size="16" fill="#2d3748">追う ── サービスをまたぐ経路</text>
+            <rect x="14" y="108" width="48" height="26" rx="4" fill="#4299e1"/>
+            <text x="38" y="126" text-anchor="middle" font-size="13" fill="#ffffff">X-Ray</text>
+            <rect x="70" y="108" width="100" height="26" rx="4" fill="#bee3f8"/>
+            <text x="120" y="126" text-anchor="middle" font-size="13" fill="#2d3748">Logs Insights</text>
+
+            <text x="14" y="168" font-size="16" fill="#2d3748">測る ── 何の良し悪しを測るか</text>
+            <rect x="14" y="180" width="81" height="26" rx="4" fill="#4299e1"/>
+            <text x="54" y="198" text-anchor="middle" font-size="13" fill="#ffffff">モデル評価</text>
+            <rect x="103" y="180" width="107" height="26" rx="4" fill="#bee3f8"/>
+            <text x="156" y="198" text-anchor="middle" font-size="13" fill="#2d3748">LLM-as-a-judge</text>
+            <rect x="218" y="180" width="62" height="26" rx="4" fill="#bee3f8"/>
+            <text x="249" y="198" text-anchor="middle" font-size="13" fill="#2d3748">Clarify</text>
+          </g>
+        </svg>
+        <figcaption>CloudTrail は分散トレーシングの代わりにならない。経路を追うのは X-Ray。</figcaption>
+      </figure>
+      <p>アプリの動きは CloudWatch Logs、誰がいつ何をしたかは CloudTrail、サービスをまたぐ経路は X-Ray です。精度はモデル評価、公平性は Clarify が担います。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこを読むか</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>段</th><th>候補</th><th>深掘り</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>集めて気づく</td>
+              <td>CloudWatch Logs / CloudTrail / CloudWatch アラーム / Athena</td>
+              <td><a href="4-3.html">4.3</a></td>
+            </tr>
+            <tr>
+              <td>測る</td>
+              <td>モデル評価 / LLM-as-a-judge / Clarify</td>
+              <td><a href="5-1.html">5.1</a></td>
+            </tr>
+            <tr>
+              <td>追って直す</td>
+              <td>X-Ray / Logs Insights</td>
+              <td><a href="5-2.html">5.2</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>このマップだけでは足りない場面: 原因の切り分けが済んだあと、直し方を決めるときは、該当する経路のマップへ戻ってください。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>このマップが束ねるタスクの問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">番号はこのマップが束ねる3タスクの問題です。図に出るサービスと一対一ではありません。クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain4.html">AIP-C01 試験ガイド Content Domain 4</a></li>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain5.html">AIP-C01 試験ガイド Content Domain 5</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>エージェントとツール連携 — AIP-C01 サービス関係マップ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-tasks="1.6,2.1,2.3,2.5">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>エージェントとツール連携 — モデルが外に手を伸ばす</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <div class="learn-card">
+      <p class="learn-lead">エージェントは、モデルに道具を持たせる仕組みです。誰が判断し、誰が道具を持ち、手順をどこまで固定するか。その線引きがこのマップの中身です。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 372" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="エージェントの経路。指示、判断する主体、道具の口、記憶、手順の固定の5段。判断する主体と道具の口と手順の固定の3段で候補が分かれる">
+          <rect width="400" height="372" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="40" font-size="19" fill="#4a5568">指示</text>
+            <text x="376" y="40" text-anchor="end" font-size="15" fill="#4a5568">Prompt Management</text>
+            <path d="M200,60 V76 M194,70 L200,78 L206,70" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="82" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="116" font-size="19" fill="#2d3748">判断する主体</text>
+            <text x="376" y="116" text-anchor="end" font-size="15" fill="#4a5568">Bedrock Agents</text>
+            <path d="M200,136 V152 M194,146 L200,154 L206,146" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="158" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="192" font-size="19" fill="#2d3748">道具の口</text>
+            <text x="376" y="192" text-anchor="end" font-size="15" fill="#4a5568">アクショングループ</text>
+            <path d="M200,212 V228 M194,222 L200,230 L206,222" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="234" width="388" height="54" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="268" font-size="19" fill="#4a5568">記憶</text>
+            <text x="376" y="268" text-anchor="end" font-size="15" fill="#4a5568">DynamoDB</text>
+            <path d="M200,288 V304 M194,298 L200,306 L206,298" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="310" width="388" height="54" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="344" font-size="19" fill="#2d3748">手順の固定</text>
+            <text x="376" y="344" text-anchor="end" font-size="15" fill="#4a5568">Step Functions</text>
+          </g>
+        </svg>
+        <figcaption>青く囲った3段が候補の割れる場所。手順をどこまで固定するかが最大の分かれ目。</figcaption>
+      </figure>
+      <p>上から下へ、指示を受けたモデルが道具を使い、結果を覚え、手順に収まるまでの5段です。</p>
+      <p class="learn-links">
+        <a href="map-rag.html">知識を引くときは → 検索経路</a>
+        <a href="map-guard.html">入出力の検査は → 安全と統制の関門</a>
+        <a href="map-ops.html">実行の記録は → 観測と評価の配線</a>
+      </p>
+    </div>
+
+    <div class="learn-card">
+      <h2>同じ段を争うもの</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 256" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="同じ段を争うサービス。判断と手順は手順が事前に決まっているかで、道具の口は持ち主と接続で分かれる。AgentCore と Strands は層が違う">
+          <rect width="400" height="256" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+
+            <text x="14" y="24" font-size="16" fill="#2d3748">判断と手順 ── 手順が事前に決まっているか</text>
+            <rect x="14" y="36" width="107" height="26" rx="4" fill="#4299e1"/>
+            <text x="67" y="54" text-anchor="middle" font-size="13" fill="#ffffff">Bedrock Agents</text>
+            <rect x="129" y="36" width="94" height="26" rx="4" fill="#bee3f8"/>
+            <text x="176" y="54" text-anchor="middle" font-size="13" fill="#2d3748">Prompt Flows</text>
+            <rect x="231" y="36" width="107" height="26" rx="4" fill="#bee3f8"/>
+            <text x="284" y="54" text-anchor="middle" font-size="13" fill="#2d3748">Step Functions</text>
+            <rect x="14" y="68" width="55" height="26" rx="4" fill="#bee3f8"/>
+            <text x="41" y="86" text-anchor="middle" font-size="13" fill="#2d3748">Lambda</text>
+
+            <text x="14" y="128" font-size="16" fill="#2d3748">道具の口 ── 持ち主と接続</text>
+            <rect x="14" y="140" width="133" height="26" rx="4" fill="#4299e1"/>
+            <text x="80" y="158" text-anchor="middle" font-size="13" fill="#ffffff">アクショングループ</text>
+            <rect x="155" y="140" width="36" height="26" rx="4" fill="#bee3f8"/>
+            <text x="173" y="158" text-anchor="middle" font-size="13" fill="#2d3748">MCP</text>
+            <rect x="199" y="140" width="48" height="26" rx="4" fill="#bee3f8"/>
+            <text x="223" y="158" text-anchor="middle" font-size="13" fill="#2d3748">STDIO</text>
+            <rect x="255" y="140" width="114" height="26" rx="4" fill="#bee3f8"/>
+            <text x="312" y="158" text-anchor="middle" font-size="13" fill="#2d3748">Streamable HTTP</text>
+
+            <text x="14" y="200" font-size="16" fill="#2d3748">層が違うもの ── 競合ではない</text>
+            <rect x="14" y="212" width="74" height="26" rx="4" fill="#4299e1"/>
+            <text x="51" y="230" text-anchor="middle" font-size="13" fill="#ffffff">AgentCore</text>
+            <rect x="96" y="212" width="62" height="26" rx="4" fill="#bee3f8"/>
+            <text x="127" y="230" text-anchor="middle" font-size="13" fill="#2d3748">Strands</text>
+          </g>
+        </svg>
+        <figcaption>AgentCore と Strands は同じ段を争わない。実行基盤と SDK で層が違う。</figcaption>
+      </figure>
+      <p>手順が事前に決まっているなら Prompt Flows や Step Functions、決まっていないならエージェントに任せます。道具が自分のものか外部のものかで、アクショングループと MCP が分かれます。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこを読むか</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>段</th><th>候補</th><th>深掘り</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>指示の管理</td>
+              <td>Prompt Management / Prompt Flows</td>
+              <td><a href="1-6.html">1.6</a></td>
+            </tr>
+            <tr>
+              <td>判断と手順</td>
+              <td>Bedrock Agents / Step Functions / Lambda</td>
+              <td><a href="2-1.html">2.1</a></td>
+            </tr>
+            <tr>
+              <td>道具の口</td>
+              <td>アクショングループ / MCP</td>
+              <td><a href="2-1.html">2.1</a></td>
+            </tr>
+            <tr>
+              <td>社内システムとの統合</td>
+              <td>API Gateway / Q Business</td>
+              <td><a href="2-3.html">2.3</a></td>
+            </tr>
+            <tr>
+              <td>開発と実行</td>
+              <td>AgentCore / Strands</td>
+              <td><a href="2-5.html">2.5</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>このマップだけでは足りない場面: エージェントが引く知識そのものの精度は <a href="map-rag.html">検索経路</a>、ツール呼び出しの記録と追跡は <a href="map-ops.html">観測と評価の配線</a> を見てください。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>このマップが束ねるタスクの問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">番号はこのマップが束ねる4タスクの問題です。図に出るサービスと一対一ではありません。クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain2.html">AIP-C01 試験ガイド Content Domain 2</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html">Amazon Bedrock User Guide — Agents</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

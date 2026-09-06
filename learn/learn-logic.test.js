@@ -223,6 +223,18 @@ for (const m of maps) {
   );
 }
 
+// 5 枚のマップが束ねるタスクの和集合は、1.1 を除く 19 タスクと一致する
+const covered = [...new Set(maps.flatMap(m => m.tasks))].sort();
+const expected = api2Tasks.filter(t => t !== '1.1').sort();
+assert.deepEqual(
+  covered, expected,
+  'マップが束ねるタスクの和集合が 1.1 を除く 19 タスクと一致しません'
+);
+
+// 同じタスクが 2 枚のマップに属さない
+const allTasks = maps.flatMap(m => m.tasks);
+assert.equal(new Set(allTasks).size, allTasks.length, '同じタスクが複数のマップに属しています');
+
 // マップ ID は重複しない
 const mapIds = maps.map(m => m.id);
 assert.equal(new Set(mapIds).size, mapIds.length, 'マップ ID が重複しています');

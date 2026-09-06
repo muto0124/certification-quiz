@@ -13,6 +13,10 @@
   // マップページの定義。ページを作った順に足す。tasks は各ページの data-tasks と一致させる
   const MAPS = [
     { id: 'map-rag', title: '検索経路', subtitle: '文書が答えになるまで', tasks: ['1.3', '1.4', '1.5'] },
+    { id: 'map-agent', title: 'エージェントとツール連携', subtitle: 'モデルが外に手を伸ばす', tasks: ['1.6', '2.1', '2.3', '2.5'] },
+    { id: 'map-invoke', title: '呼び出しと推論基盤', subtitle: 'リクエストがモデルに届くまで', tasks: ['1.2', '2.2', '2.4', '4.1', '4.2'] },
+    { id: 'map-guard', title: '安全と統制の関門', subtitle: 'どこで何を止めるか', tasks: ['3.1', '3.2', '3.3', '3.4'] },
+    { id: 'map-ops', title: '観測と評価の配線', subtitle: '壊れたとき何を見るか', tasks: ['4.3', '5.1', '5.2'] },
   ];
 
   function getMaps() {
@@ -34,6 +38,59 @@
     { label: 'メタデータフィルター', match: ['メタデータフィルタ'], map: ['map-rag'] },
     { label: 'クエリ分解', match: ['query decomposition', 'クエリ分解'], map: ['map-rag'] },
     { label: 'RetrieveAndGenerate', match: ['RetrieveAndGenerate'], map: ['map-rag'] },
+
+    { label: 'Prompt Management', match: ['Prompt Management'], map: ['map-agent'] },
+    { label: 'Prompt Flows', match: ['Prompt Flows'], map: ['map-agent'] },
+    { label: 'Bedrock Agents', match: ['Bedrock Agents'], map: ['map-agent'] },
+    { label: 'Step Functions', match: ['Step Functions'], map: ['map-agent'] },
+    { label: 'アクショングループ', match: ['アクショングループ'], map: ['map-agent'] },
+    { label: 'MCP', match: ['MCP'], map: ['map-agent'] },
+    { label: 'STDIO', match: ['STDIO'], map: ['map-agent'] },
+    { label: 'Streamable HTTP', match: ['Streamable HTTP'], map: ['map-agent'] },
+    { label: 'AgentCore', match: ['AgentCore'], map: ['map-agent'] },
+    { label: 'Strands', match: ['Strands'], map: ['map-agent'] },
+    { label: 'DynamoDB', match: ['DynamoDB'], map: ['map-agent'] },
+    { label: 'Q Business', match: ['Q Business'], map: ['map-agent'] },
+
+    { label: 'API Gateway', match: ['API Gateway'], map: ['map-agent', 'map-invoke'] },
+    { label: 'Lambda', match: ['Lambda'], map: ['map-agent', 'map-invoke'] },
+    { label: 'AppSync', match: ['AppSync'], map: ['map-invoke'] },
+    { label: 'Amplify', match: ['Amplify'], map: ['map-invoke'] },
+    { label: 'ECS', match: ['ECS'], map: ['map-invoke'] },
+    { label: 'AppConfig', match: ['AppConfig'], map: ['map-invoke'] },
+    { label: 'Converse', match: ['Converse'], map: ['map-invoke'] },
+    { label: 'ConverseStream', match: ['ConverseStream'], map: ['map-invoke'] },
+    { label: 'InvokeModel', match: ['InvokeModel'], map: ['map-invoke'] },
+    { label: 'InvokeModelWithResponseStream', match: ['InvokeModelWithResponseStream'], map: ['map-invoke'] },
+    { label: '推論プロファイル', match: ['推論プロファイル'], map: ['map-invoke'] },
+    { label: 'オンデマンド', match: ['オンデマンド'], map: ['map-invoke'] },
+    { label: 'プロビジョンドスループット', match: ['プロビジョンドスループット', 'Provisioned Throughput'], map: ['map-invoke'] },
+    { label: 'バッチ推論', match: ['Batch inference', 'バッチ推論'], map: ['map-invoke'] },
+    { label: 'プロンプトキャッシュ', match: ['prompt caching', 'プロンプトキャッシュ'], map: ['map-invoke'] },
+    { label: 'intelligent prompt routing', match: ['intelligent prompt routing'], map: ['map-invoke'] },
+    { label: 'Nova', match: ['Nova'], map: ['map-invoke'] },
+
+    { label: 'AWS WAF', match: ['AWS WAF'], map: ['map-guard'] },
+    { label: 'Cognito', match: ['Cognito'], map: ['map-guard'] },
+    { label: 'Bedrock Guardrails', match: ['Bedrock Guardrails'], map: ['map-guard'] },
+    { label: 'Comprehend', match: ['Comprehend'], map: ['map-guard'] },
+    { label: 'ApplyGuardrail', match: ['ApplyGuardrail'], map: ['map-guard'] },
+    { label: 'KMS', match: ['KMS'], map: ['map-guard'] },
+    { label: 'Macie', match: ['Macie'], map: ['map-guard'] },
+    { label: 'Lake Formation', match: ['Lake Formation'], map: ['map-guard'] },
+    { label: 'PrivateLink', match: ['PrivateLink'], map: ['map-guard'] },
+    { label: 'SCP', match: ['SCP'], map: ['map-guard'] },
+    { label: 'IAM', match: ['IAM'], map: ['map-guard'] },
+
+    { label: 'CloudWatch Logs', match: ['CloudWatch Logs'], map: ['map-ops'] },
+    { label: 'CloudTrail', match: ['CloudTrail'], map: ['map-ops'] },
+    { label: 'CloudWatch アラーム', match: ['CloudWatch アラーム'], map: ['map-ops'] },
+    { label: 'Logs Insights', match: ['Logs Insights'], map: ['map-ops'] },
+    { label: 'Athena', match: ['Athena'], map: ['map-ops'] },
+    { label: 'X-Ray', match: ['X-Ray'], map: ['map-ops'] },
+    { label: 'モデル評価', match: ['モデル評価'], map: ['map-ops'] },
+    { label: 'LLM-as-a-judge', match: ['LLM-as-a-judge'], map: ['map-ops'] },
+    { label: 'Clarify', match: ['Clarify'], map: ['map-ops'] },
   ];
 
   function getAllServices() {

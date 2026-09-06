@@ -54,6 +54,19 @@ body {
 .learn-nav a { color: #4299e1; text-decoration: none; font-size: 0.9rem; }
 .learn-nav a:hover { text-decoration: underline; }
 
+.learn-resume { margin-bottom: 0.75rem; }
+.learn-resume a {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  background: #ebf8ff;
+  border: 1px solid #bee3f8;
+  border-radius: 6px;
+  color: #2b6cb0;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.learn-resume a:hover { background: #bee3f8; }
+
 .learn-links { display: flex; flex-direction: column; gap: 0.35rem; margin-top: 0.75rem; }
 .learn-links a { color: #4299e1; text-decoration: none; font-size: 0.9rem; }
 .learn-links a:hover { text-decoration: underline; }

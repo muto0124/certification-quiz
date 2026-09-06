@@ -11,6 +11,35 @@ function taskIdToHref(taskId) {
   return taskId.replace('.', '-') + '.html';
 }
 
+// 中断データがあれば、ページ先頭に問題への戻りリンクを挿す。
+// 26 個の HTML を編集せずに済ませるため DOM で生成する。
+// body の data-exam と一致する試験のときだけ出す。別試験の中断データを
+// 元に出すと、同じ番号の別問題へ誘導してしまう。
+
+function readSessionSnapshot() {
+  try {
+    return JSON.parse(sessionStorage.getItem(window.LearnLogic.SESSION_STORAGE_KEY));
+  } catch { return null; }
+}
+
+function renderResumeLink(examId) {
+  const label = window.LearnLogic.formatResumeLabel(readSessionSnapshot(), examId);
+  if (!label) return;
+
+  const page = document.querySelector('.learn-page');
+  if (!page) return;
+
+  const paragraph = document.createElement('p');
+  paragraph.className = 'learn-resume';
+
+  const link = document.createElement('a');
+  link.href = '../index.html#resume';
+  link.textContent = label;
+
+  paragraph.appendChild(link);
+  page.insertBefore(paragraph, page.firstElementChild);
+}
+
 async function loadExamData(examId) {
   const res = await fetch(`../data/${examId}.json`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -132,6 +161,9 @@ function renderIndexPage(examData) {
   const body = document.body;
   const examId = body.dataset.exam;
   if (!examId) return;
+
+  // 問題データの取得に失敗しても戻りリンクは出す
+  renderResumeLink(examId);
 
   try {
     const examData = await loadExamData(examId);

@@ -7,6 +7,40 @@
 
   root.LearnLogic = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  // 図に出すサービスの単一の出所。label は逆引き欄の表示、match はテストの照合に使う。
+  // 図は日本語、実データの主表記は英語なので両者を分ける
+  //（例: 「リランカー」は API2.json に 4 件、「Rerank」は 129 件）
+  const SERVICES = [
+    { label: 'Bedrock Data Automation', match: ['Bedrock Data Automation'], map: ['map-rag'] },
+    { label: 'Textract', match: ['Textract'], map: ['map-rag'] },
+    { label: 'Transcribe', match: ['Transcribe'], map: ['map-rag'] },
+    { label: 'Titan Embeddings', match: ['Titan Embed'], map: ['map-rag'] },
+    { label: 'OpenSearch Serverless', match: ['OpenSearch Serverless'], map: ['map-rag'] },
+    { label: 'S3 Vectors', match: ['S3 Vectors'], map: ['map-rag'] },
+    { label: 'Aurora pgvector', match: ['pgvector'], map: ['map-rag'] },
+    { label: 'Neptune Analytics', match: ['Neptune Analytics'], map: ['map-rag'] },
+    { label: 'Kendra', match: ['Kendra'], map: ['map-rag'] },
+    { label: 'ハイブリッド検索', match: ['hybrid', 'ハイブリッド'], map: ['map-rag'] },
+    { label: 'リランカー', match: ['rerank', 'リランカー'], map: ['map-rag'] },
+    { label: 'メタデータフィルター', match: ['メタデータフィルタ'], map: ['map-rag'] },
+    { label: 'クエリ分解', match: ['query decomposition', 'クエリ分解'], map: ['map-rag'] },
+    { label: 'RetrieveAndGenerate', match: ['RetrieveAndGenerate'], map: ['map-rag'] },
+  ];
+
+  function getAllServices() {
+    return SERVICES.map(s => ({ label: s.label, match: [...s.match], map: [...s.map] }));
+  }
+
+  function getServicesForMap(mapId) {
+    return getAllServices().filter(s => s.map.includes(mapId));
+  }
+
+  function findServices(query) {
+    const q = String(query == null ? '' : query).trim().toLowerCase();
+    if (!q) return [];
+    return getAllServices().filter(s => s.label.toLowerCase().includes(q));
+  }
+
   function getDomains(examData) {
     const cat = examData && examData.categories;
     return (cat && Array.isArray(cat.domains)) ? cat.domains : [];
@@ -82,5 +116,6 @@
   return {
     getKnownTaskIds, getTaskStats, getTaskQuestionIds,
     getTasksStats, getTasksQuestionIds,
+    getAllServices, getServicesForMap, findServices,
   };
 });

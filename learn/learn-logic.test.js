@@ -8,6 +8,9 @@ const {
   getTaskQuestionIds,
   getTasksStats,
   getTasksQuestionIds,
+  getAllServices,
+  getServicesForMap,
+  findServices,
 } = require('./learn-logic.js');
 
 // --- テスト用の最小データ ---
@@ -145,5 +148,50 @@ assert.ok(
   pages.some(f => f.startsWith('map-')),
   'マップページ（map-*.html）が 1 つも見つかりません'
 );
+
+// --- サービス定数 ---
+
+const services = getAllServices();
+assert.ok(services.length > 0, 'サービス定数が空です');
+
+for (const s of services) {
+  assert.ok(typeof s.label === 'string' && s.label.length > 0, `label が不正: ${JSON.stringify(s)}`);
+  assert.ok(Array.isArray(s.match) && s.match.length > 0, `${s.label}: match が空です`);
+  assert.ok(Array.isArray(s.map) && s.map.length > 0, `${s.label}: map が空です`);
+}
+
+// 表示名は重複しない（逆引き欄で同じ行が二重に出る事故を防ぐ）
+const labels = services.map(s => s.label);
+assert.equal(new Set(labels).size, labels.length, 'サービス定数の label が重複しています');
+
+// 検査1: match のいずれかが実データ（API2.json）に現れる
+const api2Text = JSON.stringify(loadExam('API2')).toLowerCase();
+for (const s of services) {
+  const hit = s.match.some(m => api2Text.includes(m.toLowerCase()));
+  assert.ok(hit, `サービス定数 "${s.label}": match ${JSON.stringify(s.match)} が API2.json に見つかりません`);
+}
+
+// 検査2: label が所属マップの HTML に現れる
+for (const s of services) {
+  for (const mapId of s.map) {
+    const file = path.join(learnDir, `${mapId}.html`);
+    assert.ok(fs.existsSync(file), `サービス定数 "${s.label}" が存在しないマップ ${mapId} を指しています`);
+    const html = fs.readFileSync(file, 'utf8');
+    assert.ok(html.includes(s.label), `${mapId}.html: 定数の "${s.label}" が本文にありません`);
+  }
+}
+
+// マップ単位の取り出し
+assert.ok(getServicesForMap('map-rag').length > 0, 'map-rag のサービスが 0 件です');
+assert.deepEqual(getServicesForMap('map-nonexistent'), []);
+
+// 逆引きは label の部分一致、大文字小文字を無視
+assert.deepEqual(findServices('kendra').map(s => s.label), ['Kendra']);
+assert.deepEqual(findServices('KENDRA').map(s => s.label), ['Kendra']);
+assert.ok(findServices('リランカー').some(s => s.label === 'リランカー'));
+assert.deepEqual(findServices(''), []);
+assert.deepEqual(findServices('   '), []);
+assert.deepEqual(findServices(undefined), []);
+assert.deepEqual(findServices('該当なしのはず'), []);
 
 console.log('learn-logic tests passed');

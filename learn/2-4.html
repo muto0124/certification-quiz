@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2.4 基盤モデル API の統合 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="2.4">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>2.4 基盤モデル API の統合</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">呼び方の設計です。生成の途中から返すか、失敗にどう耐えるか、どのモデルへ流すか。この3つで構成が決まります。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="API 統合の3つの論点。逐次で返すストリーミング、失敗に耐える再試行と遮断、どのモデルへ流すかのルーティング">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">逐次で返す</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">完成を待たせない</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">部分応答を送り続ける</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">失敗に耐える</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">待って、散らして、止める</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">再試行が障害を広げない</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">振り分ける</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">難しさに応じて選ぶ</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">同一系列か、跨ぐか</text>
+          </g>
+        </svg>
+        <figcaption>3つとも、モデルそのものではなく呼び方の話。</figcaption>
+      </figure>
+
+      <p>電話の取り次ぎに似ています。相手を待たせないよう相槌を打ち（逐次）、話し中なら間を置いて掛け直し、何度も繋がらなければ一旦やめる（耐障害）。用件によって担当部署に回す（振り分け）。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>完成を待ってから返す。</strong> 生成に 15 秒から 45 秒かかる処理を、出来上がるまで黙って待たせると、利用者は止まったと感じます。長い生成ほど、途中から見せる価値が大きくなります。</p>
+      <p><strong>失敗したら即座に再試行する。</strong> ピーク時に全クライアントが一斉に再送すると、混雑をさらに悪化させます。待ち時間を指数的に伸ばし、ばらつきを持たせ、繰り返す失敗は遮断します。</p>
+      <p><strong>用途の違う API を選ぶ。</strong> ナレッジベースを使わない普通の会話に検索付きの API を持ち出したり、逆に引用が要る場面で素の生成 API を選んだりすると、余計な組み立てが増えます。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>生成中から表示したい</td>
+              <td>ストリーミング API</td>
+              <td>部分応答を送れる</td>
+            </tr>
+            <tr>
+              <td>引用付きで逐次表示</td>
+              <td>RetrieveAndGenerateStream</td>
+              <td>検索と生成を一度に</td>
+            </tr>
+            <tr>
+              <td>検索を使わない通常会話</td>
+              <td>ConverseStream</td>
+              <td>共通の messages 形式</td>
+            </tr>
+            <tr>
+              <td>文書を添付して会話</td>
+              <td>ContentBlock の document</td>
+              <td>text と一緒に渡せる</td>
+            </tr>
+            <tr>
+              <td>ピーク時の再試行</td>
+              <td>ジッター付き指数バックオフ</td>
+              <td>障害を広げない</td>
+            </tr>
+            <tr>
+              <td>繰り返す失敗を止める</td>
+              <td>サーキットブレーカー</td>
+              <td>落ちた先を切り離す</td>
+            </tr>
+            <tr>
+              <td>難易度で自動的に使い分け</td>
+              <td>Prompt Router</td>
+              <td>同一系列内で自動判定</td>
+            </tr>
+            <tr>
+              <td>能力の違うタスクを分ける</td>
+              <td>アプリ側で明示的に分岐</td>
+              <td>系列を跨ぐため</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>Intelligent Prompt Routing は同一モデルファミリー内での振り分け。</strong> 自分で構成する場合も、同じファミリーから2つ選び、応答品質の差を routing criteria として設定する。基準を満たさない場合は fallback model へ回る。</li>
+        <li>ファミリーを跨ぐ振り分け（たとえば SageMaker のエンドポイントと Bedrock の基盤モデル）は Prompt Router では扱えない。アプリケーションや Step Functions で明示的に分岐する。</li>
+        <li>ルーターを挟むことによる追加のオーバーヘッドは P90 で約 85 ミリ秒。安いモデルへ回る分と差し引きで、全体では下がることが多い。</li>
+        <li>Converse と ConverseStream は複数のモデルを同じ messages 形式で扱える。IAM ロールで認証すれば、実行環境や言語が違っても同じインターフェースで呼べる。</li>
+        <li>再試行の設計は3点セット。指数バックオフ、ジッター、そしてサーキットブレーカー。ストリームを張り直す場合は重複を避けるための識別子も要る。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 302" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="振り分けの2種類。Prompt Router は同一モデルファミリー内で自動判定し、アプリ側の分岐は異なるファミリーや推論基盤を跨げる">
+          <rect width="400" height="302" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="134" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="36" font-size="20" fill="#2d3748">Prompt Router</text>
+            <text x="24" y="66" font-size="17" fill="#1a202c">同一ファミリー内の 2 モデル</text>
+            <text x="24" y="94" font-size="17" fill="#4a5568">品質差の基準で自動判定</text>
+            <text x="24" y="122" font-size="17" fill="#4a5568">満たさなければ fallback へ</text>
+
+            <rect x="6" y="156" width="388" height="134" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="186" font-size="20" fill="#2d3748">アプリ側の分岐</text>
+            <text x="24" y="216" font-size="17" fill="#1a202c">ファミリーや基盤を跨げる</text>
+            <text x="24" y="244" font-size="17" fill="#4a5568">条件は自分で書く</text>
+            <text x="24" y="272" font-size="17" fill="#4a5568">SageMaker との併用も可</text>
+          </g>
+        </svg>
+        <figcaption>「同じ系列の大小2モデル」なら Router、「性質の違うタスク群」ならアプリ側。</figcaption>
+      </figure>
+      <p>問題文が「単純な質問は安いモデル、複雑なものだけ高性能モデル」と言っていれば Prompt Router です。「コードレビューと画像解析と翻訳」のように能力の系統が違うものが並んでいたら、明示的な分岐を選びます。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain2.html">AIP-C01 試験ガイド Content Domain 2</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-routing.html">Amazon Bedrock User Guide — Understanding intelligent prompt routing</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

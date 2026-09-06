@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1.6 プロンプトエンジニアリングとガバナンス — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="1.6">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>1.6 プロンプトエンジニアリングとガバナンス</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">プロンプトをコードに埋め込まない、という話です。管理された版を1か所に置き、実行時に参照させます。書き方の工夫より、扱い方の設計が問われます。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 306" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="プロンプトの一生。編集中の下書き、承認して固めた版、アプリが参照する別名という3段階に分かれる">
+          <rect width="400" height="306" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="80" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <text x="24" y="38" font-size="20" fill="#2d3748">DRAFT — 編集中</text>
+            <text x="24" y="68" font-size="17" fill="#4a5568">試すときは準備してから</text>
+
+            <path d="M200,86 V104 M194,98 L200,106 L206,98" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="110" width="388" height="80" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="142" font-size="20" fill="#2d3748">version — 固まった版</text>
+            <text x="24" y="172" font-size="17" fill="#4a5568">承認済み、以後変わらない</text>
+
+            <path d="M200,190 V208 M194,202 L200,210 L206,202" fill="none" stroke="#4a5568" stroke-width="2"/>
+            <rect x="6" y="214" width="388" height="80" rx="8" fill="#ebf8ff" stroke="#4299e1" stroke-width="2"/>
+            <text x="24" y="246" font-size="20" fill="#2d3748">alias — 参照先</text>
+            <text x="24" y="276" font-size="17" fill="#4a5568">アプリは常にここを見る</text>
+          </g>
+        </svg>
+        <figcaption>アプリは alias を見る。切り替えは alias が指す version を差し替えるだけ。</figcaption>
+      </figure>
+
+      <p>就業規則の運用と同じです。各部署がコピーを持つと、いつのまにか版が食い違い、どれが正しいのか誰にも分からなくなります。正本を1つ置いて全員にそこを参照させ、改訂したら正本を差し替える。参照する側は何も変えません。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>テンプレートをアプリにコピーする。</strong> 一見早いのですが、版が散り、誰がいつ変えたか分からなくなり、問題が起きても戻せません。複数チームで同じテンプレートを使う場面では特に効いてきます。</p>
+      <p><strong>本番から下書きを実行する。</strong> 作業中の編集がそのまま利用者に出ます。本番は固まった版を指す参照先だけを見るようにします。</p>
+      <p><strong>会話履歴やツールを扱えないテンプレート種別を選ぶ。</strong> 単発のテキスト生成と、履歴やシステム指示やツール利用を伴う対話とでは、必要なテンプレートの種類が違います。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>承認済みの版だけ使わせる</td>
+              <td>prompt version の ARN を参照</td>
+              <td>本文をコピーしない</td>
+            </tr>
+            <tr>
+              <td>参照先を固定したまま切替</td>
+              <td>alias</td>
+              <td>アプリを変えずに済む</td>
+            </tr>
+            <tr>
+              <td>会話履歴・system・ツール</td>
+              <td>CHAT テンプレート</td>
+              <td>TEXT では扱えない</td>
+            </tr>
+            <tr>
+              <td>候補を同じ条件で比べる</td>
+              <td>variants とテスト変数</td>
+              <td>比較条件が揃う</td>
+            </tr>
+            <tr>
+              <td>改善のたたき台がほしい</td>
+              <td>プロンプト最適化</td>
+              <td>採否は人が決める</td>
+            </tr>
+            <tr>
+              <td>変更履歴と監査を残す</td>
+              <td>CloudTrail と IAM</td>
+              <td>誰がいつ変えたか</td>
+            </tr>
+            <tr>
+              <td>下書きを本番に影響なく試す</td>
+              <td>準備してから実行</td>
+              <td>alias は動かさない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong>Converse の <code>modelId</code> には prompt version の ARN を渡せる。</strong> 実行時の値は <code>promptVariables</code> で渡す。本文を各アプリへ配らずに、承認済みの版を共有できる。</li>
+        <li><strong>CHAT テンプレートは会話履歴、system instructions、tool use、プロンプトキャッシュを扱える。</strong> TEXT テンプレートでは扱えない。Converse に対応したモデルが前提になる。</li>
+        <li>Prompt Flows は DRAFT、version、alias に分かれる。本番は alias 経由で不変の version を指し、リリースのたびにアプリの参照先を書き換えない。</li>
+        <li>DRAFT の編集内容を試すときは、version 化や alias の切り替えの前に準備の操作を挟む。本番 alias が指す version には影響しない。</li>
+        <li>ナレッジベースで独自モデルやカスタムモデルを生成に使う場合、基盤モデル向けの既定プロンプトのままでは動かない。orchestration と generation のプロンプトを明示的に設定する。</li>
+      </ul>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 268" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="本文をコピー配布する場合と管理された版を参照する場合の違い。コピーでは版が食い違い、参照では正本が1つに保たれる">
+          <rect width="400" height="268" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">コピー配布</text>
+            <rect x="14" y="40" width="112" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="70" y="66" text-anchor="middle" font-size="17" fill="#2d3748">v1</text>
+            <rect x="140" y="40" width="112" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="196" y="66" text-anchor="middle" font-size="17" fill="#2d3748">v2</text>
+            <rect x="266" y="40" width="120" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="326" y="66" text-anchor="middle" font-size="17" fill="#2d3748">v1 改</text>
+            <text x="14" y="106" font-size="17" fill="#e53e3e">どれが正しいか分からなくなる</text>
+
+            <text x="14" y="158" font-size="18" fill="#2d3748">版を参照</text>
+            <rect x="14" y="172" width="112" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="70" y="198" text-anchor="middle" font-size="17" fill="#2d3748">アプリA</text>
+            <rect x="140" y="172" width="112" height="40" rx="6" fill="#cbd5e0"/>
+            <text x="196" y="198" text-anchor="middle" font-size="17" fill="#2d3748">アプリB</text>
+            <path d="M70,212 V232 H196 V212" fill="none" stroke="#4299e1" stroke-width="2"/>
+            <rect x="266" y="172" width="120" height="40" rx="6" fill="#4299e1"/>
+            <text x="326" y="198" text-anchor="middle" font-size="17" fill="#ffffff">正本</text>
+            <path d="M258,192 H196" fill="none" stroke="#4299e1" stroke-width="2"/>
+            <text x="14" y="256" font-size="17" fill="#4a5568">改訂しても参照側は変えない</text>
+          </g>
+        </svg>
+        <figcaption>「複数チームで共通利用」「法務レビュー済みだけを本番で」が出たら参照方式。</figcaption>
+      </figure>
+      <p>試験では「テンプレートを各アプリにコピーする」という選択肢が必ず紛れています。監査、ロールバック、A/B 比較のいずれかが要件にあれば、その選択肢は落とせます。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain1.html">AIP-C01 試験ガイド Content Domain 1</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-management.html">Amazon Bedrock User Guide — Amazon Bedrock Prompt Management</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

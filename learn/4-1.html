@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4.1 コスト最適化とリソース効率 — AIP-C01</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-exam="API2" data-task="4.1">
+  <div class="learn-page">
+    <p class="learn-nav"><a href="index.html">← 一覧に戻る</a></p>
+    <h1>4.1 コスト最適化とリソース効率</h1>
+    <p class="learn-meta" id="learn-meta" hidden></p>
+
+    <!-- 直感層 -->
+    <div class="learn-card">
+      <p class="learn-lead">払っているのはトークンです。減らす道は3つ。そもそも送らない、送ったものを使い回す、安いモデルに回す。</p>
+    </div>
+
+    <div class="learn-card">
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 324" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="トークン費用を減らす3つの道。送る量を減らす、送ったものを使い回す、安いモデルへ振り分ける">
+          <rect width="400" height="324" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <rect x="6" y="6" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="6" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="34" font-size="21" fill="#2d3748">送らない</text>
+            <text x="24" y="64" font-size="17" fill="#1a202c">履歴を圧縮、上限を決める</text>
+            <text x="24" y="90" font-size="17" fill="#4a5568">送る前に数えて判断する</text>
+
+            <rect x="6" y="114" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="114" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="142" font-size="21" fill="#2d3748">使い回す</text>
+            <text x="24" y="172" font-size="17" fill="#1a202c">同じ前置きは再利用</text>
+            <text x="24" y="198" font-size="17" fill="#4a5568">似た質問は答えも再利用</text>
+
+            <rect x="6" y="222" width="388" height="96" rx="8" fill="#ffffff" stroke="#cbd5e0" stroke-width="1.5"/>
+            <rect x="6" y="222" width="6" height="96" fill="#4299e1"/>
+            <text x="24" y="250" font-size="21" fill="#2d3748">安い方へ回す</text>
+            <text x="24" y="280" font-size="17" fill="#1a202c">簡単な質問は小型モデル</text>
+            <text x="24" y="306" font-size="17" fill="#4a5568">難しいものだけ大型へ</text>
+          </g>
+        </svg>
+        <figcaption>3つは併用できる。どれか一つで足りることは少ない。</figcaption>
+      </figure>
+
+      <p>電気代の下げ方と同じです。使っていない部屋の明かりを消し、洗濯はまとめて回し、古い家電を省エネ型に替える。一つやれば劇的に下がるわけではなく、積み重ねで効いてきます。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>どこで間違えるのか</h2>
+      <p><strong>文字数でトークンを見積もる。</strong> 実際に送られるのは、会話履歴も添付文書もツールの実行結果も含んだ構造です。しかも数え方はモデルごとに違います。文字数からの換算では上限にもコストにも届きません。</p>
+      <p><strong>キャッシュの前に変わるものを置く。</strong> プロンプトキャッシュは前方一致で効きます。先頭にタイムスタンプや会話要約を置くと、後ろがどれだけ同じでも毎回外れます。</p>
+      <p><strong>完全一致のキャッシュで済ませる。</strong> 同じことを違う言い回しで聞く問い合わせは、文字列一致では拾えません。意味で当てる仕組みが要ります。</p>
+    </div>
+
+    <!-- 決め手層 -->
+    <div class="learn-card">
+      <h2>こう言われたら、これを選ぶ</h2>
+      <div class="learn-table-wrap">
+        <table class="learn-table">
+          <thead><tr><th>問題文の手がかり</th><th>選ぶもの</th><th>理由</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>送信前にトークンを知りたい</td>
+              <td>CountTokens API</td>
+              <td>課金と同じ数え方</td>
+            </tr>
+            <tr>
+              <td>同じ長い前置きを何度も送る</td>
+              <td>プロンプトキャッシュ</td>
+              <td>前方一致で再利用する</td>
+            </tr>
+            <tr>
+              <td>言い回しの違う同じ質問</td>
+              <td>セマンティックキャッシュ</td>
+              <td>意味で当てる</td>
+            </tr>
+            <tr>
+              <td>ピークだけ超える</td>
+              <td>クロスリージョン推論</td>
+              <td>固定費を増やさない</td>
+            </tr>
+            <tr>
+              <td>平常時の負荷が読める</td>
+              <td>プロビジョンドスループット</td>
+              <td>安定分を賄う</td>
+            </tr>
+            <tr>
+              <td>アプリ別にコストを分ける</td>
+              <td>application inference profile</td>
+              <td>利用を帰属できる</td>
+            </tr>
+            <tr>
+              <td>単純な質問が大半</td>
+              <td>小型モデルへの振り分け</td>
+              <td>高い方を使わずに済む</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="learn-card">
+      <h2>覚えておく数字と制限</h2>
+      <ul>
+        <li><strong><code>CountTokens</code> はモデル固有で、実際に課金されるのと同じカウントが返る。</strong> <code>InvokeModel</code> と <code>Converse</code> の<strong>両方の入力形式</strong>を受け付けるので、送るつもりの構造をそのまま渡して事前に測れる。</li>
+        <li>プロンプトキャッシュは<strong>前方一致</strong>。長い契約書などの静的な部分を先頭に固定し、毎回変わる要素は後ろに置く。効いているかは <code>CacheReadInputTokens</code> と <code>CacheWriteInputTokens</code> で確認する。</li>
+        <li>セマンティックキャッシュでは、類似度のしきい値、TTL、テナントの境界を決める。近すぎるしきい値は誤った再利用を招く。</li>
+        <li>平常時とピークの性質は違う。予測できるベース負荷はプロビジョンドスループットで支え、突発分はクロスリージョン推論のオンデマンドへ逃がす、という併用が定番。</li>
+      </ul>
+      <p>「使わない時間帯の固定課金を避けたい」と書かれていたら、全量をプロビジョンドで確保する選択肢は落ちます。逆に「常時一定の負荷」だけならオンデマンド一本も割高になります。</p>
+    </div>
+
+    <div class="learn-card">
+      <h2>紛らわしいものの対比</h2>
+      <figure class="learn-figure">
+        <svg viewBox="0 0 400 262" xmlns="http://www.w3.org/2000/svg" role="img"
+             aria-label="プロンプトキャッシュの前方一致。静的な長文を先頭に置けば再利用されるが、毎回変わる要素を先頭に置くと一致しない">
+          <rect width="400" height="262" fill="#f8fafc"/>
+          <g font-family="'Segoe UI','Hiragino Sans',sans-serif">
+            <text x="14" y="26" font-size="18" fill="#2d3748">当たる並び</text>
+            <rect x="14" y="40" width="240" height="42" rx="6" fill="#4299e1"/>
+            <text x="134" y="67" text-anchor="middle" font-size="17" fill="#ffffff">静的な長文</text>
+            <rect x="258" y="40" width="128" height="42" rx="6" fill="#cbd5e0"/>
+            <text x="322" y="67" text-anchor="middle" font-size="17" fill="#2d3748">毎回違う</text>
+            <text x="14" y="106" font-size="17" fill="#4a5568">前方が一致するので再利用される</text>
+
+            <text x="14" y="158" font-size="18" fill="#2d3748">外れる並び</text>
+            <rect x="14" y="172" width="128" height="42" rx="6" fill="#cbd5e0"/>
+            <text x="78" y="199" text-anchor="middle" font-size="17" fill="#2d3748">毎回違う</text>
+            <rect x="146" y="172" width="240" height="42" rx="6" fill="#4299e1"/>
+            <text x="266" y="199" text-anchor="middle" font-size="17" fill="#ffffff">静的な長文</text>
+            <text x="14" y="238" font-size="17" fill="#e53e3e">先頭で外れるので毎回書き直し</text>
+          </g>
+        </svg>
+        <figcaption>中身が同じでも、順番を間違えるとキャッシュは効かない。</figcaption>
+      </figure>
+      <p>試験では「同じ資料を何度も送る」「40% が似た問い合わせ」といった記述が合図になります。前者はプロンプトキャッシュ、後者はセマンティックキャッシュで、狙う重複の種類が違います。</p>
+    </div>
+
+    <div class="learn-card" id="learn-qids-section" hidden>
+      <h2>この問題集で該当する問題</h2>
+      <p class="learn-qids" id="learn-qids"></p>
+      <p class="learn-meta">クイズの出題範囲に番号を入力して解いてください。</p>
+    </div>
+
+    <div id="learn-fallback" class="learn-card" hidden>
+      <p>問題データを読み込めませんでした。問題番号の一覧はオンラインで開き直すと表示されます。</p>
+    </div>
+
+    <div class="learn-footer">
+      <p>最終確認日: 2026-09-06</p>
+      <p>参照した公式ドキュメント:</p>
+      <ul>
+        <li><a href="https://docs.aws.amazon.com/aws-certification/latest/ai-professional-01/ai-professional-01-domain4.html">AIP-C01 試験ガイド Content Domain 4</a></li>
+        <li><a href="https://docs.aws.amazon.com/bedrock/latest/APIReference/API_runtime_CountTokens.html">Amazon Bedrock API Reference — CountTokens</a></li>
+      </ul>
+    </div>
+  </div>
+  <script src="learn-logic.js"></script>
+  <script src="learn.js"></script>
+</body>
+</html>

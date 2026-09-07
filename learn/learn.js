@@ -163,7 +163,12 @@ function renderIndexPage(examData) {
   if (!examId) return;
 
   // 問題データの取得に失敗しても戻りリンクは出す
-  renderResumeLink(examId);
+  // 戻りリンクで失敗してもページ本文の描画は止めない
+  try {
+    renderResumeLink(examId);
+  } catch (e) {
+    console.error('learn: failed to render resume link', e);
+  }
 
   try {
     const examData = await loadExamData(examId);

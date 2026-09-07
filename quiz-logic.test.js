@@ -208,6 +208,8 @@ assert.equal(describeSnapshot({ ...snapshot, index: 3 }), null);
 assert.equal(describeSnapshot({ ...snapshot, index: -1 }), null);
 assert.equal(describeSnapshot({ ...snapshot, index: 1.5 }), null);
 assert.equal(describeSnapshot({ ...snapshot, answers: [null] }), null);
+assert.equal(describeSnapshot({ ...snapshot, questionIds: [12, 'x', 14] }), null);
+assert.equal(describeSnapshot({ ...snapshot, questionIds: [12, NaN, 14] }), null);
 
 // restoreSessionSnapshot は問題オブジェクトを引き直す
 const restored = restoreSessionSnapshot(snapshot, sampleQuestions);

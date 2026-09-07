@@ -671,7 +671,14 @@ async function resumeFromSnapshot(snapshot) {
   }
 
   const restored = window.QuizLogic.restoreSessionSnapshot(snapshot, allQuestions);
-  if (!restored) return false;
+  if (!restored) {
+    // currentExamId / allQuestions は既に書き換え済みなので、他のセッション状態も
+    // 揃えておく（この経路では再描画しないため実害は無いが、不変条件を保つ）
+    sessionQuestions = [];
+    currentIndex = 0;
+    sessionAnswers = [];
+    return false;
+  }
 
   currentMode = restored.mode;
   sessionQuestions = restored.questions;
@@ -811,8 +818,8 @@ async function init() {
   const indexData = await res.json();
   window._indexData = indexData;
 
-  renderSelectScreen(indexData);
-
+  // イベントハンドラは、復帰で問題画面へ直行する場合でも操作可能でなければ
+  // ならないため、選択画面の描画・復帰の試行より先に登録する。
   document.getElementById('btn-sequential').addEventListener('click', () => startQuiz('sequential'));
   document.getElementById('btn-random').addEventListener('click', () => startQuiz('random'));
   document.getElementById('btn-incorrect-only').addEventListener('click', startIncorrectOnly);
@@ -858,9 +865,17 @@ async function init() {
   // ハッシュは先に消す。#resume の付いた URL をブックマークされると
   // 後日開いたときに意味が変わるため。replaceState なので履歴は増えず、
   // ブラウザバックで学習ページへ戻る動きは保たれる。
+  let resumed = false;
   if (location.hash === RESUME_HASH) {
     history.replaceState(null, '', location.pathname + location.search);
-    await resumeFromSnapshot(loadSessionSnapshot());
+    resumed = await resumeFromSnapshot(loadSessionSnapshot());
+  }
+
+  // 復帰に失敗した（または #resume が無かった）場合だけ試験選択画面を描画する。
+  // 復帰が成功した経路では選択画面を経由せず問題画面へ直行するため、
+  // ここで描画すると一瞬でも試験一覧がちらついてしまう。
+  if (!resumed) {
+    renderSelectScreen(indexData);
   }
 }
 

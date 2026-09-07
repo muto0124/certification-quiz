@@ -279,5 +279,32 @@ assert.equal(formatResumeLabel({ ...resumeSnapshot, questionIds: [] }, 'API2'), 
 assert.equal(formatResumeLabel({ ...resumeSnapshot, index: 3 }, 'API2'), null);
 assert.equal(formatResumeLabel({ ...resumeSnapshot, index: -1 }, 'API2'), null);
 assert.equal(formatResumeLabel({ ...resumeSnapshot, answers: [null] }, 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, questionIds: [12, 'x', 14] }, 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, questionIds: [12, NaN, 14] }, 'API2'), null);
+
+// --- 問題の category から学習ページへのリンクが必ず存在すること ---
+// 解説パネルの「このタスクを学ぶ」リンクは category から機械的にファイル名を組み立てるため、
+// ページが無いと 404 になる。逆方向（ページ→タスク）は上の整合テストで既にみている。
+
+const api2Data = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'data', 'API2.json'), 'utf8')
+);
+
+const declaredTaskIds = getKnownTaskIds(api2Data);
+
+for (const q of api2Data.questions) {
+  if (!q.category) continue;
+
+  assert.ok(
+    declaredTaskIds.includes(q.category),
+    `問題 ${q.id}: category "${q.category}" は categories.json のタスクIDに存在しません`
+  );
+
+  const pageFile = path.join(learnDir, `${q.category.replace('.', '-')}.html`);
+  assert.ok(
+    fs.existsSync(pageFile),
+    `問題 ${q.id}: category "${q.category}" に対応する学習ページ ${path.basename(pageFile)} がありません`
+  );
+}
 
 console.log('learn-logic tests passed');

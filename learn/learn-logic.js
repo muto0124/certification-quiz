@@ -192,6 +192,7 @@
     const { questionIds, index, answers } = snapshot;
 
     if (!Array.isArray(questionIds) || questionIds.length === 0) return null;
+    if (!questionIds.every((id) => Number.isFinite(id))) return null;
     if (!Array.isArray(answers) || answers.length !== questionIds.length) return null;
     if (!Number.isInteger(index) || index < 0 || index >= questionIds.length) return null;
 

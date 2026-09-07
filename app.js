@@ -662,7 +662,13 @@ async function resumeFromSnapshot(snapshot) {
   const exams = (window._indexData && window._indexData.exams) || [];
   if (!exams.some((exam) => exam.id === described.examId)) return false;
 
-  if (!(await loadExamData(described.examId))) return false;
+  // 同じ試験が既に読み込まれているなら取り直さない。スタート画面の復帰カードは
+  // その試験のデータで検証してから出しているので、ここで再取得すると
+  // 一時的な通信失敗だけで有効な中断データを捨てることになる。
+  if (currentExamId !== described.examId
+      && !(await loadExamData(described.examId))) {
+    return false;
+  }
 
   const restored = window.QuizLogic.restoreSessionSnapshot(snapshot, allQuestions);
   if (!restored) return false;

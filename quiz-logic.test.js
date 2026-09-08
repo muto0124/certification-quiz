@@ -11,6 +11,10 @@ const {
   getAnswerLabels,
   isMultiAnswerQuestion,
   toggleSelection,
+  SESSION_STORAGE_KEY,
+  buildSessionSnapshot,
+  describeSnapshot,
+  restoreSessionSnapshot,
 } = require('./quiz-logic.js');
 
 assert.equal(isMultiAnswerQuestion({ answer: 'BD' }), true);
@@ -168,5 +172,68 @@ assert.equal(
 
 // HTML エスケープ
 assert.equal(escapeHtml('a<b>&c'), 'a&lt;b&gt;&amp;c');
+
+// --- 中断データ ---
+
+assert.equal(SESSION_STORAGE_KEY, 'quiz_session');
+
+const sampleQuestions = [{ id: 12 }, { id: 13 }, { id: 14 }];
+const sampleAnswers = [
+  { selected: ['A'], isCorrect: true, isSubmitted: true },
+  null,
+  null,
+];
+const snapshot = buildSessionSnapshot('API2', 'sequential', sampleQuestions, 1, sampleAnswers);
+
+assert.equal(snapshot.examId, 'API2');
+assert.equal(snapshot.mode, 'sequential');
+assert.deepEqual(snapshot.questionIds, [12, 13, 14]);
+assert.equal(snapshot.index, 1);
+assert.equal(snapshot.answers.length, 3);
+assert.deepEqual(snapshot.answers[0], { selected: ['A'], isCorrect: true, isSubmitted: true });
+assert.equal(snapshot.answers[1], null);
+
+// JSON を往復しても壊れない（sessionStorage に入れて出す経路の代理）
+assert.deepEqual(JSON.parse(JSON.stringify(snapshot)), snapshot);
+
+// describeSnapshot は形だけを見る
+assert.deepEqual(describeSnapshot(snapshot), {
+  examId: 'API2', questionId: 13, position: 2, total: 3,
+});
+assert.equal(describeSnapshot(null), null);
+assert.equal(describeSnapshot('quiz_session'), null);
+assert.equal(describeSnapshot({ ...snapshot, examId: '' }), null);
+assert.equal(describeSnapshot({ ...snapshot, questionIds: [] }), null);
+assert.equal(describeSnapshot({ ...snapshot, index: 3 }), null);
+assert.equal(describeSnapshot({ ...snapshot, index: -1 }), null);
+assert.equal(describeSnapshot({ ...snapshot, index: 1.5 }), null);
+assert.equal(describeSnapshot({ ...snapshot, answers: [null] }), null);
+assert.equal(describeSnapshot({ ...snapshot, questionIds: [12, 'x', 14] }), null);
+assert.equal(describeSnapshot({ ...snapshot, questionIds: [12, NaN, 14] }), null);
+
+// restoreSessionSnapshot は問題オブジェクトを引き直す
+const restored = restoreSessionSnapshot(snapshot, sampleQuestions);
+assert.deepEqual(restored.questions.map((q) => q.id), [12, 13, 14]);
+assert.equal(restored.questions[0], sampleQuestions[0]);
+assert.equal(restored.examId, 'API2');
+assert.equal(restored.mode, 'sequential');
+assert.equal(restored.index, 1);
+assert.equal(restored.answers[0].isCorrect, true);
+assert.equal(restored.answers[1], null);
+
+// 出題順が入れ替わっていても、その順で引き直す
+const shuffled = buildSessionSnapshot('API2', 'random', [{ id: 14 }, { id: 12 }], 0, [null, null]);
+assert.deepEqual(
+  restoreSessionSnapshot(shuffled, sampleQuestions).questions.map((q) => q.id),
+  [14, 12],
+);
+
+// 問題データを差し替えて ID が欠けたら復帰しない
+assert.equal(restoreSessionSnapshot(snapshot, [{ id: 12 }, { id: 13 }]), null);
+assert.equal(restoreSessionSnapshot(snapshot, []), null);
+assert.equal(restoreSessionSnapshot(null, sampleQuestions), null);
+
+// mode が壊れていても既定値で復帰する
+assert.equal(restoreSessionSnapshot({ ...snapshot, mode: 42 }, sampleQuestions).mode, 'sequential');
 
 console.log('quiz-logic tests passed');

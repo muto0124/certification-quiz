@@ -12,6 +12,8 @@ const {
   getServicesForMap,
   findServices,
   getMaps,
+  SESSION_STORAGE_KEY,
+  formatResumeLabel,
 } = require('./learn-logic.js');
 
 // --- テスト用の最小データ ---
@@ -244,6 +246,65 @@ for (const s of getAllServices()) {
   for (const mapId of s.map) {
     assert.ok(mapIds.includes(mapId), `サービス "${s.label}" が未定義のマップ ${mapId} を指しています`);
   }
+}
+
+// --- 戻りリンクの文言 ---
+
+// quiz-logic.js の同名定数と値がずれると戻りリンクが永久に出なくなる
+assert.equal(SESSION_STORAGE_KEY, 'quiz_session');
+
+const resumeSnapshot = {
+  examId: 'API2',
+  mode: 'sequential',
+  questionIds: [12, 13, 14],
+  index: 1,
+  answers: [{ selected: ['A'], isCorrect: true, isSubmitted: true }, null, null],
+};
+
+assert.equal(formatResumeLabel(resumeSnapshot, 'API2'), '← 問題 13 に戻る（2/3問目）');
+
+// 先頭と末尾でも位置が正しい
+assert.equal(formatResumeLabel({ ...resumeSnapshot, index: 0 }, 'API2'), '← 問題 12 に戻る（1/3問目）');
+assert.equal(formatResumeLabel({ ...resumeSnapshot, index: 2 }, 'API2'), '← 問題 14 に戻る（3/3問目）');
+
+// 別の試験の中断データには出さない（learn ページは特定の試験に紐づくため）
+assert.equal(formatResumeLabel(resumeSnapshot, 'google_network'), null);
+assert.equal(formatResumeLabel(resumeSnapshot, ''), null);
+assert.equal(formatResumeLabel(resumeSnapshot, undefined), null);
+
+// 壊れた中断データには出さない
+assert.equal(formatResumeLabel(null, 'API2'), null);
+assert.equal(formatResumeLabel('quiz_session', 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, questionIds: [] }, 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, index: 3 }, 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, index: -1 }, 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, answers: [null] }, 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, questionIds: [12, 'x', 14] }, 'API2'), null);
+assert.equal(formatResumeLabel({ ...resumeSnapshot, questionIds: [12, NaN, 14] }, 'API2'), null);
+
+// --- 問題の category から学習ページへのリンクが必ず存在すること ---
+// 解説パネルの「このタスクを学ぶ」リンクは category から機械的にファイル名を組み立てるため、
+// ページが無いと 404 になる。逆方向（ページ→タスク）は上の整合テストで既にみている。
+
+const api2Data = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'data', 'API2.json'), 'utf8')
+);
+
+const declaredTaskIds = getKnownTaskIds(api2Data);
+
+for (const q of api2Data.questions) {
+  if (!q.category) continue;
+
+  assert.ok(
+    declaredTaskIds.includes(q.category),
+    `問題 ${q.id}: category "${q.category}" は categories.json のタスクIDに存在しません`
+  );
+
+  const pageFile = path.join(learnDir, `${q.category.replace('.', '-')}.html`);
+  assert.ok(
+    fs.existsSync(pageFile),
+    `問題 ${q.id}: category "${q.category}" に対応する学習ページ ${path.basename(pageFile)} がありません`
+  );
 }
 
 console.log('learn-logic tests passed');

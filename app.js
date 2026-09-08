@@ -45,6 +45,31 @@ function getQuestionProgress(questionId) {
   return data.progress[questionId] || { history: [] };
 }
 
+// --- 中断データ ---
+// sessionStorage はプライベートモードなどで例外を投げる。中断データは
+// 無くても出題そのものは成立するので、失敗は握りつぶして先へ進める。
+
+function saveSessionSnapshot() {
+  try {
+    const snapshot = window.QuizLogic.buildSessionSnapshot(
+      currentExamId, currentMode, sessionQuestions, currentIndex, sessionAnswers,
+    );
+    sessionStorage.setItem(window.QuizLogic.SESSION_STORAGE_KEY, JSON.stringify(snapshot));
+  } catch { /* 中断データを諦める */ }
+}
+
+function loadSessionSnapshot() {
+  try {
+    return JSON.parse(sessionStorage.getItem(window.QuizLogic.SESSION_STORAGE_KEY));
+  } catch { return null; }
+}
+
+function clearSessionSnapshot() {
+  try {
+    sessionStorage.removeItem(window.QuizLogic.SESSION_STORAGE_KEY);
+  } catch { /* 中断データを諦める */ }
+}
+
 // --- 画面切り替え ---
 
 function showScreen(id) {
@@ -73,6 +98,8 @@ function renderStart() {
   // 学習資料へのリンクは分類データを持つ試験でのみ表示する
   document.getElementById('learn-link')
     .classList.toggle('hidden', !window._quizCategories);
+
+  renderResumeCard('resume-card-start', currentExamId);
 }
 
 function showStartMessage(text) {
@@ -175,6 +202,7 @@ function goToPrevQuestion() {
 function goToNextQuestion() {
   const nextState = window.QuizLogic.getNextQuestionState(currentIndex, sessionQuestions.length);
   if (nextState.isLast) {
+    clearSessionSnapshot();
     renderStart();
     showScreen('screen-start');
     return;
@@ -224,6 +252,7 @@ function renderSubmittedAnswer(q, answerState) {
   });
 
   renderExplanation(q.explanation);
+  renderLearnLinkForQuestion(q);
   document.getElementById('explanation-panel').classList.remove('hidden');
   document.getElementById('btn-skip').classList.add('hidden');
   document.getElementById('btn-submit').classList.add('hidden');
@@ -285,11 +314,13 @@ function submitCurrentAnswer() {
 
 function renderQuiz() {
   if (currentIndex >= sessionQuestions.length) {
+    clearSessionSnapshot();
     renderStart();
     showScreen('screen-start');
     showCompletionMessage();
     return;
   }
+  saveSessionSnapshot();
 
   const q = sessionQuestions[currentIndex];
   const answerState = sessionAnswers[currentIndex];
@@ -319,6 +350,11 @@ function renderQuiz() {
     renderSubmittedAnswer(q, answerState);
   } else {
     renderPendingAnswer(q, selectedLabels);
+  }
+
+  if (pendingScrollToExplanation) {
+    pendingScrollToExplanation = false;
+    scrollToExplanation();
   }
 }
 
@@ -392,6 +428,38 @@ function renderExplanation(exp) {
   } else { pitfallsDiv.innerHTML = ''; }
 }
 
+// --- 学習資料へのリンク ---
+// categories を持つ試験（現状 API2 のみ）でだけ出す。タスク ID の "1.3" が
+// learn/1-3.html に対応する。
+
+function taskIdToLearnHref(taskId) {
+  return `learn/${String(taskId).replace('.', '-')}.html`;
+}
+
+function findTaskTitleJa(taskId) {
+  const domains = (window._quizCategories && window._quizCategories.domains) || [];
+  for (const domain of domains) {
+    for (const task of (domain.tasks || [])) {
+      if (task.id === taskId) return task.titleJa;
+    }
+  }
+  return null;
+}
+
+function renderLearnLinkForQuestion(q) {
+  const box = document.getElementById('exp-learn-link');
+  const titleJa = q.category ? findTaskTitleJa(q.category) : null;
+
+  if (!titleJa) {
+    box.innerHTML = '';
+    box.classList.add('hidden');
+    return;
+  }
+
+  const label = `📘 このタスクの学習資料を読む — ${q.category} ${window.QuizLogic.escapeHtml(titleJa)}`;
+  box.innerHTML = `<a class="btn btn-secondary" href="${taskIdToLearnHref(q.category)}">${label}</a>`;
+  box.classList.remove('hidden');
+}
 // --- 進捗一覧画面 ---
 
 let currentFilter = 'all';
@@ -573,6 +641,105 @@ function handleKeydown(e) {
 
 // --- 初期化 ---
 
+// --- 中断データからの復帰 ---
+const RESUME_HASH = '#resume';
+
+// 復帰した直後の 1 回だけ解説パネルへスクロールする。読者は解説の途中から
+// 学習資料へ抜けているので、問題文の頭に戻されると読んでいた場所を見失う。
+let pendingScrollToExplanation = false;
+
+function scrollToExplanation() {
+  const panel = document.getElementById('explanation-panel');
+  if (panel && !panel.classList.contains('hidden')) {
+    panel.scrollIntoView({ block: 'start' });
+  }
+}
+
+async function resumeFromSnapshot(snapshot) {
+  const described = window.QuizLogic.describeSnapshot(snapshot);
+  if (!described) return false;
+
+  const exams = (window._indexData && window._indexData.exams) || [];
+  if (!exams.some((exam) => exam.id === described.examId)) return false;
+
+  // 同じ試験が既に読み込まれているなら取り直さない。スタート画面の復帰カードは
+  // その試験のデータで検証してから出しているので、ここで再取得すると
+  // 一時的な通信失敗だけで有効な中断データを捨てることになる。
+  if (currentExamId !== described.examId
+      && !(await loadExamData(described.examId))) {
+    return false;
+  }
+
+  const restored = window.QuizLogic.restoreSessionSnapshot(snapshot, allQuestions);
+  if (!restored) {
+    // currentExamId / allQuestions は既に書き換え済みなので、他のセッション状態も
+    // 揃えておく（この経路では再描画しないため実害は無いが、不変条件を保つ）
+    sessionQuestions = [];
+    currentIndex = 0;
+    sessionAnswers = [];
+    return false;
+  }
+
+  currentMode = restored.mode;
+  sessionQuestions = restored.questions;
+  currentIndex = restored.index;
+  sessionAnswers = restored.answers;
+
+  pendingScrollToExplanation = true;
+  // #screen-quiz は hidden の間 display:none で、scrollIntoView は
+  // 非表示祖先の中では何もしない。先に画面を表示してから描画する。
+  showScreen('screen-quiz');
+  renderQuiz();
+  return true;
+}
+
+// 復帰カード。expectedExamId が null なら試験を問わず出し、文言に試験名を含める
+//（試験選択画面。AIP と API2 はほぼ同名なので試験名が無いと区別できない）。
+// 文字列を渡した場合はその試験の中断データのときだけ出す（スタート画面）。
+function renderResumeCard(cardId, expectedExamId) {
+  const card = document.getElementById(cardId);
+  const snapshot = loadSessionSnapshot();
+  const described = window.QuizLogic.describeSnapshot(snapshot);
+  const exams = (window._indexData && window._indexData.exams) || [];
+  const exam = described ? exams.find((item) => item.id === described.examId) : null;
+  const wanted = expectedExamId === null || (described && described.examId === expectedExamId);
+
+  // スタート画面は試験データを読み込み済みなので、問題 ID が現在のデータに
+  // 存在するかまで確かめる。試験選択画面はまだデータを持たないので形だけを見て、
+  // 押された時点で復帰に失敗したら中断データを捨てる（下の go ハンドラ）。
+  const restorable = expectedExamId === null
+    || Boolean(window.QuizLogic.restoreSessionSnapshot(snapshot, allQuestions));
+
+  if (!described || !exam || !wanted || !restorable) {
+    card.innerHTML = '';
+    card.classList.add('hidden');
+    return;
+  }
+
+  const where = expectedExamId === null
+    ? `${window.QuizLogic.escapeHtml(exam.title)} ／ 問題 ${described.questionId}`
+    : `問題 ${described.questionId}`;
+
+  card.innerHTML =
+    `<button class="btn btn-primary btn-sm resume-card-go">` +
+    `▶ 中断した出題に戻る — ${where}（${described.position}/${described.total}問目）</button>` +
+    `<button class="btn btn-secondary btn-sm resume-card-dismiss">✕</button>`;
+  card.classList.remove('hidden');
+
+  card.querySelector('.resume-card-go').addEventListener('click', async () => {
+    if (await resumeFromSnapshot(loadSessionSnapshot())) return;
+
+    // 復帰できない中断データは残しておいても押すたびに黙って失敗するだけなので捨てる
+    clearSessionSnapshot();
+    renderSelectScreen(window._indexData);
+  });
+  card.querySelector('.resume-card-dismiss').addEventListener('click', () => {
+    clearSessionSnapshot();
+    card.innerHTML = '';
+    card.classList.add('hidden');
+  });
+}
+
 function migrateOldProgress() {
   const oldKey = 'quiz_progress';
   const oldData = localStorage.getItem(oldKey);
@@ -607,13 +774,17 @@ function renderSelectScreen(indexData) {
     const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
     document.getElementById('app-version-select').textContent = formatted;
   }
+
+  renderResumeCard('resume-card-select', null);
 }
 
-async function selectExam(examId) {
-  currentExamId = examId;
+// 試験データの読み込みだけを行う。画面遷移は呼び出し側の責務。
+// スタート画面へ進む selectExam と、問題画面へ直行する復帰の両方から使う。
+async function loadExamData(examId) {
   try {
     const res = await fetch(`data/${examId}.json`);
     const data = await res.json();
+    currentExamId = examId;
     allQuestions = data.questions;
     window._quizTitle = data.title;
     window._quizCategories = data.categories || null;
@@ -624,13 +795,20 @@ async function selectExam(examId) {
       const formatted = `Build: ${ver.slice(0,4)}-${ver.slice(4,6)}-${ver.slice(6,8)} ${ver.slice(8,10)}:${ver.slice(10,12)}`;
       document.getElementById('app-version').textContent = formatted;
     }
-
-    renderStart();
+    return true;
   } catch (e) {
     console.error('Failed to load exam data:', e);
     currentExamId = null;
-    alert('試験データの読み込みに失敗しました。再度お試しください。');
+    return false;
   }
+}
+
+async function selectExam(examId) {
+  if (!(await loadExamData(examId))) {
+    alert('試験データの読み込みに失敗しました。再度お試しください。');
+    return;
+  }
+  renderStart();
 }
 
 async function init() {
@@ -640,8 +818,8 @@ async function init() {
   const indexData = await res.json();
   window._indexData = indexData;
 
-  renderSelectScreen(indexData);
-
+  // イベントハンドラは、復帰で問題画面へ直行する場合でも操作可能でなければ
+  // ならないため、選択画面の描画・復帰の試行より先に登録する。
   document.getElementById('btn-sequential').addEventListener('click', () => startQuiz('sequential'));
   document.getElementById('btn-random').addEventListener('click', () => startQuiz('random'));
   document.getElementById('btn-incorrect-only').addEventListener('click', startIncorrectOnly);
@@ -683,6 +861,22 @@ async function init() {
   });
 
   document.addEventListener('keydown', handleKeydown);
+
+  // ハッシュは先に消す。#resume の付いた URL をブックマークされると
+  // 後日開いたときに意味が変わるため。replaceState なので履歴は増えず、
+  // ブラウザバックで学習ページへ戻る動きは保たれる。
+  let resumed = false;
+  if (location.hash === RESUME_HASH) {
+    history.replaceState(null, '', location.pathname + location.search);
+    resumed = await resumeFromSnapshot(loadSessionSnapshot());
+  }
+
+  // 復帰に失敗した（または #resume が無かった）場合だけ試験選択画面を描画する。
+  // 復帰が成功した経路では選択画面を経由せず問題画面へ直行するため、
+  // ここで描画すると一瞬でも試験一覧がちらついてしまう。
+  if (!resumed) {
+    renderSelectScreen(indexData);
+  }
 }
 
 init();

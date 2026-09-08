@@ -202,6 +202,71 @@
     return { answered, latestCorrect, rate };
   }
 
+  // --- 中断データ ---
+  // 出題セッションを sessionStorage に置ける形へ落とす。問題オブジェクトそのものではなく
+  // ID の配列で持ち、復帰時に allQuestions から引き直す。問題データを再生成して
+  // 中身が変わったとき、古い問題文のまま復帰してしまうのを防ぐため。
+  const SESSION_STORAGE_KEY = 'quiz_session';
+
+  function buildSessionSnapshot(examId, mode, questions, index, answers) {
+    return {
+      examId,
+      mode,
+      questionIds: (questions || []).map((question) => question.id),
+      index,
+      answers: (answers || []).map((answer) => (answer ? {
+        selected: getAnswerLabels(answer.selected),
+        isCorrect: Boolean(answer.isCorrect),
+        isSubmitted: Boolean(answer.isSubmitted),
+      } : null)),
+    };
+  }
+
+  function describeSnapshot(snapshot) {
+    if (!snapshot || typeof snapshot !== 'object') {
+      return null;
+    }
+
+    const { examId, questionIds, index, answers } = snapshot;
+
+    if (typeof examId !== 'string' || !examId) return null;
+    if (!Array.isArray(questionIds) || questionIds.length === 0) return null;
+    if (!questionIds.every((id) => Number.isFinite(id))) return null;
+    if (!Array.isArray(answers) || answers.length !== questionIds.length) return null;
+    if (!Number.isInteger(index) || index < 0 || index >= questionIds.length) return null;
+
+    return {
+      examId,
+      questionId: questionIds[index],
+      position: index + 1,
+      total: questionIds.length,
+    };
+  }
+
+  function restoreSessionSnapshot(snapshot, allQuestions) {
+    const described = describeSnapshot(snapshot);
+    if (!described) {
+      return null;
+    }
+
+    const byId = new Map((allQuestions || []).map((question) => [question.id, question]));
+    const questions = [];
+
+    for (const id of snapshot.questionIds) {
+      const question = byId.get(id);
+      if (!question) return null;
+      questions.push(question);
+    }
+
+    return {
+      examId: described.examId,
+      mode: typeof snapshot.mode === 'string' ? snapshot.mode : 'sequential',
+      questions,
+      index: snapshot.index,
+      answers: snapshot.answers.map((answer) => (answer ? { ...answer } : null)),
+    };
+  }
+
   return {
     escapeHtml,
     evaluateAnswer,
@@ -213,5 +278,9 @@
     getAnswerLabels,
     isMultiAnswerQuestion,
     toggleSelection,
+    SESSION_STORAGE_KEY,
+    buildSessionSnapshot,
+    describeSnapshot,
+    restoreSessionSnapshot,
   };
 });

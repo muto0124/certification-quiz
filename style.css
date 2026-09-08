@@ -187,6 +187,16 @@ a.btn { text-decoration: none; }
   animation: slideIn .25s ease;
 }
 .completion-card .btn { color: #276749; background: transparent; }
+/* 解説内の学習資料リンク */
+.exp-learn-link { margin-top: 1rem; }
+.exp-learn-link a { display: inline-block; text-decoration: none; }
+
+/* 中断した出題への復帰カード */
+.resume-card {
+  background: #ebf8ff; border: 1px solid #bee3f8;
+  display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+}
+.resume-card .resume-card-go { flex: 1; text-align: left; }
 
 /* サマリーアクション */
 .summary-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }

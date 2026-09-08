@@ -25,6 +25,7 @@
   <!-- 試験選択画面 -->
   <div id="screen-select" class="screen">
     <h1>資格試験問題集</h1>
+    <div id="resume-card-select" class="card resume-card hidden"></div>
     <div id="exam-list" class="exam-list"></div>
     <p id="app-version-select" class="app-version"></p>
   </div>
@@ -37,6 +38,7 @@
       <span>出題範囲の全問を解き終えました！</span>
       <button id="btn-dismiss" class="btn btn-secondary btn-sm">✕</button>
     </div>
+    <div id="resume-card-start" class="card resume-card hidden"></div>
     <div class="card">
       <h2>出題範囲</h2>
       <div class="range-inputs">
@@ -92,6 +94,7 @@
       <div id="exp-key-insight"></div>
       <div id="exp-analysis"></div>
       <div id="exp-pitfalls"></div>
+      <div id="exp-learn-link" class="exp-learn-link hidden"></div>
     </div>
     <div class="nav-area hidden" id="nav-area">
       <button id="btn-next" class="btn btn-primary">次の問題 →</button>

@@ -41,7 +41,12 @@
     <div id="resume-card-start" class="card resume-card hidden"></div>
     <div class="card">
       <h2>出題範囲</h2>
-      <div class="range-inputs">
+      <div id="category-select-wrap" class="category-select-wrap hidden">
+        <label for="category-select">ドメイン／タスク</label>
+        <select id="category-select"></select>
+        <p id="category-stats" class="category-stats"></p>
+      </div>
+      <div class="range-inputs" id="range-inputs">
         <span>No.</span>
         <input type="number" id="range-start" min="1" value="1">
         <span>〜 No.</span>

@@ -1,9 +1,36 @@
-// app.js — 資格試験学習サイト メインロジック
+﻿// app.js — 資格試験学習サイト メインロジック
 
 let currentExamId = null;  // 現在選択中の試験ID
 
 function getStorageKey() {
   return `quiz_progress_${currentExamId}`;
+}
+
+function getCoreOnlyStorageKey() {
+  return `quiz_core_only_${currentExamId}`;
+}
+
+// --- コア問題の絞り込み ---
+// localStorage はプライベートモードなどで例外を投げる。チェック状態が
+// 保持できなくても出題は成立するので、失敗は握りつぶして既定値へ倒す。
+
+function isCoreOnlyEnabled() {
+  if (!window._quizCoreTotal) return false;
+  return document.getElementById('core-only').checked;
+}
+
+function loadCoreOnlyPreference() {
+  if (!currentExamId) return false;
+  try {
+    return localStorage.getItem(getCoreOnlyStorageKey()) === '1';
+  } catch { return false; }
+}
+
+function saveCoreOnlyPreference(enabled) {
+  if (!currentExamId) return;
+  try {
+    localStorage.setItem(getCoreOnlyStorageKey(), enabled ? '1' : '0');
+  } catch { /* 設定の保持を諦める */ }
 }
 
 let allQuestions = [];   // data.json から読み込んだ全問題
@@ -12,6 +39,7 @@ let currentIndex = 0;    // sessionQuestions 内の現在位置
 let answered = false;    // 現在の問題を回答済みか
 let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {selected, isCorrect}=回答済み)
 let currentMode = 'sequential';
+let currentCoreOnly = false; // 今回の出題をコア問題に絞ったか（バッジ表示用）
 
 // --- 進捗管理 ---
 
@@ -99,6 +127,14 @@ function renderStart() {
   document.getElementById('learn-link')
     .classList.toggle('hidden', !window._quizCategories);
 
+  // コア問題の絞り込みはコアセットを持つ試験でのみ表示する
+  const coreTotal = window._quizCoreTotal;
+  document.getElementById('core-only-toggle').classList.toggle('hidden', !coreTotal);
+  if (coreTotal) {
+    document.getElementById('core-only-count').textContent = coreTotal;
+    document.getElementById('core-only').checked = loadCoreOnlyPreference();
+  }
+
   renderResumeCard('resume-card-start', currentExamId);
 }
 
@@ -123,7 +159,8 @@ function getSelectedRangeQuestions() {
   const start = Math.max(1, Math.min(startVal, allQuestions.length));
   const end = Math.max(start, Math.min(endVal, allQuestions.length));
 
-  return allQuestions.filter(q => q.id >= start && q.id <= end);
+  const inRange = allQuestions.filter(q => q.id >= start && q.id <= end);
+  return window.QuizLogic.filterCoreOnly(inRange, isCoreOnlyEnabled());
 }
 
 function startQuiz(mode) {
@@ -132,7 +169,12 @@ function startQuiz(mode) {
   currentMode = mode;
 
   // id は 1-based
+  currentCoreOnly = isCoreOnlyEnabled();
   sessionQuestions = getSelectedRangeQuestions();
+  if (sessionQuestions.length === 0) {
+    showStartMessage('範囲内にコア問題がありません');
+    return;
+  }
   if (mode === 'random') {
     sessionQuestions = [...sessionQuestions].sort(() => Math.random() - 0.5);
   }
@@ -146,14 +188,16 @@ function startIncorrectOnly() {
   document.getElementById('completion-message').classList.add('hidden');
   currentMode = 'incorrect-only';
   const data = loadProgress();
-  const incorrectIds = allQuestions.filter(q => {
+  const coreOnly = isCoreOnlyEnabled();
+  currentCoreOnly = coreOnly;
+  const incorrectIds = window.QuizLogic.filterCoreOnly(allQuestions, coreOnly).filter(q => {
     const p = data.progress[q.id];
     if (!p || p.history.length === 0) return false;
     return p.history[p.history.length - 1] === 'incorrect';
   });
 
   if (incorrectIds.length === 0) {
-    showStartMessage('不正解の問題はありません');
+    showStartMessage(coreOnly ? 'コア問題に不正解はありません' : '不正解の問題はありません');
     return;
   }
 
@@ -174,12 +218,15 @@ function startReviewMode() {
   );
 
   if (reviewCandidates.length === 0) {
-    showStartMessage('回答済みの復習対象が範囲内にありません');
+    showStartMessage(isCoreOnlyEnabled()
+      ? '回答済みの復習対象が範囲内のコア問題にありません'
+      : '回答済みの復習対象が範囲内にありません');
     return;
   }
 
   showStartMessage('');
   currentMode = 'review';
+  currentCoreOnly = isCoreOnlyEnabled();
   sessionQuestions = reviewCandidates.map((item) => item.question);
   currentIndex = 0;
   sessionAnswers = new Array(sessionQuestions.length).fill(null);
@@ -238,6 +285,16 @@ function isAnsweredState(answerState) {
   return Boolean(answerState && answerState.isSubmitted);
 }
 
+function updateModeBadge() {
+  const labels = [];
+  if (currentMode === 'review') labels.push('復習モード');
+  if (currentCoreOnly) labels.push('コアのみ');
+
+  const badge = document.getElementById('quiz-mode-badge');
+  badge.textContent = labels.join(' ／ ');
+  badge.classList.toggle('hidden', labels.length === 0);
+}
+
 function renderSubmittedAnswer(q, answerState) {
   const correctLabels = window.QuizLogic.getAnswerLabels(q.answer);
 
@@ -252,6 +309,7 @@ function renderSubmittedAnswer(q, answerState) {
   });
 
   renderExplanation(q.explanation);
+  renderCoreInfoForQuestion(q);
   renderLearnLinkForQuestion(q);
   document.getElementById('explanation-panel').classList.remove('hidden');
   document.getElementById('btn-skip').classList.add('hidden');
@@ -329,7 +387,7 @@ function renderQuiz() {
 
   document.getElementById('quiz-counter').textContent =
     `問題 ${q.id} （${currentIndex + 1} / ${sessionQuestions.length}）`;
-  document.getElementById('quiz-mode-badge').classList.toggle('hidden', currentMode !== 'review');
+  updateModeBadge();
 
   document.getElementById('btn-prev').disabled = currentIndex === 0;
   document.getElementById('question-text').innerHTML = window.QuizLogic.formatQuestionText(q.question);
@@ -460,6 +518,38 @@ function renderLearnLinkForQuestion(q) {
   box.innerHTML = `<a class="btn btn-secondary" href="${taskIdToLearnHref(q.category)}">${label}</a>`;
   box.classList.remove('hidden');
 }
+
+// 知識点と、同じ知識点を問う問題への導線。コアセットを持たない試験では何も出さない。
+function renderCoreInfoForQuestion(q) {
+  const box = document.getElementById('exp-core-info');
+  const esc = window.QuizLogic.escapeHtml;
+  box.innerHTML = '';
+
+  if (q.core === true) {
+    let html = `<p><strong>🎯 知識点:</strong> ${esc(q.coreLabel)}</p>`;
+    if (q.related && q.related.length) {
+      const buttons = q.related
+        .map((id) => `<button type="button" data-jump="${id}">#${id}</button>`)
+        .join('');
+      html += `<p class="exp-core-related"><strong>同系:</strong> ${buttons}</p>`;
+    } else {
+      html += '<p>この知識点を問う問題は他にありません。</p>';
+    }
+    box.innerHTML = html;
+  } else if (q.coreOf) {
+    box.innerHTML = '<p>この問題はコア問題 '
+      + `<span class="exp-core-related"><button type="button" data-jump="${q.coreOf}">#${q.coreOf}</button></span>`
+      + ' と同じ知識点です。</p>';
+  } else {
+    box.classList.add('hidden');
+    return;
+  }
+
+  box.querySelectorAll('button[data-jump]').forEach((btn) => {
+    btn.addEventListener('click', () => jumpToQuestion(Number(btn.dataset.jump)));
+  });
+  box.classList.remove('hidden');
+}
 // --- 進捗一覧画面 ---
 
 let currentFilter = 'all';
@@ -530,6 +620,7 @@ function applyFilter(filter) {
 function jumpToQuestion(qid) {
   // 指定問題を先頭にして順番通りモードで開始
   currentMode = 'sequential';
+  currentCoreOnly = false;
   sessionQuestions = allQuestions.filter(q => q.id === qid);
   currentIndex = 0;
   sessionAnswers = new Array(sessionQuestions.length).fill(null);
@@ -788,6 +879,7 @@ async function loadExamData(examId) {
     allQuestions = data.questions;
     window._quizTitle = data.title;
     window._quizCategories = data.categories || null;
+    window._quizCoreTotal = data.coreTotal || null;
 
     // バージョン表示
     const ver = data.version || '';
@@ -824,6 +916,10 @@ async function init() {
   document.getElementById('btn-random').addEventListener('click', () => startQuiz('random'));
   document.getElementById('btn-incorrect-only').addEventListener('click', startIncorrectOnly);
   document.getElementById('btn-review').addEventListener('click', startReviewMode);
+  document.getElementById('core-only').addEventListener('change', (e) => {
+    saveCoreOnlyPreference(e.target.checked);
+    showStartMessage('');
+  });
   document.getElementById('btn-skip').addEventListener('click', skipQuestion);
   document.getElementById('btn-submit').addEventListener('click', submitCurrentAnswer);
   document.getElementById('btn-prev').addEventListener('click', goToPrevQuestion);

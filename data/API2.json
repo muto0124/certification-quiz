@@ -1,7 +1,7 @@
 {
   "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集 268問",
   "total": 268,
-  "version": "20260907200920",
+  "version": "20260912161805",
   "categories": {
     "examGuide": {
       "code": "AIP-C01",
@@ -152,6 +152,7 @@
       }
     ]
   },
+  "coreTotal": 146,
   "questions": [
     {
       "id": 1,
@@ -198,7 +199,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.4"
+      "category": "3.4",
+      "core": true,
+      "coreLabel": "公平性の運用化：ログから Lambda で集計し、CloudWatch カスタムメトリクスとアラーム、週次レポートへ接続する",
+      "related": []
     },
     {
       "id": 2,
@@ -261,7 +265,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "Guardrails のフィルター種別の使い分け：拒否トピック / カスタム単語 / コンテンツフィルター / PII",
+      "related": [
+        15
+      ]
     },
     {
       "id": 3,
@@ -308,7 +317,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": false,
+      "coreOf": 218
     },
     {
       "id": 4,
@@ -355,7 +366,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "AgentCore Gateway target の tool catalog 再同期（SynchronizeGatewayTargets）",
+      "related": []
     },
     {
       "id": 5,
@@ -402,7 +416,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 160
     },
     {
       "id": 6,
@@ -449,7 +465,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": false,
+      "coreOf": 10
     },
     {
       "id": 7,
@@ -496,7 +514,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "大規模ベクトル検索の既定解：OpenSearch（Serverless / Service）+ Knowledge Bases 連携",
+      "related": [
+        29
+      ]
     },
     {
       "id": 8,
@@ -543,7 +566,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 201
     },
     {
       "id": 9,
@@ -590,7 +615,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": false,
+      "coreOf": 258
     },
     {
       "id": 10,
@@ -637,7 +664,16 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "Prompt Management を選ぶ判断：版管理・変数化・variants 比較・IAM / CloudTrail による統制",
+      "related": [
+        6,
+        89,
+        158,
+        223,
+        230
+      ]
     },
     {
       "id": 11,
@@ -684,7 +720,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": true,
+      "coreLabel": "InvokeModelWithResponseStream の部分応答を WebSocket / REST streaming でクライアントへ配信する",
+      "related": [
+        43,
+        85
+      ]
     },
     {
       "id": 12,
@@ -739,7 +781,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "Prompt Management と Guardrails（検出モード）を Prompt Flows に接続する",
+      "related": []
     },
     {
       "id": 13,
@@ -786,7 +831,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": false,
+      "coreOf": 99
     },
     {
       "id": 14,
@@ -841,7 +888,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 207
     },
     {
       "id": 15,
@@ -888,7 +937,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 2
     },
     {
       "id": 16,
@@ -935,7 +986,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 42
     },
     {
       "id": 17,
@@ -990,7 +1043,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "AgentCore Gateway で既存 Lambda / REST API を tool 化する。tool の配置先（Lambda と ECS）の判断",
+      "related": [
+        121
+      ]
     },
     {
       "id": 18,
@@ -1037,7 +1095,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 114
     },
     {
       "id": 19,
@@ -1084,7 +1144,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": false,
+      "coreOf": 140
     },
     {
       "id": 20,
@@ -1131,7 +1193,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": false,
+      "coreOf": 161
     },
     {
       "id": 21,
@@ -1178,7 +1242,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.2"
+      "category": "4.2",
+      "core": true,
+      "coreLabel": "Step Functions Parallel での同時実行とタイムアウト設計",
+      "related": []
     },
     {
       "id": 22,
@@ -1225,7 +1292,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 126
     },
     {
       "id": 23,
@@ -1272,7 +1341,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 160
     },
     {
       "id": 24,
@@ -1319,7 +1390,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.2"
+      "category": "2.2",
+      "core": true,
+      "coreLabel": "プロビジョンドスループットの使い方：modelId を基盤モデル ID からプロビジョンドモデル ARN に置き換える",
+      "related": []
     },
     {
       "id": 25,
@@ -1366,7 +1440,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.4"
+      "category": "3.4",
+      "core": true,
+      "coreLabel": "根拠の提示：KB の出典情報と RetrieveAndGenerate 系 API。利用者向けの引用と運用者向けの trace",
+      "related": [
+        66
+      ]
     },
     {
       "id": 26,
@@ -1413,7 +1492,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": false,
+      "coreOf": 152
     },
     {
       "id": 27,
@@ -1460,7 +1541,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 115
     },
     {
       "id": 28,
@@ -1507,7 +1590,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "Step Functions の状態データ肥大化対策：大きな出力は S3 に置き ResultPath / ResultSelector で URI を渡す",
+      "related": []
     },
     {
       "id": 29,
@@ -1554,7 +1640,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": false,
+      "coreOf": 7
     },
     {
       "id": 30,
@@ -1609,7 +1697,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": true,
+      "coreLabel": "分散トレーシング：CloudWatch Transaction Search の有効化と ADOT による agent コードの計装、X-Ray",
+      "related": [
+        34,
+        95
+      ]
     },
     {
       "id": 31,
@@ -1656,7 +1750,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": false,
+      "coreOf": 156
     },
     {
       "id": 32,
@@ -1711,7 +1807,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 91
     },
     {
       "id": 33,
@@ -1758,7 +1856,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 178
     },
     {
       "id": 34,
@@ -1805,7 +1905,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": false,
+      "coreOf": 30
     },
     {
       "id": 35,
@@ -1852,7 +1954,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 167
     },
     {
       "id": 36,
@@ -1899,7 +2003,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": false,
+      "coreOf": 147
     },
     {
       "id": 37,
@@ -1946,7 +2052,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.2"
+      "category": "4.2",
+      "core": false,
+      "coreOf": 166
     },
     {
       "id": 38,
@@ -2001,7 +2109,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": false,
+      "coreOf": 90
     },
     {
       "id": 39,
@@ -2048,7 +2158,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "Step Functions によるオーケストレーション：.waitForTaskToken の人手承認、Retry / Catch、会話状態の保持",
+      "related": [
+        48,
+        57
+      ]
     },
     {
       "id": 40,
@@ -2111,7 +2227,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": false,
+      "coreOf": 52
     },
     {
       "id": 41,
@@ -2158,7 +2276,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": true,
+      "coreLabel": "Q Business の S3 データソース ACL（部門 prefix と Identity Center グループの対応を単一 JSON で指定）",
+      "related": []
     },
     {
       "id": 42,
@@ -2205,7 +2326,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "承認済み文書に基づく回答と出典提示：Knowledge Bases + RetrieveAndGenerate",
+      "related": [
+        16,
+        261
+      ]
     },
     {
       "id": 43,
@@ -2252,7 +2379,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": false,
+      "coreOf": 11
     },
     {
       "id": 44,
@@ -2299,7 +2428,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 172
     },
     {
       "id": 45,
@@ -2346,7 +2477,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.5"
+      "category": "2.5",
+      "core": true,
+      "coreLabel": "Amazon Q Developer のカスタマイズで承認済み社内リソースを提案に反映する",
+      "related": []
     },
     {
       "id": 46,
@@ -2393,7 +2527,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": false,
+      "coreOf": 166
     },
     {
       "id": 47,
@@ -2440,7 +2576,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 190
     },
     {
       "id": 48,
@@ -2487,7 +2625,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 39
     },
     {
       "id": 49,
@@ -2534,7 +2674,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": false,
+      "coreOf": 233
     },
     {
       "id": 50,
@@ -2581,7 +2723,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": false,
+      "coreOf": 67
     },
     {
       "id": 51,
@@ -2628,7 +2772,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "ElastiCache for Valkey の HNSW インメモリベクトル検索（数百万件・低レイテンシ）",
+      "related": []
     },
     {
       "id": 52,
@@ -2675,7 +2822,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": true,
+      "coreLabel": "大容量データの前処理パイプライン：Step Functions 分散処理 + PII マスク + 埋め込み生成",
+      "related": [
+        40
+      ]
     },
     {
       "id": 53,
@@ -2722,7 +2874,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 160
     },
     {
       "id": 54,
@@ -2769,7 +2923,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.2"
+      "category": "4.2",
+      "core": false,
+      "coreOf": 151
     },
     {
       "id": 55,
@@ -2816,7 +2972,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": false,
+      "coreOf": 175
     },
     {
       "id": 56,
@@ -2863,7 +3021,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 79
     },
     {
       "id": 57,
@@ -2910,7 +3070,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 39
     },
     {
       "id": 58,
@@ -2957,7 +3119,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.5"
+      "category": "2.5",
+      "core": true,
+      "coreLabel": "Step Functions Express と Standard の使い分け（短時間の変換処理と、人手確認を含む長時間フロー）",
+      "related": [
+        133
+      ]
     },
     {
       "id": 59,
@@ -3004,7 +3171,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": false,
+      "coreOf": 90
     },
     {
       "id": 60,
@@ -3051,7 +3220,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 254
     },
     {
       "id": 61,
@@ -3098,7 +3269,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": true,
+      "coreLabel": "環境別 modelId 設定と CI/CD（単一 CDK アプリ、CodePipeline / CodeBuild による昇格とロールバック）",
+      "related": [
+        97
+      ]
     },
     {
       "id": 62,
@@ -3145,7 +3321,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "静的知識は Knowledge Base、動的な取引データは実行時 API 照会に分ける設計",
+      "related": []
     },
     {
       "id": 63,
@@ -3192,7 +3371,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 160
     },
     {
       "id": 64,
@@ -3239,7 +3420,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": false,
+      "coreOf": 80
     },
     {
       "id": 65,
@@ -3286,7 +3469,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": false,
+      "coreOf": 81
     },
     {
       "id": 66,
@@ -3333,7 +3518,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.4"
+      "category": "3.4",
+      "core": false,
+      "coreOf": 25
     },
     {
       "id": 67,
@@ -3380,7 +3567,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "S3 data source の .metadata.json の置き方と、チャンク metadata の設計（アクセス条件・版・出典）",
+      "related": [
+        50,
+        226
+      ]
     },
     {
       "id": 68,
@@ -3427,7 +3620,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": true,
+      "coreLabel": "Q Business の data accessor と SearchRelevantContent（ISV に許可済みコンテキストだけを渡す）",
+      "related": []
     },
     {
       "id": 69,
@@ -3474,7 +3670,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 201
     },
     {
       "id": 70,
@@ -3529,7 +3727,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": false,
+      "coreOf": 140
     },
     {
       "id": 71,
@@ -3584,7 +3784,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.2"
+      "category": "2.2",
+      "core": true,
+      "coreLabel": "バッチの安定容量とリアルタイム／ハイブリッド統合の組み合わせ",
+      "related": []
     },
     {
       "id": 72,
@@ -3631,7 +3834,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.1"
+      "category": "1.1",
+      "core": false,
+      "coreOf": 228
     },
     {
       "id": 73,
@@ -3678,7 +3883,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": false,
+      "coreOf": 90
     },
     {
       "id": 74,
@@ -3725,7 +3932,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": false,
+      "coreOf": 266
     },
     {
       "id": 75,
@@ -3772,7 +3981,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 153
     },
     {
       "id": 76,
@@ -3819,7 +4030,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.1"
+      "category": "1.1",
+      "core": false,
+      "coreOf": 111
     },
     {
       "id": 77,
@@ -3866,7 +4079,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": true,
+      "coreLabel": "Converse API の基本：IAM ロールと messages 配列での会話履歴の受け渡し",
+      "related": []
     },
     {
       "id": 78,
@@ -3913,7 +4129,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": false,
+      "coreOf": 151
     },
     {
       "id": 79,
@@ -3960,7 +4178,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "MCP サーバーの公開：API Gateway HTTP API + Streamable HTTP + Cognito JWT オーソライザー",
+      "related": [
+        56
+      ]
     },
     {
       "id": 80,
@@ -4007,7 +4230,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": true,
+      "coreLabel": "呼び出しの回復性と可観測性：適応的リトライ、サーキットブレーカ、X-Ray とモデル別の相関分析",
+      "related": [
+        64
+      ]
     },
     {
       "id": 81,
@@ -4054,7 +4282,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "データ保護の総合構成：ABAC + VPC エンドポイント + Guardrails + CloudTrail Lake / model invocation logging",
+      "related": [
+        65
+      ]
     },
     {
       "id": 82,
@@ -4101,7 +4334,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": false,
+      "coreOf": 165
     },
     {
       "id": 83,
@@ -4148,7 +4383,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": false,
+      "coreOf": 145
     },
     {
       "id": 84,
@@ -4203,7 +4440,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": false,
+      "coreOf": 196
     },
     {
       "id": 85,
@@ -4250,7 +4489,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.5"
+      "category": "2.5",
+      "core": false,
+      "coreOf": 11
     },
     {
       "id": 86,
@@ -4297,7 +4538,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": false,
+      "coreOf": 203
     },
     {
       "id": 87,
@@ -4344,7 +4587,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": false,
+      "coreOf": 156
     },
     {
       "id": 88,
@@ -4391,7 +4636,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": false,
+      "coreOf": 161
     },
     {
       "id": 89,
@@ -4438,7 +4685,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": false,
+      "coreOf": 10
     },
     {
       "id": 90,
@@ -4485,7 +4734,14 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "Bedrock model evaluation job：generator と evaluator が同一リージョンで使える必要がある。独自データセットは S3 に置く",
+      "related": [
+        38,
+        59,
+        73
+      ]
     },
     {
       "id": 91,
@@ -4532,7 +4788,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "contextual grounding checks の設定：source と query を渡し groundedness と relevance を分けて評価する",
+      "related": [
+        32
+      ]
     },
     {
       "id": 92,
@@ -4579,7 +4840,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "GenerateQuery：自然言語から SQL をレビュー可能な中間成果物として生成する",
+      "related": []
     },
     {
       "id": 93,
@@ -4626,7 +4890,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "Guardrail の version 運用（本番は番号付きの不変 version、開発は DRAFT）",
+      "related": []
     },
     {
       "id": 94,
@@ -4673,7 +4940,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "OpenSearch Serverless の network access policy で Bedrock を source service として許可する",
+      "related": []
     },
     {
       "id": 95,
@@ -4720,7 +4990,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": false,
+      "coreOf": 30
     },
     {
       "id": 96,
@@ -4767,7 +5039,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": true,
+      "coreLabel": "imported model の Converse API 対応と on-demand throughput",
+      "related": []
     },
     {
       "id": 97,
@@ -4814,7 +5089,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": false,
+      "coreOf": 61
     },
     {
       "id": 98,
@@ -4861,7 +5138,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": true,
+      "coreLabel": "application inference profile：アプリ別のコスト配賦と利用明細",
+      "related": []
     },
     {
       "id": 99,
@@ -4908,7 +5188,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "RAG 評価を retrieve-only と retrieve-and-generate に分け、検索側と生成側の原因を切り分ける",
+      "related": [
+        13
+      ]
     },
     {
       "id": 100,
@@ -4955,7 +5240,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "SaaS 連携の取り込み：AppFlow から S3 へ、完了イベントを EventBridge で受けて同期を起動する",
+      "related": []
     },
     {
       "id": 101,
@@ -5002,7 +5290,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 220
     },
     {
       "id": 102,
@@ -5049,7 +5339,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "引用だけが消えた場合は prompt template の $output_format_instructions$ の削除を確認する",
+      "related": []
     },
     {
       "id": 103,
@@ -5096,7 +5389,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "保存済みログの機微情報は Macie、実行時の入出力は Guardrails の sensitive information filters",
+      "related": []
     },
     {
       "id": 104,
@@ -5143,7 +5439,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "AgentCore Policy：ツール実行前の決定的な可否判定",
+      "related": []
     },
     {
       "id": 105,
@@ -5190,7 +5489,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "Amazon A2I の custom task type と StartHumanLoop",
+      "related": []
     },
     {
       "id": 106,
@@ -5237,7 +5539,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "ApplyGuardrail を source=OUTPUT で呼び、組み立て後の最終出力を審査する",
+      "related": []
     },
     {
       "id": 107,
@@ -5284,7 +5589,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": false,
+      "coreOf": 247
     },
     {
       "id": 108,
@@ -5331,7 +5638,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": true,
+      "coreLabel": "modelLifecycle の EOL 監視と後継バージョンへの段階移行",
+      "related": []
     },
     {
       "id": 109,
@@ -5378,7 +5688,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": false,
+      "coreOf": 196
     },
     {
       "id": 110,
@@ -5425,7 +5737,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "ingestion 失敗の切り分け：APPLICATION_LOGS を CloudWatch Logs へ配信し status_reasons を見る",
+      "related": []
     },
     {
       "id": 111,
@@ -5472,7 +5787,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": true,
+      "coreLabel": "geography 単位 ≠ 単一リージョン固定。厳格な単一リージョン要件では CRI ではない別構成が要る",
+      "related": [
+        76
+      ]
     },
     {
       "id": 112,
@@ -5519,7 +5839,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "RetrieveAndGenerate の sessionId で追加質問の文脈を維持する",
+      "related": []
     },
     {
       "id": 113,
@@ -5566,7 +5889,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "クロスアカウントの S3 / KMS：KB サービスロール ARN を bucket policy と key policy の双方で許可する",
+      "related": []
     },
     {
       "id": 114,
@@ -5613,7 +5939,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "GraphRAG + Neptune Analytics：文書をまたぐエンティティ関係を retrieval 時点で使う",
+      "related": [
+        18
+      ]
     },
     {
       "id": 115,
@@ -5660,7 +5991,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "Bedrock Agents の基本構成：action groups と Knowledge Base の関連付け",
+      "related": [
+        27
+      ]
     },
     {
       "id": 116,
@@ -5707,7 +6043,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 211
     },
     {
       "id": 117,
@@ -5754,7 +6092,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": true,
+      "coreLabel": "Bedrock の IAM 権限の落とし穴：API 名から権限名を推測しない。Prompt Flows は service role が実行主体",
+      "related": [
+        118
+      ]
     },
     {
       "id": 118,
@@ -5801,7 +6144,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": false,
+      "coreOf": 117
     },
     {
       "id": 119,
@@ -5848,7 +6193,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": false,
+      "coreOf": 177
     },
     {
       "id": 120,
@@ -5895,7 +6242,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 201
     },
     {
       "id": 121,
@@ -5950,7 +6299,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 17
     },
     {
       "id": 122,
@@ -5997,7 +6348,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 160
     },
     {
       "id": 123,
@@ -6044,7 +6397,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.5"
+      "category": "2.5",
+      "core": false,
+      "coreOf": 146
     },
     {
       "id": 124,
@@ -6091,7 +6446,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "評価ジョブの service role に必要な権限（S3 入出力 / KB / モデル呼び出し / KMS）",
+      "related": []
     },
     {
       "id": 125,
@@ -6138,7 +6496,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": false,
+      "coreOf": 139
     },
     {
       "id": 126,
@@ -6185,7 +6545,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "guardContent と tagSuffix：現在のユーザー入力だけをタグで囲い、suffix をリクエストごとに変える",
+      "related": [
+        22
+      ]
     },
     {
       "id": 127,
@@ -6240,7 +6605,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 192
     },
     {
       "id": 128,
@@ -6287,7 +6654,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "処理段階で分ける多層防御：入力前は Comprehend、実行時は Guardrails、出力後は Lambda の決定論的検証",
+      "related": [
+        260
+      ]
     },
     {
       "id": 129,
@@ -6334,7 +6706,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": false,
+      "coreOf": 143
     },
     {
       "id": 130,
@@ -6381,7 +6755,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "SageMaker / custom model を KB の生成に使うときは orchestration prompt と generation prompt を明示する",
+      "related": []
     },
     {
       "id": 131,
@@ -6428,7 +6805,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": true,
+      "coreLabel": "cross-Region inference の実処理リージョンは CloudTrail の additionalEventData.inferenceRegion で確認する",
+      "related": []
     },
     {
       "id": 132,
@@ -6475,7 +6855,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "CloudWatch Synthetics canary による本番 regression の継続検知",
+      "related": []
     },
     {
       "id": 133,
@@ -6522,7 +6905,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.5"
+      "category": "2.5",
+      "core": false,
+      "coreOf": 58
     },
     {
       "id": 134,
@@ -6569,7 +6954,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 172
     },
     {
       "id": 135,
@@ -6616,7 +7003,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "ページ番号 citation / page filter を使うには、チャンク戦略がページ番号メタデータを保持している必要がある",
+      "related": [
+        234
+      ]
     },
     {
       "id": 136,
@@ -6663,7 +7055,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 210
     },
     {
       "id": 137,
@@ -6710,7 +7104,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": true,
+      "coreLabel": "AWS Agent Registry による agentic 資産の発見・承認・認可",
+      "related": []
     },
     {
       "id": 138,
@@ -6757,7 +7154,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": true,
+      "coreLabel": "ConverseStream と ContentBlock（text / document）で文書添付付きの複数ターン会話をストリーミングする",
+      "related": [
+        202
+      ]
     },
     {
       "id": 139,
@@ -6804,7 +7206,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "human-based evaluation：HumanEvaluationCustomMetric と ratingMethod、private workforce",
+      "related": [
+        125
+      ]
     },
     {
       "id": 140,
@@ -6851,7 +7258,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": true,
+      "coreLabel": "model invocation logging：requestMetadata を付けてアプリ別・リクエスト別に深掘りし、Logs Insights で分析する",
+      "related": [
+        19,
+        70
+      ]
     },
     {
       "id": 141,
@@ -6898,7 +7311,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": true,
+      "coreLabel": "bedrock:InferenceProfileArn 条件キーで application inference profile 経由の呼び出しだけを許可する",
+      "related": []
     },
     {
       "id": 142,
@@ -6945,7 +7361,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": false,
+      "coreOf": 258
     },
     {
       "id": 143,
@@ -6992,7 +7410,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": true,
+      "coreLabel": "モデルの明示的な振り分け（SageMaker AI endpoint と Bedrock FM、入力特徴による分岐）",
+      "related": [
+        129
+      ]
     },
     {
       "id": 144,
@@ -7039,7 +7462,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "大規模同期時だけ悪化する OpenSearch Managed Cluster の負荷（node / EBS / IOPS / indexing 設定）",
+      "related": []
     },
     {
       "id": 145,
@@ -7086,7 +7512,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": true,
+      "coreLabel": "マルチモーダル抽出は Bedrock Data Automation に寄せ、分岐と人手レビューは Step Functions で管理",
+      "related": [
+        83
+      ]
     },
     {
       "id": 146,
@@ -7133,7 +7564,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": true,
+      "coreLabel": "非同期ジョブの状態変化を EventBridge で受ける（Batch Inference / Data Automation の State Change）",
+      "related": [
+        123
+      ]
     },
     {
       "id": 147,
@@ -7180,7 +7616,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "AgentCore Evaluations：OTEL / OpenInference trace、assertions、expected_trajectory による継続評価",
+      "related": [
+        36
+      ]
     },
     {
       "id": 148,
@@ -7227,7 +7668,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "CHAT template type の prompt variant（会話履歴・system・tools・prompt caching）",
+      "related": []
     },
     {
       "id": 149,
@@ -7274,7 +7718,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": false,
+      "coreOf": 265
     },
     {
       "id": 150,
@@ -7321,7 +7767,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 227
     },
     {
       "id": 151,
@@ -7368,7 +7816,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": true,
+      "coreLabel": "容量設計：Provisioned Throughput でベースを支え、バーストは cross-Region inference の on-demand へ逃がす",
+      "related": [
+        54,
+        78
+      ]
     },
     {
       "id": 152,
@@ -7415,7 +7869,15 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": true,
+      "coreLabel": "CountTokens API：実際の入力形状で事前見積もりし、モデル選択・履歴圧縮・出力上限の判断に使う",
+      "related": [
+        26,
+        187,
+        197,
+        215
+      ]
     },
     {
       "id": 153,
@@ -7462,7 +7924,14 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": true,
+      "coreLabel": "geographic profile と global profile の使い分け（データレジデンシー制約の有無で決まる）",
+      "related": [
+        75,
+        188,
+        267
+      ]
     },
     {
       "id": 154,
@@ -7509,7 +7978,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.1"
+      "category": "1.1",
+      "core": true,
+      "coreLabel": "要件からのサービス選定：既製の enterprise assistant（Amazon Q Business）で足りるか自前構築か",
+      "related": []
     },
     {
       "id": 155,
@@ -7556,7 +8028,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": true,
+      "coreLabel": "prompt caching の効果測定：CacheReadInputTokens / CacheWriteInputTokens",
+      "related": []
     },
     {
       "id": 156,
@@ -7603,7 +8078,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "プロンプト起因の不具合診断：version compare と同一テスト変数での Run prompt、評価ジョブ / fmeval での定量比較",
+      "related": [
+        31,
+        87
+      ]
     },
     {
       "id": 157,
@@ -7650,7 +8131,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": true,
+      "coreLabel": "Organizations SCP で禁止モデル ARN の InvokeModel 系アクションを Deny する",
+      "related": []
     },
     {
       "id": 158,
@@ -7697,7 +8181,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": false,
+      "coreOf": 10
     },
     {
       "id": 159,
@@ -7744,7 +8230,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "action group Lambda の resource-based policy（bedrock.amazonaws.com + SourceArn で対象 agent に限定）",
+      "related": []
     },
     {
       "id": 160,
@@ -7799,7 +8288,17 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": true,
+      "coreLabel": "AppConfig による再デプロイ不要のモデル/設定の動的切替。canary・linear 配信とアラーム連動ロールバック",
+      "related": [
+        5,
+        23,
+        53,
+        63,
+        122,
+        213
+      ]
     },
     {
       "id": 161,
@@ -7854,7 +8353,14 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": true,
+      "coreLabel": "ガバナンスの証跡：Model Cards / Glue Data Catalog + タグ / CloudTrail + CloudWatch Logs、保持と分類（Object Lock, Macie）",
+      "related": [
+        20,
+        88,
+        257
+      ]
     },
     {
       "id": 162,
@@ -7901,7 +8407,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.2"
+      "category": "4.2",
+      "core": true,
+      "coreLabel": "Batch inference：大量の非同期生成を S3 入出力でまとめて処理する",
+      "related": []
     },
     {
       "id": 163,
@@ -7948,7 +8457,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "OpenSearch Managed Cluster の FGAC：KB サービスロール ARN を backend role にマッピングする",
+      "related": []
     },
     {
       "id": 164,
@@ -7995,7 +8507,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "Bedrock Prompt optimization で改善候補を生成し、人間が採用判断して version 化する",
+      "related": []
     },
     {
       "id": 165,
@@ -8050,7 +8565,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "CI/CD の品質ゲート：固定評価データセット + 本番カナリア + CodePipeline で未達モデルを昇格させない",
+      "related": [
+        82
+      ]
     },
     {
       "id": 166,
@@ -8097,7 +8617,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": true,
+      "coreLabel": "prompt caching：長い接頭辞を前方に固定して cache checkpoint を置き、TTL と latency optimized を併用する",
+      "related": [
+        37,
+        46
+      ]
     },
     {
       "id": 167,
@@ -8144,7 +8670,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "hierarchical chunking：小さい child で検索し、広い parent を文脈として渡す",
+      "related": [
+        35,
+        235
+      ]
     },
     {
       "id": 168,
@@ -8199,7 +8731,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 173
     },
     {
       "id": 169,
@@ -8246,7 +8780,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "nmslib エンジンの既存 index は流用できない。faiss エンジンで index を作り直す",
+      "related": []
     },
     {
       "id": 170,
@@ -8293,7 +8830,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "大量オフライン埋め込みの生成（throughput optimized batch jobs）",
+      "related": []
     },
     {
       "id": 171,
@@ -8340,7 +8880,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 241
     },
     {
       "id": 172,
@@ -8387,7 +8929,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "ApplyGuardrail API を独立して呼ぶ（Bedrock 外モデル、RAG 前段の source=INPUT）",
+      "related": [
+        44,
+        134
+      ]
     },
     {
       "id": 173,
@@ -8442,7 +8990,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "多層防御の組み立て：Cognito（認証）+ WAF（入口）+ Guardrails（モデル入出力）",
+      "related": [
+        168
+      ]
     },
     {
       "id": 174,
@@ -8489,7 +9042,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.3"
+      "category": "2.3",
+      "core": true,
+      "coreLabel": "AgentCore Identity：既存 Cognito / Okta を活かした認証と外部 SaaS の資格情報管理",
+      "related": []
     },
     {
       "id": 175,
@@ -8536,7 +9092,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": true,
+      "coreLabel": "semantic cache：ElastiCache for Valkey の vector search に類似度しきい値・TTL・テナント境界を設定する",
+      "related": [
+        55
+      ]
     },
     {
       "id": 176,
@@ -8583,7 +9144,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "action group の必須パラメータ定義（function details / OpenAPI schema の required）で不足を追質問させる",
+      "related": []
     },
     {
       "id": 177,
@@ -8630,7 +9194,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "interface VPC endpoint の使い分け：bedrock-runtime / bedrock-agent-runtime / bedrock-agent（build-time と runtime の分離）",
+      "related": [
+        119
+      ]
     },
     {
       "id": 178,
@@ -8677,7 +9246,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "AgentCore Runtime：既存フレームワークを保ったまま serverless / session isolation / 非同期実行を得る",
+      "related": [
+        33
+      ]
     },
     {
       "id": 179,
@@ -8732,7 +9306,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "toolChoice の any / auto の使い分け",
+      "related": []
     },
     {
       "id": 180,
@@ -8779,7 +9356,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "SessionState の sessionAttributes でセッション内の業務属性を保持・更新する",
+      "related": []
     },
     {
       "id": 181,
@@ -8826,7 +9406,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "implicit filtering：自然文から metadata 条件を自動生成する（metadataAttributes + modelArn）",
+      "related": [
+        224
+      ]
     },
     {
       "id": 182,
@@ -8873,7 +9458,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "AgentCore Runtime / Gateway への PrivateLink 接続",
+      "related": []
     },
     {
       "id": 183,
@@ -8920,7 +9508,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": false,
+      "coreOf": 203
     },
     {
       "id": 184,
@@ -8967,7 +9557,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "RetrieveAndGenerate の推論パラメータの置き場所（additionalModelRequestFields と textInferenceConfig）",
+      "related": []
     },
     {
       "id": 185,
@@ -9014,7 +9607,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "長文マニュアルの要約は章・節に分割し、中間要約を経て段階的に統合する",
+      "related": []
     },
     {
       "id": 186,
@@ -9061,7 +9657,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": true,
+      "coreLabel": "承認済みモデルのバージョン統制（SageMaker Model Registry + CodePipeline）と再トレーニングの自動化",
+      "related": [
+        256
+      ]
     },
     {
       "id": 187,
@@ -9108,7 +9709,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": false,
+      "coreOf": 152
     },
     {
       "id": 188,
@@ -9155,7 +9758,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 153
     },
     {
       "id": 189,
@@ -9202,7 +9807,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "Prompt Flows の version + alias で、参照先を固定したまま本番 workflow を切り替える",
+      "related": []
     },
     {
       "id": 190,
@@ -9249,7 +9857,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "semantic chunking：書式が不統一な文書を意味的まとまりで分割し、既存文書は再埋め込みする",
+      "related": [
+        47
+      ]
     },
     {
       "id": 191,
@@ -9296,7 +9909,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "生成が検索結果を参照しない場合は generation prompt の $search_results$ プレースホルダーを確認する",
+      "related": []
     },
     {
       "id": 192,
@@ -9351,7 +9967,14 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "Strands Agents SDK：@tool / inputSchema による tool 定義、agent-as-tool、hooks / plugins",
+      "related": [
+        127,
+        246,
+        251
+      ]
     },
     {
       "id": 193,
@@ -9398,7 +10021,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.1"
+      "category": "5.1",
+      "core": true,
+      "coreLabel": "golden dataset（期待根拠 + 期待回答）で RAG の改善候補を比較する",
+      "related": []
     },
     {
       "id": 194,
@@ -9445,7 +10071,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 216
     },
     {
       "id": 195,
@@ -9492,7 +10120,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "QUERY_DECOMPOSITION：複合質問をサブクエリに分解して retrieval する",
+      "related": [
+        229,
+        268
+      ]
     },
     {
       "id": 196,
@@ -9539,7 +10173,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": true,
+      "coreLabel": "承認済み Guardrail の強制：bedrock:GuardrailIdentifier 条件キーを IAM / permission boundary / SCP で使う",
+      "related": [
+        84,
+        109
+      ]
     },
     {
       "id": 197,
@@ -9586,7 +10226,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": false,
+      "coreOf": 152
     },
     {
       "id": 198,
@@ -9633,7 +10275,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "foundation model parser + custom parsing prompt で複雑 PDF の解析方針を制御する",
+      "related": []
     },
     {
       "id": 199,
@@ -9680,7 +10325,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 201
     },
     {
       "id": 200,
@@ -9735,7 +10382,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 201
     },
     {
       "id": 201,
@@ -9782,7 +10431,18 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "ハイブリッド検索と filterable text field：型番の厳密一致と意味検索の両立、startsWith / stringContains を前フィルタに使う条件",
+      "related": [
+        8,
+        69,
+        120,
+        199,
+        200,
+        222,
+        232
+      ]
     },
     {
       "id": 202,
@@ -9829,7 +10489,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": false,
+      "coreOf": 138
     },
     {
       "id": 203,
@@ -9876,7 +10538,13 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": true,
+      "coreLabel": "Intelligent Prompt Routing：Prompt Router の作成（fallback model、routing criteria、routing metrics）",
+      "related": [
+        86,
+        183
+      ]
     },
     {
       "id": 204,
@@ -9923,7 +10591,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": true,
+      "coreLabel": "Bedrock Agent の trace（InvokeAgent の enableTrace=true）",
+      "related": []
     },
     {
       "id": 205,
@@ -9970,7 +10641,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "model invocation logging を SSE-KMS バケットへ：KMS キーポリシーに kms:GenerateDataKey が要る",
+      "related": []
     },
     {
       "id": 206,
@@ -10017,7 +10691,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "PrepareFlow で DRAFT を準備済みにしてから、本番 version に影響させずにテストする",
+      "related": []
     },
     {
       "id": 207,
@@ -10080,7 +10757,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": true,
+      "coreLabel": "geographic inference profile に必要な IAM 権限（profile 本体 + source/destination 双方のモデル ARN）と SCP の宛先リージョン制約",
+      "related": [
+        14
+      ]
     },
     {
       "id": 208,
@@ -10127,7 +10809,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "Automated Reasoning checks：ルールから policy を作り、findings で再生成・追加確認へ分岐する",
+      "related": [
+        225
+      ]
     },
     {
       "id": 209,
@@ -10174,7 +10861,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "S3 の更新を KB に反映する同期：EventBridge から StartIngestionJob を起動する増分同期",
+      "related": [
+        231
+      ]
     },
     {
       "id": 210,
@@ -10221,7 +10913,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "contextual grounding checks を適用できる場面の見極め（参照文書のない一般チャットには使えない）",
+      "related": [
+        136
+      ]
     },
     {
       "id": 211,
@@ -10268,7 +10965,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": true,
+      "coreLabel": "structured outputs + JSON Schema（必要なら strict tool use）で生成段階から構造を強制する",
+      "related": [
+        116
+      ]
     },
     {
       "id": 212,
@@ -10315,7 +11017,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "S3 Vectors：低運用でセマンティック検索を始める構成",
+      "related": []
     },
     {
       "id": 213,
@@ -10362,7 +11067,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 160
     },
     {
       "id": 214,
@@ -10417,7 +11124,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "AgentCore Memory の short-term / long-term の使い分け",
+      "related": []
     },
     {
       "id": 215,
@@ -10464,7 +11174,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "4.1"
+      "category": "4.1",
+      "core": false,
+      "coreOf": 152
     },
     {
       "id": 216,
@@ -10511,7 +11223,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "Bedrock Data Automation を parser に指定し、表・図・音声・動画を検索可能なテキストにする",
+      "related": [
+        194
+      ]
     },
     {
       "id": 217,
@@ -10566,7 +11283,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "5.2"
+      "category": "5.2",
+      "core": true,
+      "coreLabel": "hierarchical chunking で返却件数が減る理由（child hits から parent chunks への置換）",
+      "related": []
     },
     {
       "id": 218,
@@ -10613,7 +11333,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.4"
+      "category": "2.4",
+      "core": true,
+      "coreLabel": "RetrieveAndGenerateStream：Knowledge Bases の引用を保ったままストリーミングする",
+      "related": [
+        3
+      ]
     },
     {
       "id": 219,
@@ -10660,7 +11385,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "Converse の modelId に prompt version ARN を指定し、promptVariables で値を渡す",
+      "related": []
     },
     {
       "id": 220,
@@ -10715,7 +11443,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "AgentCore Browser / Code Interpreter（DOM 外は OS レベル操作で扱う）",
+      "related": [
+        101
+      ]
     },
     {
       "id": 221,
@@ -10770,7 +11503,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": true,
+      "coreLabel": "Guardrail のクロスアカウント共有（利用側 IAM の ApplyGuardrail 許可 + 中央側の resource-based policy）",
+      "related": []
     },
     {
       "id": 222,
@@ -10817,7 +11553,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 201
     },
     {
       "id": 223,
@@ -10864,7 +11602,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": false,
+      "coreOf": 10
     },
     {
       "id": 224,
@@ -10911,7 +11651,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 181
     },
     {
       "id": 225,
@@ -10966,7 +11708,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 208
     },
     {
       "id": 226,
@@ -11013,7 +11757,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": false,
+      "coreOf": 67
     },
     {
       "id": 227,
@@ -11060,7 +11806,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "マルチモーダル埋め込みモデルの選択（Titan Multimodal G1 / Nova Multimodal Embeddings）",
+      "related": [
+        150
+      ]
     },
     {
       "id": 228,
@@ -11115,7 +11866,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.1"
+      "category": "1.1",
+      "core": true,
+      "coreLabel": "GenAI ワークロードの標準化：Well-Architected Generative AI Lens レビューと承認済みパターンの配布（Service Catalog / IaC / CloudFormation Guard）",
+      "related": [
+        72
+      ]
     },
     {
       "id": 229,
@@ -11162,7 +11918,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 195
     },
     {
       "id": 230,
@@ -11209,7 +11967,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.6"
+      "category": "1.6",
+      "core": false,
+      "coreOf": 10
     },
     {
       "id": 231,
@@ -11256,7 +12016,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": false,
+      "coreOf": 209
     },
     {
       "id": 232,
@@ -11303,7 +12065,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 201
     },
     {
       "id": 233,
@@ -11350,7 +12114,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": true,
+      "coreLabel": "埋め込み前のデータ品質検証：Glue Data Quality での検証・失敗レコード隔離・CloudWatch 監視",
+      "related": [
+        49
+      ]
     },
     {
       "id": 234,
@@ -11397,7 +12166,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 135
     },
     {
       "id": 235,
@@ -11444,7 +12215,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 167
     },
     {
       "id": 236,
@@ -11491,7 +12264,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "多言語 RAG：query set でモデルを評価し、全言語を同一ベクトル空間に載せる",
+      "related": []
     },
     {
       "id": 237,
@@ -11554,7 +12330,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "reranker による再順位付け（HYBRID + metadata filter + reranker の組み合わせ）",
+      "related": [
+        259
+      ]
     },
     {
       "id": 238,
@@ -11601,7 +12382,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "チャンキングなし + カスタム変換 Lambda による条項単位の分割と chunk metadata 付与",
+      "related": []
     },
     {
       "id": 239,
@@ -11656,7 +12440,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "S3 data source と custom data source の違い（inline content / inline metadata の可否）",
+      "related": []
     },
     {
       "id": 240,
@@ -11703,7 +12490,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 245
     },
     {
       "id": 241,
@@ -11758,7 +12547,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "reranker に渡す metadata の絞り込み（selectionMode = SELECTIVE、fieldsToInclude / Exclude）",
+      "related": [
+        171
+      ]
     },
     {
       "id": 242,
@@ -11805,7 +12599,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "RetrievalFilter の演算子と組み合わせ（andAll、greaterThanOrEquals による鮮度の強制）",
+      "related": [
+        248
+      ]
     },
     {
       "id": 243,
@@ -11852,7 +12651,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": false,
+      "coreOf": 264
     },
     {
       "id": 244,
@@ -11899,7 +12700,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "埋め込みモデルの次元変更：保存列とインデックスを作り直し、既存文書も再埋め込みする",
+      "related": []
     },
     {
       "id": 245,
@@ -11946,7 +12750,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "予約 metadata キーでのフィルタ（x-amz-bedrock-kb-data-source-id / source-uri）",
+      "related": [
+        240
+      ]
     },
     {
       "id": 246,
@@ -11993,7 +12802,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 192
     },
     {
       "id": 247,
@@ -12040,7 +12851,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "既存の Kendra GenAI Index を Bedrock Knowledge Base として再利用する",
+      "related": [
+        107
+      ]
     },
     {
       "id": 248,
@@ -12095,7 +12911,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 242
     },
     {
       "id": 249,
@@ -12142,7 +12960,12 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.4"
+      "category": "1.4",
+      "core": true,
+      "coreLabel": "Aurora PostgreSQL + pgvector：customMetadataField に対応する JSONB 列とインデックス",
+      "related": [
+        263
+      ]
     },
     {
       "id": 250,
@@ -12189,7 +13012,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": true,
+      "coreLabel": "画像由来の根拠：マルチモーダル parser と supplemental data storage（KB の作り直しが要る）",
+      "related": []
     },
     {
       "id": 251,
@@ -12236,7 +13062,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 192
     },
     {
       "id": 252,
@@ -12283,7 +13111,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 254
     },
     {
       "id": 253,
@@ -12330,7 +13160,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 254
     },
     {
       "id": 254,
@@ -12377,7 +13209,15 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": true,
+      "coreLabel": "Bedrock Agents の multi-agent collaboration：supervisor に collaborator / alias / collaboration instruction を設定する",
+      "related": [
+        60,
+        252,
+        253,
+        255
+      ]
     },
     {
       "id": 255,
@@ -12424,7 +13264,9 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1"
+      "category": "2.1",
+      "core": false,
+      "coreOf": 254
     },
     {
       "id": 256,
@@ -12471,7 +13313,9 @@
         ],
         "pitfalls": "- ML の再トレーニング/再デプロイは長時間処理のため Step Functions「Standard」（Express ではない）。\n- リアルタイム推論エンドポイントは「予測」用であり、再トレーニング自動化の役割ではない。\n- Pipelines は適切だが、Webhook/EventBridge バスの追加は不要な複雑性を生む（Bの罠）。"
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 186
     },
     {
       "id": 257,
@@ -12518,7 +13362,9 @@
         ],
         "pitfalls": "- AWS WAF は Web アプリ保護であり、生成 AI 出力の安全性制御には使わない（guardrails が担当）。\n- ⚠️ 注記: Amazon Bedrock Model Evaluation はデプロイ前の非同期バッチ評価ジョブで、200ms のリアルタイム hallucination 検出には使えない。リアルタイム検出は Guardrails の contextual grounding check（grounding/relevance スコアで推論時にブロック）が担う。出題意図上の正答は A だが、選択肢に grounding check が無く Model Evaluation でのリアルタイム検出という記述は現行仕様と乖離がある。\n- 低レイテンシー（200ms）かつ TTL 付き保存には DynamoDB が適する。"
       },
-      "category": "3.3"
+      "category": "3.3",
+      "core": false,
+      "coreOf": 161
     },
     {
       "id": 258,
@@ -12565,7 +13411,13 @@
         ],
         "pitfalls": "- 列レベル・属性ベースの一元アクセス制御は Lake Formation の LF-Tag が定石。\n- S3 バケット単位の制御では列レベルの PII 編集を表現できない。\n- データアクセスの監査証跡は CloudTrail。"
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "Lake Formation による列・行レベル権限（LF-Tag ベース）とクロスアカウント共有",
+      "related": [
+        9,
+        142
+      ]
     },
     {
       "id": 259,
@@ -12612,7 +13464,9 @@
         ],
         "pitfalls": "- C（Rerank API + 独自検索パイプライン）と D（KB 内 reranking 設定）の違いに注意。既存の RetrieveAndGenerateStream を活かせる D が低運用負荷。\n- 独自ランキングモデルの SageMaker ホスティングは運用負荷が高い。\n- 「意味的に近いが文脈的に無関係」な文書は reranking で順位を下げる。"
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 237
     },
     {
       "id": 260,
@@ -12659,7 +13513,9 @@
         ],
         "pitfalls": "- PII は「検出」だけでなく「エンティティ編集（redaction）」まで行わないとプライバシー保護にならない。\n- 逐次処理はレイテンシーを増やす。並列処理が応答時間維持に有効。\n- 「安全なプロンプトにのみ toxicity 検出」は不快コンテンツ検出の網羅性を下げる。"
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 128
     },
     {
       "id": 261,
@@ -12706,7 +13562,9 @@
         ],
         "pitfalls": "- 構造化データ（RDS）の正確な取得はベクトル/セマンティック検索より text-to-SQL が適する。\n- B と D はどちらも text-to-SQL。違いは hallucination 低減手段（B: Step Functions/Lambda 検証 / D: 信頼スコアリング+類似検索）。要件に合うのは D。\n- guardrails はレスポンスのフィルタリングを担う。"
       },
-      "category": "3.1"
+      "category": "3.1",
+      "core": false,
+      "coreOf": 42
     },
     {
       "id": 262,
@@ -12753,7 +13611,9 @@
         ],
         "pitfalls": "- データレジデンシー（同一リージョン処理）要件下ではクロスリージョン guardrail は不可。各リージョンへコピー展開する。\n- detect モードは検出のみでマスク/ブロックしない（ガードレール有効性の評価用途）。実際にマスク結果を確認しながら評価するなら mask、本番適用は block。\n- PII 検出は「機密情報フィルター」。単語フィルター単独では不十分。"
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": false,
+      "coreOf": 265
     },
     {
       "id": 263,
@@ -12800,7 +13660,9 @@
         ],
         "pitfalls": "- 意味的類似検索は埋め込みベクトル検索が必要。トピック抽出（Comprehend）では代替できない。\n- 埋め込みモデルはマネージドの Titan Embeddings を使う方が SageMaker 自前ホストより低運用負荷。\n- 100 万未満の規模なら Aurora PostgreSQL Serverless + pgvector が管理負荷を抑えやすい（D は Serverless 指定）。"
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 249
     },
     {
       "id": 264,
@@ -12855,7 +13717,12 @@
         ],
         "pitfalls": "- Step Functions は AWS SDK 統合で Bedrock を直接呼べる。要約/感情分析のためだけに Lambda を挟むのは不要。\n- S3 イベントは EventBridge ルール経由で Step Functions を起動するのが定石（D が正、E は不適）。\n- 出力は「構造化（JSON）形式」で生成する点を押さえる。"
       },
-      "category": "1.3"
+      "category": "1.3",
+      "core": true,
+      "coreLabel": "音声・スキャン PDF の取り込み（Transcribe / Textract）と Step Functions からの Bedrock 直接呼び出し",
+      "related": [
+        243
+      ]
     },
     {
       "id": 265,
@@ -12902,7 +13769,13 @@
         ],
         "pitfalls": "- ロール別の PII 表示は「元データ編集」ではなく「出力時（レスポンス）の制御」で行う。元データを編集すると外科医にも PII を出せなくなる。\n- ロール別出力制御は Cognito グループ + ApplyGuardrail が定石（KB を 2 つ作る必要はない）。\n- 3 年未満限定は S3 Lifecycle で古いオブジェクトを削除して実現。"
       },
-      "category": "3.2"
+      "category": "3.2",
+      "core": true,
+      "coreLabel": "PII の扱い分け：custom regex は BLOCK、PII は ANONYMIZE。環境別の mask / block、ロール別の出力制御",
+      "related": [
+        149,
+        262
+      ]
     },
     {
       "id": 266,
@@ -12949,7 +13822,12 @@
         ],
         "pitfalls": "- A と D の差は「異常検出」の有無。運用メトリクス劣化の自動検出には複合アラーム + 異常検出（D）。\n- 「自動修復（Lambda）」は要件にない。求められているのは「自動アラート」。\n- リアルタイムなアラート通知は CloudWatch + SNS が直接的。QuickSight/EventBridge 構成は分析寄りで複雑。"
       },
-      "category": "4.3"
+      "category": "4.3",
+      "core": true,
+      "coreLabel": "CloudWatch の異常検出アラームと複合アラームによる劣化検出・自動通知",
+      "related": [
+        74
+      ]
     },
     {
       "id": 267,
@@ -12996,7 +13874,9 @@
         ],
         "pitfalls": "- 選定 FM が許可外リージョン（eu-central-1/eu-west-3）にあるため、SCP を「ヨーロッパ内推論プロファイル許可」に拡張する必要がある。\n- 主因は SCP が eu-north-1/eu-west-1 のみ許可しており eu-central-1/eu-west-3 でのリソース作成が SCP 違反になる点。VPC エンドポイントがリージョン単位で別リージョン FM に直接使えない（Bedrock の PrivateLink はクロスリージョン非対応）のは補強理由。クロスリージョン推論プロファイルで対応。\n- Bedrock の FM を EC2/SageMaker に再デプロイする選択肢は要件から外れる。"
       },
-      "category": "1.2"
+      "category": "1.2",
+      "core": false,
+      "coreOf": 153
     },
     {
       "id": 268,
@@ -13043,7 +13923,9 @@
         ],
         "pitfalls": "- 複雑クエリの分解（semantic dilution 低減）は Bedrock ナレッジベースの query decomposition で実現でき自前実装は不要。これは RetrieveAndGenerate API の orchestrationConfiguration.queryTransformationConfiguration.type=QUERY_DECOMPOSITION でリクエスト単位に指定する（KB への永続設定ではない）。\n- カスタム ML（SageMaker）や複数 Lambda による分解は運用負荷とレイテンシーを増やす。\n- ドメイン固有用語の参照は参照医療文書をナレッジベースに保存して根拠化する。"
       },
-      "category": "1.5"
+      "category": "1.5",
+      "core": false,
+      "coreOf": 195
     }
   ]
 }

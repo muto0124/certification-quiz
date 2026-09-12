@@ -3,6 +3,7 @@
 const {
   escapeHtml,
   evaluateAnswer,
+  filterCoreOnly,
   formatQuestionText,
   getLatestOverallStats,
   getNextQuestionState,
@@ -235,5 +236,32 @@ assert.equal(restoreSessionSnapshot(null, sampleQuestions), null);
 
 // mode が壊れていても既定値で復帰する
 assert.equal(restoreSessionSnapshot({ ...snapshot, mode: 42 }, sampleQuestions).mode, 'sequential');
+
+// --- filterCoreOnly ---
+
+const coreSample = [
+  { id: 1, core: true, coreLabel: 'ハイブリッド検索', related: [2, 3] },
+  { id: 2, core: false, coreOf: 1 },
+  { id: 3, core: false, coreOf: 1 },
+  { id: 4, core: true, coreLabel: 'prompt caching', related: [] },
+];
+
+// 無効なら入力をそのまま返す
+assert.deepEqual(filterCoreOnly(coreSample, false).map((q) => q.id), [1, 2, 3, 4]);
+
+// 有効なら代表問だけ返す
+assert.deepEqual(filterCoreOnly(coreSample, true).map((q) => q.id), [1, 4]);
+
+// core キーを持たない試験では、有効でもフィルタを適用しない（空にしない）
+const noCoreSample = [{ id: 1 }, { id: 2 }];
+assert.deepEqual(filterCoreOnly(noCoreSample, true).map((q) => q.id), [1, 2]);
+
+// コアセットを持つ試験で、範囲内に代表問が無ければ空を返す。
+// 「core: true が1件も無い」を「コアセットが無い」と取り違えると、
+// コアのみ指定なのに同系問題が出てしまう。
+assert.deepEqual(filterCoreOnly(coreSample.slice(1, 3), true), []);
+
+// 空配列は空のまま
+assert.deepEqual(filterCoreOnly([], true), []);
 
 console.log('quiz-logic tests passed');

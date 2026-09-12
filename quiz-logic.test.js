@@ -3,8 +3,11 @@
 const {
   escapeHtml,
   evaluateAnswer,
+  filterByCategory,
   filterCoreOnly,
   formatQuestionText,
+  getCategoryOptions,
+  getCategoryStats,
   getLatestOverallStats,
   getNextQuestionState,
   getReviewCandidates,
@@ -263,5 +266,114 @@ assert.deepEqual(filterCoreOnly(coreSample.slice(1, 3), true), []);
 
 // 空配列は空のまま
 assert.deepEqual(filterCoreOnly([], true), []);
+
+// --- ドメイン／タスク単位の絞り込み ---
+
+const CATS = {
+  domains: [
+    {
+      id: '1',
+      weight: 31,
+      titleJa: 'ドメイン1',
+      tasks: [{ id: '1.1', titleJa: 'タスク1.1' }, { id: '1.2', titleJa: 'タスク1.2' }],
+    },
+    { id: '2', weight: 26, titleJa: 'ドメイン2', tasks: [{ id: '2.1', titleJa: 'タスク2.1' }] },
+  ],
+};
+const CQS = [
+  { id: 1, category: '1.1', core: true },
+  { id: 2, category: '1.1', core: false },
+  { id: 3, category: '1.2', core: true },
+  { id: 4, category: '2.1', core: false },
+  { id: 5 },  // 未分類
+];
+
+// 全範囲は未分類も含めて素通し
+assert.deepEqual(filterByCategory(CQS, 'all').map((q) => q.id), [1, 2, 3, 4, 5]);
+
+// 選択が無い（未初期化）場合も素通しにして、出題自体は成立させる
+assert.deepEqual(filterByCategory(CQS, null).map((q) => q.id), [1, 2, 3, 4, 5]);
+
+// ドメインは配下のタスクをまとめる。未分類は含めない
+assert.deepEqual(filterByCategory(CQS, 'd:1').map((q) => q.id), [1, 2, 3]);
+assert.deepEqual(filterByCategory(CQS, 'd:2').map((q) => q.id), [4]);
+
+// タスクは完全一致
+assert.deepEqual(filterByCategory(CQS, 't:1.1').map((q) => q.id), [1, 2]);
+
+// 失効した選択値は空を返す（呼び出し側が「全範囲」へ倒す）
+assert.deepEqual(filterByCategory(CQS, 't:9.9').map((q) => q.id), []);
+
+// ドメイン ID が多桁になっても前方一致で誤爆しない
+assert.deepEqual(
+  filterByCategory([{ id: 1, category: '11.1' }, { id: 2, category: '1.1' }], 'd:1')
+    .map((q) => q.id),
+  [2],
+);
+
+// 選択肢は「全範囲」＋ドメインごとの optgroup
+const opts = getCategoryOptions(CATS, CQS);
+assert.deepEqual(opts[0], { value: 'all', label: '全範囲', count: 5 });
+assert.equal(opts.length, 3);
+assert.equal(opts[1].group, 'ドメイン1 ドメイン1（31%）');
+assert.deepEqual(opts[1].options.map((o) => o.value), ['d:1', 't:1.1', 't:1.2']);
+assert.equal(opts[1].options[0].label, 'ドメイン1 全体');
+assert.equal(opts[1].options[0].count, 3);
+assert.equal(opts[1].options[1].label, '1.1 タスク1.1');
+assert.equal(opts[1].options[1].count, 2);
+assert.equal(opts[2].options[0].count, 1);
+
+// categories を持たない試験では選択肢を作らない
+assert.deepEqual(getCategoryOptions(null, CQS), []);
+
+const CPROG = {
+  1: { history: ['correct'] },
+  2: { history: ['correct', 'incorrect'] },
+  3: { history: ['incorrect', 'correct'] },
+};
+
+// 絞り込み済みの配列を渡す（絞り込みは呼び出し側の責務）
+const D1 = filterByCategory(CQS, 'd:1');
+
+// ドメイン1（全問）: 3問回答済み、最新が正解は 1 と 3 の 2 問
+assert.deepEqual(getCategoryStats(CATS, D1, CPROG, 'd:1'), {
+  count: 3, answered: 3, rate: 67, weight: 31, domainId: '1', isTask: false,
+});
+
+// ドメイン1（コアのみ）: 対象は 1 と 3 の 2 問
+assert.deepEqual(getCategoryStats(CATS, filterCoreOnly(D1, true), CPROG, 'd:1'), {
+  count: 2, answered: 2, rate: 100, weight: 31, domainId: '1', isTask: false,
+});
+
+// タスクは親ドメインの weight を返す
+assert.deepEqual(getCategoryStats(CATS, filterByCategory(CQS, 't:1.1'), CPROG, 't:1.1'), {
+  count: 2, answered: 2, rate: 50, weight: 31, domainId: '1', isTask: true,
+});
+
+// 全範囲は weight を持たない
+assert.deepEqual(getCategoryStats(CATS, CQS, CPROG, 'all'), {
+  count: 5, answered: 3, rate: 67, weight: null, domainId: null, isTask: false,
+});
+
+// 未回答だけの範囲でも 0% を返して落ちない
+assert.deepEqual(getCategoryStats(CATS, filterByCategory(CQS, 'd:2'), CPROG, 'd:2'), {
+  count: 1, answered: 0, rate: 0, weight: 26, domainId: '2', isTask: false,
+});
+
+// No. 範囲で更に絞った集合でも、渡された集合をそのまま説明する
+assert.deepEqual(getCategoryStats(CATS, CQS.slice(0, 2), CPROG, 'all'), {
+  count: 2, answered: 2, rate: 50, weight: null, domainId: null, isTask: false,
+});
+
+// --- 統計の対象を絞れる（第2引数） ---
+
+// 省略時は従来どおり progress 全体を見る
+assert.deepEqual(getLatestOverallStats(CPROG), { answered: 3, latestCorrect: 2, rate: 67 });
+
+// questionIds で対象を絞る
+assert.deepEqual(getLatestOverallStats(CPROG, [1, 2]), { answered: 2, latestCorrect: 1, rate: 50 });
+
+// 対象が空なら 0 件
+assert.deepEqual(getLatestOverallStats(CPROG, []), { answered: 0, latestCorrect: 0, rate: 0 });
 
 console.log('quiz-logic tests passed');

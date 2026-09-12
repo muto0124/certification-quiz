@@ -33,6 +33,33 @@ function saveCoreOnlyPreference(enabled) {
   } catch { /* 設定の保持を諦める */ }
 }
 
+// --- ドメイン／タスクの絞り込み ---
+// 分類データ（categories）を持つ試験だけで使う。選択は
+// 'all' | 'd:{ドメインID}' | 't:{タスクID}' の1文字列で、試験ごとに保存する。
+
+function getCategoryStorageKey() {
+  return `quiz_category_${currentExamId}`;
+}
+
+function getSelectedCategory() {
+  if (!window._quizCategories) return window.QuizLogic.ALL_CATEGORY;
+  return document.getElementById('category-select').value || window.QuizLogic.ALL_CATEGORY;
+}
+
+function loadCategoryPreference() {
+  if (!currentExamId) return window.QuizLogic.ALL_CATEGORY;
+  try {
+    return localStorage.getItem(getCategoryStorageKey()) || window.QuizLogic.ALL_CATEGORY;
+  } catch { return window.QuizLogic.ALL_CATEGORY; }
+}
+
+function saveCategoryPreference(value) {
+  if (!currentExamId) return;
+  try {
+    localStorage.setItem(getCategoryStorageKey(), value);
+  } catch { /* 設定の保持を諦める */ }
+}
+
 let allQuestions = [];   // data.json から読み込んだ全問題
 let sessionQuestions = []; // 今回の出題リスト（範囲・シャッフル済み）
 let currentIndex = 0;    // sessionQuestions 内の現在位置
@@ -40,6 +67,7 @@ let answered = false;    // 現在の問題を回答済みか
 let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {selected, isCorrect}=回答済み)
 let currentMode = 'sequential';
 let currentCoreOnly = false; // 今回の出題をコア問題に絞ったか（バッジ表示用）
+let currentCategory = 'all'; // 今回の出題をどのドメイン／タスクに絞ったか（バッジ表示用）
 
 // --- 進捗管理 ---
 
@@ -131,11 +159,100 @@ function renderStart() {
   const coreTotal = window._quizCoreTotal;
   document.getElementById('core-only-toggle').classList.toggle('hidden', !coreTotal);
   if (coreTotal) {
-    document.getElementById('core-only-count').textContent = coreTotal;
     document.getElementById('core-only').checked = loadCoreOnlyPreference();
   }
 
+  // 選択 UI を先に組み立てる。件数と統計はそこで選ばれた値を読むため。
+  renderCategorySelect();
+  updateRangeSummary();
+
   renderResumeCard('resume-card-start', currentExamId);
+}
+
+function buildCategoryOption(item) {
+  const option = document.createElement('option');
+  option.value = item.value;
+  option.textContent = `${item.label}（${item.count}問）`;
+  return option;
+}
+
+function renderCategorySelect() {
+  const wrap = document.getElementById('category-select-wrap');
+  const select = document.getElementById('category-select');
+  const entries = window.QuizLogic.getCategoryOptions(window._quizCategories, allQuestions);
+
+  wrap.classList.toggle('hidden', entries.length === 0);
+  select.innerHTML = '';
+  if (!entries.length) return;
+
+  const values = [];
+  for (const entry of entries) {
+    if (!entry.group) {
+      select.appendChild(buildCategoryOption(entry));
+      values.push(entry.value);
+      continue;
+    }
+
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = entry.group;
+    for (const item of entry.options) {
+      optgroup.appendChild(buildCategoryOption(item));
+      values.push(item.value);
+    }
+    select.appendChild(optgroup);
+  }
+
+  // 保存値が今の選択肢に無ければ「全範囲」へ倒す。問題データを再生成して
+  // タスク構成が変わったとき、消えたタスク ID が残って 0 問になるのを防ぐ。
+  const saved = loadCategoryPreference();
+  select.value = values.includes(saved) ? saved : window.QuizLogic.ALL_CATEGORY;
+}
+
+// コア件数・統計行・No. 入力の有効無効をまとめて更新する。ドメイン選択と
+// コアのみトグルはどちらを動かしても3つすべてに影響するため、1か所に集約する。
+function updateRangeSummary() {
+  const selection = getSelectedCategory();
+  const isAll = selection === window.QuizLogic.ALL_CATEGORY;
+
+  // ドメイン／タスクで絞っている間は No. 範囲を使わない。二重の絞り込みで
+  // 0 問になったときに理由が読み取れなくなるため。
+  ['range-start', 'range-end'].forEach((id) => {
+    document.getElementById(id).disabled = !isAll;
+  });
+  document.getElementById('range-inputs').classList.toggle('is-disabled', !isAll);
+
+  // トグルのラベル件数は試験全体の coreTotal ではなく、いま選んでいる範囲の中で数える
+  if (window._quizCoreTotal) {
+    document.getElementById('core-only-count').textContent = getScopedQuestions(true).length;
+  }
+
+  if (!window._quizCategories) return;
+
+  const stats = window.QuizLogic.getCategoryStats(
+    window._quizCategories,
+    getSelectedRangeQuestions(),
+    loadProgress().progress,
+    selection,
+  );
+  const parts = [
+    `${stats.count}問中 ${stats.answered}問回答済み`,
+    `正答率 ${stats.rate}%`,
+  ];
+  if (stats.weight != null) {
+    // 試験ガイドの比率はドメインにしか付かないため、タスク選択時は親ドメインを明示する
+    parts.push(stats.isTask
+      ? `試験比率 ${stats.weight}%（ドメイン${stats.domainId}）`
+      : `試験比率 ${stats.weight}%`);
+  }
+  document.getElementById('category-stats').textContent = parts.join(' ／ ');
+}
+
+// 0 問になった理由を出し分ける。ドメイン／タスクの絞り込みとコアのみを
+// 重ねると 0 問になり得るため、どちらの条件で消えたのかを文言で示す。
+function getScopeLabel() {
+  const selection = getSelectedCategory();
+  if (selection === window.QuizLogic.ALL_CATEGORY) return '範囲内';
+  return selection.startsWith('t:') ? 'このタスク' : 'このドメイン';
 }
 
 function showStartMessage(text) {
@@ -153,14 +270,30 @@ function showStartMessage(text) {
   showStartMessage.timerId = setTimeout(() => msg.classList.add('hidden'), 3000);
 }
 
-function getSelectedRangeQuestions() {
+function applyNumberRange(questions) {
   const startVal = parseInt(document.getElementById('range-start').value) || 1;
   const endVal = parseInt(document.getElementById('range-end').value) || allQuestions.length;
   const start = Math.max(1, Math.min(startVal, allQuestions.length));
   const end = Math.max(start, Math.min(endVal, allQuestions.length));
 
-  const inRange = allQuestions.filter(q => q.id >= start && q.id <= end);
-  return window.QuizLogic.filterCoreOnly(inRange, isCoreOnlyEnabled());
+  return questions.filter(q => q.id >= start && q.id <= end);
+}
+
+// 出題範囲の絞り込みはこの1本に集約する。コアのみだけ引数で切り替えられるのは、
+// トグルのラベル件数（コアにしたら何問になるか）を同じ経路で数えるため。
+function getScopedQuestions(coreOnly) {
+  const selection = getSelectedCategory();
+  const byCategory = window.QuizLogic.filterByCategory(allQuestions, selection);
+  // No. 範囲は「全範囲」のときだけ効かせる。ドメイン選択中は入力を disabled に
+  // しているため、値が残っていても適用しない。
+  const scoped = selection === window.QuizLogic.ALL_CATEGORY
+    ? applyNumberRange(byCategory)
+    : byCategory;
+  return window.QuizLogic.filterCoreOnly(scoped, coreOnly);
+}
+
+function getSelectedRangeQuestions() {
+  return getScopedQuestions(isCoreOnlyEnabled());
 }
 
 function startQuiz(mode) {
@@ -170,9 +303,12 @@ function startQuiz(mode) {
 
   // id は 1-based
   currentCoreOnly = isCoreOnlyEnabled();
+  currentCategory = getSelectedCategory();
   sessionQuestions = getSelectedRangeQuestions();
   if (sessionQuestions.length === 0) {
-    showStartMessage('範囲内にコア問題がありません');
+    showStartMessage(currentCoreOnly
+      ? `${getScopeLabel()}にコア問題がありません`
+      : `${getScopeLabel()}に問題がありません`);
     return;
   }
   if (mode === 'random') {
@@ -190,14 +326,23 @@ function startIncorrectOnly() {
   const data = loadProgress();
   const coreOnly = isCoreOnlyEnabled();
   currentCoreOnly = coreOnly;
-  const incorrectIds = window.QuizLogic.filterCoreOnly(allQuestions, coreOnly).filter(q => {
+  currentCategory = getSelectedCategory();
+  // このモードだけは No. 範囲を見ない（不正解は試験全体から拾う）。
+  // ドメイン／タスクの絞り込みは効かせる。
+  const pool = window.QuizLogic.filterCoreOnly(
+    window.QuizLogic.filterByCategory(allQuestions, currentCategory),
+    coreOnly,
+  );
+  const incorrectIds = pool.filter(q => {
     const p = data.progress[q.id];
     if (!p || p.history.length === 0) return false;
     return p.history[p.history.length - 1] === 'incorrect';
   });
 
   if (incorrectIds.length === 0) {
-    showStartMessage(coreOnly ? 'コア問題に不正解はありません' : '不正解の問題はありません');
+    showStartMessage(coreOnly
+      ? `${getScopeLabel()}のコア問題に不正解はありません`
+      : `${getScopeLabel()}に不正解の問題はありません`);
     return;
   }
 
@@ -219,14 +364,15 @@ function startReviewMode() {
 
   if (reviewCandidates.length === 0) {
     showStartMessage(isCoreOnlyEnabled()
-      ? '回答済みの復習対象が範囲内のコア問題にありません'
-      : '回答済みの復習対象が範囲内にありません');
+      ? `${getScopeLabel()}のコア問題に回答済みの復習対象がありません`
+      : `${getScopeLabel()}に回答済みの復習対象がありません`);
     return;
   }
 
   showStartMessage('');
   currentMode = 'review';
   currentCoreOnly = isCoreOnlyEnabled();
+  currentCategory = getSelectedCategory();
   sessionQuestions = reviewCandidates.map((item) => item.question);
   currentIndex = 0;
   sessionAnswers = new Array(sessionQuestions.length).fill(null);
@@ -285,9 +431,20 @@ function isAnsweredState(answerState) {
   return Boolean(answerState && answerState.isSubmitted);
 }
 
+// 出題中の絞り込みをバッジで短く示す。ドメインは 'ドメイン1'、
+// タスクは '1.5'。全範囲のときは何も足さない。
+function getCategoryBadgeLabel(selection) {
+  if (!selection || selection === window.QuizLogic.ALL_CATEGORY) return '';
+  const [kind, id] = String(selection).split(':');
+  if (!id) return '';
+  return kind === 'd' ? `ドメイン${id}` : id;
+}
+
 function updateModeBadge() {
   const labels = [];
   if (currentMode === 'review') labels.push('復習モード');
+  const categoryLabel = getCategoryBadgeLabel(currentCategory);
+  if (categoryLabel) labels.push(categoryLabel);
   if (currentCoreOnly) labels.push('コアのみ');
 
   const badge = document.getElementById('quiz-mode-badge');
@@ -918,7 +1075,17 @@ async function init() {
   document.getElementById('btn-review').addEventListener('click', startReviewMode);
   document.getElementById('core-only').addEventListener('change', (e) => {
     saveCoreOnlyPreference(e.target.checked);
+    updateRangeSummary();
     showStartMessage('');
+  });
+  document.getElementById('category-select').addEventListener('change', (e) => {
+    saveCategoryPreference(e.target.value);
+    updateRangeSummary();
+    showStartMessage('');
+  });
+  // No. 範囲を触っても統計行が実際の出題対象を示すようにする
+  ['range-start', 'range-end'].forEach((id) => {
+    document.getElementById(id).addEventListener('input', updateRangeSummary);
   });
   document.getElementById('btn-skip').addEventListener('click', skipQuestion);
   document.getElementById('btn-submit').addEventListener('click', submitCurrentAnswer);

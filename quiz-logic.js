@@ -36,6 +36,100 @@
     return questions.filter((question) => question.core === true);
   }
 
+  // --- ドメイン／タスク単位の絞り込み ---
+  // 選択値は 'all' | 'd:{ドメインID}' | 't:{タスクID}' の 1 文字列で持つ。
+  // 単一選択なので状態が1つで済み、localStorage への保存もそのまま書ける。
+  const ALL_CATEGORY = 'all';
+
+  function getDomainList(categories) {
+    return (categories && Array.isArray(categories.domains)) ? categories.domains : [];
+  }
+
+  function filterByCategory(questions, selection) {
+    const list = questions || [];
+    if (!selection || selection === ALL_CATEGORY) return list;
+
+    const [kind, id] = String(selection).split(':');
+    if (!id) return list;
+
+    if (kind === 't') return list.filter((question) => question.category === id);
+
+    // ドメイン判定を startsWith(id + '.') で行うのは、ID が多桁になったときに
+    // '11.1' がドメイン '1' に含まれてしまう事故を避けるため。
+    if (kind === 'd') {
+      return list.filter((question) => typeof question.category === 'string'
+        && (question.category === id || question.category.startsWith(`${id}.`)));
+    }
+
+    return list;
+  }
+
+  function getCategoryOptions(categories, questions) {
+    const domains = getDomainList(categories);
+    if (!domains.length) return [];
+
+    const list = questions || [];
+    const options = [{ value: ALL_CATEGORY, label: '全範囲', count: list.length }];
+
+    for (const domain of domains) {
+      const inner = [{
+        value: `d:${domain.id}`,
+        label: `ドメイン${domain.id} 全体`,
+        count: filterByCategory(list, `d:${domain.id}`).length,
+      }];
+
+      for (const task of (domain.tasks || [])) {
+        inner.push({
+          value: `t:${task.id}`,
+          label: `${task.id} ${task.titleJa}`,
+          count: filterByCategory(list, `t:${task.id}`).length,
+        });
+      }
+
+      options.push({
+        group: `ドメイン${domain.id} ${domain.titleJa}（${domain.weight}%）`,
+        options: inner,
+      });
+    }
+
+    return options;
+  }
+
+  // 試験ガイドの weight はドメインにしか付かないため、タスク選択でも
+  // 親ドメインの weight を返し、タスクかどうかは isTask で区別させる。
+  function findDomainForSelection(categories, selection) {
+    if (!selection || selection === ALL_CATEGORY) return null;
+
+    const [kind, id] = String(selection).split(':');
+    if (!id) return null;
+
+    const domains = getDomainList(categories);
+    if (kind === 'd') return domains.find((domain) => domain.id === id) || null;
+    if (kind === 't') {
+      return domains.find((domain) => (domain.tasks || [])
+        .some((task) => task.id === id)) || null;
+    }
+    return null;
+  }
+
+  // 絞り込み済みの配列を受け取り、その集合を説明するだけに徹する。絞り込み自体は
+  // 呼び出し側（app.js の1本の経路）が行う。ここで再度絞ると、No. 範囲やコアの
+  // 条件が二重に効いて「表示は 268 問なのに出題は 50 問」のようなずれが起きる。
+  function getCategoryStats(categories, scopedQuestions, progress, selection) {
+    const scoped = scopedQuestions || [];
+    const stats = getLatestOverallStats(progress, scoped.map((question) => question.id));
+    const domain = findDomainForSelection(categories, selection);
+
+    return {
+      count: scoped.length,
+      answered: stats.answered,
+      rate: stats.rate,
+      weight: domain ? domain.weight : null,
+      domainId: domain ? domain.id : null,
+      isTask: String(selection || '').startsWith('t:'),
+    };
+  }
+
   function evaluateAnswer(answer, selectedLabels) {
     const expected = getAnswerLabels(answer);
     const selected = getAnswerLabels(selectedLabels);
@@ -196,8 +290,14 @@
     return html;
   }
 
-  function getLatestOverallStats(progress) {
-    const entries = Object.values(progress || {});
+  // questionIds を渡すとその問題だけを対象にする。省略時は progress 全体。
+  // スタート画面のサマリーとドメイン別の統計で「各問の最新の回答」という
+  // 同じ定義を共有するため、集計の実体はこの1つに寄せている。
+  function getLatestOverallStats(progress, questionIds) {
+    const source = progress || {};
+    const entries = Array.isArray(questionIds)
+      ? questionIds.map((id) => source[id])
+      : Object.values(source);
     const answered = entries.filter((item) => {
       const history = item && Array.isArray(item.history) ? item.history : [];
       return history.length > 0;
@@ -279,10 +379,14 @@
   }
 
   return {
+    ALL_CATEGORY,
     escapeHtml,
     evaluateAnswer,
+    filterByCategory,
     filterCoreOnly,
     formatQuestionText,
+    getCategoryOptions,
+    getCategoryStats,
     getLatestOverallStats,
     getNextQuestionState,
     getReviewCandidates,

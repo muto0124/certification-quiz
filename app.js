@@ -176,10 +176,18 @@ function buildCategoryOption(item) {
   return option;
 }
 
+// 選択肢のラベルに出す件数は、コアのみトグルの ON/OFF を反映させる。
+// 全問の件数のままだと「ドメイン1 全体（103問）」を選んだのに 54 問しか
+// 出題されない、という食い違いが起きるため、トグルの変更時に組み直す。
 function renderCategorySelect() {
   const wrap = document.getElementById('category-select-wrap');
   const select = document.getElementById('category-select');
-  const entries = window.QuizLogic.getCategoryOptions(window._quizCategories, allQuestions);
+  const entries = window.QuizLogic.getCategoryOptions(
+    window._quizCategories,
+    window.QuizLogic.filterCoreOnly(allQuestions, isCoreOnlyEnabled()),
+  );
+
+  const previous = select.value;
 
   wrap.classList.toggle('hidden', entries.length === 0);
   select.innerHTML = '';
@@ -202,10 +210,12 @@ function renderCategorySelect() {
     select.appendChild(optgroup);
   }
 
-  // 保存値が今の選択肢に無ければ「全範囲」へ倒す。問題データを再生成して
-  // タスク構成が変わったとき、消えたタスク ID が残って 0 問になるのを防ぐ。
-  const saved = loadCategoryPreference();
-  select.value = values.includes(saved) ? saved : window.QuizLogic.ALL_CATEGORY;
+  // 組み直しでは画面上の選択を優先する。トグル操作のたびに保存値へ
+  // 戻ると、選んだドメインが勝手に変わってしまうため。
+  // 候補に無ければ「全範囲」へ倒す（データ再生成でタスク構成が変わり、
+  // 消えたタスク ID が残って 0 問になるのを防ぐ）。
+  const preferred = previous || loadCategoryPreference();
+  select.value = values.includes(preferred) ? preferred : window.QuizLogic.ALL_CATEGORY;
 }
 
 // コア件数・統計行・No. 入力の有効無効をまとめて更新する。ドメイン選択と
@@ -1075,6 +1085,7 @@ async function init() {
   document.getElementById('btn-review').addEventListener('click', startReviewMode);
   document.getElementById('core-only').addEventListener('change', (e) => {
     saveCoreOnlyPreference(e.target.checked);
+    renderCategorySelect();
     updateRangeSummary();
     showStartMessage('');
   });

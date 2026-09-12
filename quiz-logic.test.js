@@ -326,6 +326,15 @@ assert.equal(opts[2].options[0].count, 1);
 // categories を持たない試験では選択肢を作らない
 assert.deepEqual(getCategoryOptions(null, CQS), []);
 
+// コアだけに絞った配列を渡せば、件数もコアの数になる。
+// 選択肢のラベルと実際の出題数を一致させるため、呼び出し側は
+// コアのみトグルの状態を反映した配列を渡す。
+const coreOpts = getCategoryOptions(CATS, filterCoreOnly(CQS, true));
+assert.equal(coreOpts[0].count, 2);
+assert.equal(coreOpts[1].options[0].count, 2);   // d:1
+assert.equal(coreOpts[1].options[1].count, 1);   // t:1.1
+assert.equal(coreOpts[2].options[0].count, 0);   // d:2 にコアは無い
+
 const CPROG = {
   1: { history: ['correct'] },
   2: { history: ['correct', 'incorrect'] },

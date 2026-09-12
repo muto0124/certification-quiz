@@ -47,6 +47,11 @@
         <span>〜 No.</span>
         <input type="number" id="range-end" min="1" value="1">
       </div>
+      <label id="core-only-toggle" class="core-only-toggle hidden">
+        <input type="checkbox" id="core-only">
+        <span>🎯 コア問題のみ（<span id="core-only-count"></span>問）</span>
+        <small>知識点が重複する問題を除いた代表問だけを出題する</small>
+      </label>
       <div class="btn-group">
         <button id="btn-sequential" class="btn btn-primary">▶ 順番通りに出題</button>
         <button id="btn-random" class="btn btn-primary">🔀 ランダムに出題</button>
@@ -94,6 +99,7 @@
       <div id="exp-key-insight"></div>
       <div id="exp-analysis"></div>
       <div id="exp-pitfalls"></div>
+      <div id="exp-core-info" class="exp-core-info hidden"></div>
       <div id="exp-learn-link" class="exp-learn-link hidden"></div>
     </div>
     <div class="nav-area hidden" id="nav-area">

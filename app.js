@@ -68,6 +68,8 @@ let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {
 let currentMode = 'sequential';
 let currentCoreOnly = false; // 今回の出題を代表問に絞ったか（バッジ表示用）
 let currentCategory = 'all'; // 今回の出題をどのドメイン／タスクに絞ったか（バッジ表示用）
+// 同系問リンクで飛ぶ前の出題状態。飛んだ先から続けて飛べるよう積み上げ、戻るたびに 1 つ取り出す
+let returnStack = [];
 
 // --- 進捗管理 ---
 
@@ -136,6 +138,8 @@ function showScreen(id) {
 // --- スタート画面 ---
 
 function renderStart() {
+  // 新しい出題はすべてスタート画面から始まるので、ここで戻り先を捨てる
+  returnStack = [];
   currentMode = 'sequential';
   showScreen('screen-start');
   document.getElementById('quiz-title').textContent = allQuestions.length
@@ -397,13 +401,23 @@ function skipQuestion() {
 }
 
 function goToPrevQuestion() {
+  if (currentIndex === 0 && returnStack.length) {
+    returnToOrigin();
+    return;
+  }
   if (currentIndex <= 0) return;
   currentIndex--;
   renderQuiz();
 }
 
 function goToNextQuestion() {
-  const nextState = window.QuizLogic.getNextQuestionState(currentIndex, sessionQuestions.length);
+  const nextState = window.QuizLogic.getNextQuestionState(
+    currentIndex, sessionQuestions.length, getReturnQuestionId(),
+  );
+  if (nextState.isLast && returnStack.length) {
+    returnToOrigin();
+    return;
+  }
   if (nextState.isLast) {
     clearSessionSnapshot();
     renderStart();
@@ -415,8 +429,17 @@ function goToNextQuestion() {
   renderQuiz();
 }
 
+function updatePrevQuestionButton() {
+  const button = document.getElementById('btn-prev');
+  const returnId = currentIndex === 0 ? getReturnQuestionId() : null;
+  button.textContent = returnId === null ? '◀ 戻る' : `◀ #${returnId} に戻る`;
+  button.disabled = currentIndex === 0 && returnId === null;
+}
+
 function updateNextQuestionButtons() {
-  const nextState = window.QuizLogic.getNextQuestionState(currentIndex, sessionQuestions.length);
+  const nextState = window.QuizLogic.getNextQuestionState(
+    currentIndex, sessionQuestions.length, getReturnQuestionId(),
+  );
 
   ['btn-next-top', 'btn-next'].forEach((id) => {
     const button = document.getElementById(id);
@@ -556,7 +579,7 @@ function renderQuiz() {
     `問題 ${q.id} （${currentIndex + 1} / ${sessionQuestions.length}）`;
   updateModeBadge();
 
-  document.getElementById('btn-prev').disabled = currentIndex === 0;
+  updatePrevQuestionButton();
   document.getElementById('question-text').innerHTML = window.QuizLogic.formatQuestionText(q.question);
 
   const choicesDiv = document.getElementById('choices');
@@ -713,7 +736,7 @@ function renderCoreInfoForQuestion(q) {
   }
 
   box.querySelectorAll('button[data-jump]').forEach((btn) => {
-    btn.addEventListener('click', () => jumpToQuestion(Number(btn.dataset.jump)));
+    btn.addEventListener('click', () => jumpToRelatedQuestion(Number(btn.dataset.jump)));
   });
   box.classList.remove('hidden');
 }
@@ -784,7 +807,48 @@ function applyFilter(filter) {
   }
 }
 
+// 進捗一覧の「解く」から。今の出題を離れて新しく始めるので戻り先は持たない
 function jumpToQuestion(qid) {
+  returnStack = [];
+  openSingleQuestion(qid);
+}
+
+// 解説の同系問リンクから。解説を読んでいる途中なので、今の出題へ戻れるようにしておく
+function jumpToRelatedQuestion(qid) {
+  returnStack.push({
+    mode: currentMode,
+    coreOnly: currentCoreOnly,
+    category: currentCategory,
+    questions: sessionQuestions,
+    index: currentIndex,
+    answers: sessionAnswers,
+  });
+  openSingleQuestion(qid);
+  // 解説の末尾から飛ぶので、そのままだと飛んだ先の問題文が画面外に残る
+  window.scrollTo(0, 0);
+}
+
+function getReturnQuestionId() {
+  const origin = returnStack[returnStack.length - 1];
+  return origin ? origin.questions[origin.index].id : null;
+}
+
+// 飛ぶ前の出題を回答状態ごと戻す。読んでいた解説の位置へスクロールする
+function returnToOrigin() {
+  const origin = returnStack.pop();
+  if (!origin) return;
+
+  currentMode = origin.mode;
+  currentCoreOnly = origin.coreOnly;
+  currentCategory = origin.category;
+  sessionQuestions = origin.questions;
+  currentIndex = origin.index;
+  sessionAnswers = origin.answers;
+  pendingScrollToExplanation = true;
+  renderQuiz();
+}
+
+function openSingleQuestion(qid) {
   // 指定問題を先頭にして順番通りモードで開始
   currentMode = 'sequential';
   currentCoreOnly = false;

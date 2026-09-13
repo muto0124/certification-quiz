@@ -45,6 +45,18 @@ assert.deepEqual(getNextQuestionState(2, 3), {
   label: 'スタートに戻る',
 });
 
+// 同系問へ飛んだ先では、最後の問題の先が飛ぶ前の問題になる
+assert.deepEqual(getNextQuestionState(0, 1, 12), {
+  isLast: true,
+  label: '↩ #12 に戻る',
+});
+
+// 途中の問題なら戻り先があっても通常どおり次へ進む
+assert.deepEqual(getNextQuestionState(0, 3, 12), {
+  isLast: false,
+  label: '次の問題 →',
+});
+
 assert.deepEqual(getLatestOverallStats({}), {
   answered: 0,
   latestCorrect: 0,

@@ -216,7 +216,7 @@ a.btn { text-decoration: none; }
 .core-only-toggle input { width: 1.1rem; height: 1.1rem; margin: 0; cursor: pointer; }
 .core-only-toggle small { grid-column: 2; color: #718096; font-size: 0.8125rem; }
 
-/* 解説内の知識点・同系問題 */
+/* 解説内の知識点・同系問 */
 .exp-core-info {
   margin-top: 1rem; padding: 0.75rem;
   background: #f7fafc; border-left: 3px solid #cbd5e0; border-radius: 4px;

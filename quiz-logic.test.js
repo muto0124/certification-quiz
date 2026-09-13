@@ -261,7 +261,7 @@ assert.deepEqual(filterCoreOnly(noCoreSample, true).map((q) => q.id), [1, 2]);
 
 // コアセットを持つ試験で、範囲内に代表問が無ければ空を返す。
 // 「core: true が1件も無い」を「コアセットが無い」と取り違えると、
-// コアのみ指定なのに同系問題が出てしまう。
+// コアのみ指定なのに同系問が出てしまう。
 assert.deepEqual(filterCoreOnly(coreSample.slice(1, 3), true), []);
 
 // 空配列は空のまま

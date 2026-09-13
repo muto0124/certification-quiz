@@ -66,7 +66,7 @@ let currentIndex = 0;    // sessionQuestions 内の現在位置
 let answered = false;    // 現在の問題を回答済みか
 let sessionAnswers = []; // セッション内の回答状態 (null=未回答, {selected, isCorrect}=回答済み)
 let currentMode = 'sequential';
-let currentCoreOnly = false; // 今回の出題をコア問題に絞ったか（バッジ表示用）
+let currentCoreOnly = false; // 今回の出題を代表問に絞ったか（バッジ表示用）
 let currentCategory = 'all'; // 今回の出題をどのドメイン／タスクに絞ったか（バッジ表示用）
 
 // --- 進捗管理 ---
@@ -317,7 +317,7 @@ function startQuiz(mode) {
   sessionQuestions = getSelectedRangeQuestions();
   if (sessionQuestions.length === 0) {
     showStartMessage(currentCoreOnly
-      ? `${getScopeLabel()}にコア問題がありません`
+      ? `${getScopeLabel()}に代表問がありません`
       : `${getScopeLabel()}に問題がありません`);
     return;
   }
@@ -351,7 +351,7 @@ function startIncorrectOnly() {
 
   if (incorrectIds.length === 0) {
     showStartMessage(coreOnly
-      ? `${getScopeLabel()}のコア問題に不正解はありません`
+      ? `${getScopeLabel()}の代表問に不正解はありません`
       : `${getScopeLabel()}に不正解の問題はありません`);
     return;
   }
@@ -374,7 +374,7 @@ function startReviewMode() {
 
   if (reviewCandidates.length === 0) {
     showStartMessage(isCoreOnlyEnabled()
-      ? `${getScopeLabel()}のコア問題に回答済みの復習対象がありません`
+      ? `${getScopeLabel()}の代表問に回答済みの復習対象がありません`
       : `${getScopeLabel()}に回答済みの復習対象がありません`);
     return;
   }
@@ -698,13 +698,13 @@ function renderCoreInfoForQuestion(q) {
       const buttons = q.related
         .map((id) => `<button type="button" data-jump="${id}">#${id}</button>`)
         .join('');
-      html += `<p class="exp-core-related"><strong>同系:</strong> ${buttons}</p>`;
+      html += `<p class="exp-core-related"><strong>同系問:</strong> ${buttons}</p>`;
     } else {
       html += '<p>この知識点を問う問題は他にありません。</p>';
     }
     box.innerHTML = html;
   } else if (q.coreOf) {
-    box.innerHTML = '<p>この問題はコア問題 '
+    box.innerHTML = '<p>この問題は代表問 '
       + `<span class="exp-core-related"><button type="button" data-jump="${q.coreOf}">#${q.coreOf}</button></span>`
       + ' と同じ知識点です。</p>';
   } else {

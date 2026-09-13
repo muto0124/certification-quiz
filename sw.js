@@ -1,5 +1,5 @@
 ﻿// Service Worker — キャッシュファースト戦略
-const CACHE_VERSION = '20260913133721';
+const CACHE_VERSION = '20260913134254';
 const CACHE_NAME = `quiz-cache-${CACHE_VERSION}`;
 const ASSETS = [
   './',

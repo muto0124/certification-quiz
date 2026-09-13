@@ -1,7 +1,7 @@
 {
   "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集 268問",
   "total": 268,
-  "version": "20260912173403",
+  "version": "20260913101652",
   "categories": {
     "examGuide": {
       "code": "AIP-C01",
@@ -152,7 +152,7 @@
       }
     ]
   },
-  "coreTotal": 146,
+  "coreTotal": 172,
   "questions": [
     {
       "id": 1,
@@ -267,10 +267,8 @@
       },
       "category": "3.1",
       "core": true,
-      "coreLabel": "Guardrails のフィルター種別の使い分け：拒否トピック / カスタム単語 / コンテンツフィルター / PII",
-      "related": [
-        15
-      ]
+      "coreLabel": "Guardrails のポリシー種別の割り当て：業務上の禁止話題は拒否トピック、競合他社名などの固有語はカスタム単語フィルター、承認済みガイダンスに基づかない主張は contextual grounding（閾値を高く）。コンテンツフィルターは安全カテゴリ用で代わりにならない",
+      "related": []
     },
     {
       "id": 3,
@@ -466,8 +464,9 @@
         "pitfalls": ""
       },
       "category": "1.6",
-      "core": false,
-      "coreOf": 10
+      "core": true,
+      "coreLabel": "Prompt Management の variants で部門別プロンプトを一元管理し、Guardrails のカテゴリフィルタと機密用語リストでモデレーション基準を調整する",
+      "related": []
     },
     {
       "id": 7,
@@ -516,7 +515,7 @@
       },
       "category": "1.4",
       "core": true,
-      "coreLabel": "大規模ベクトル検索の既定解：OpenSearch（Serverless / Service）+ Knowledge Bases 連携",
+      "coreLabel": "大規模ベクトル検索（1,000 万件規模以上・低レイテンシ）には OpenSearch（Serverless / Service）を選ぶ",
       "related": [
         29
       ]
@@ -568,7 +567,7 @@
       },
       "category": "1.5",
       "core": false,
-      "coreOf": 201
+      "coreOf": 237
     },
     {
       "id": 9,
@@ -668,11 +667,9 @@
       "core": true,
       "coreLabel": "Prompt Management を選ぶ判断：版管理・変数化・variants 比較・IAM / CloudTrail による統制",
       "related": [
-        6,
         89,
         158,
-        223,
-        230
+        223
       ]
     },
     {
@@ -722,10 +719,9 @@
       },
       "category": "2.4",
       "core": true,
-      "coreLabel": "InvokeModelWithResponseStream の部分応答を WebSocket / REST streaming でクライアントへ配信する",
+      "coreLabel": "ストリーミング生成（InvokeModelWithResponseStream / ConverseStream）の部分応答を、API Gateway WebSocket でクライアントへ逐次配信する",
       "related": [
-        43,
-        85
+        43
       ]
     },
     {
@@ -833,7 +829,7 @@
       },
       "category": "5.1",
       "core": false,
-      "coreOf": 99
+      "coreOf": 38
     },
     {
       "id": 14,
@@ -938,8 +934,11 @@
         "pitfalls": ""
       },
       "category": "3.1",
-      "core": false,
-      "coreOf": 2
+      "core": true,
+      "coreLabel": "金融アシスタントの Guardrails 構成：投資助言は拒否トピック、有害コンテンツは強度を上げすぎない、PII は機密情報フィルターで mask と block を使い分け、監査は model invocation logging と CloudTrail で残す",
+      "related": [
+        65
+      ]
     },
     {
       "id": 16,
@@ -988,7 +987,7 @@
       },
       "category": "3.1",
       "core": false,
-      "coreOf": 42
+      "coreOf": 25
     },
     {
       "id": 17,
@@ -1045,10 +1044,8 @@
       },
       "category": "2.1",
       "core": true,
-      "coreLabel": "AgentCore Gateway で既存 Lambda / REST API を tool 化する。tool の配置先（Lambda と ECS）の判断",
-      "related": [
-        121
-      ]
+      "coreLabel": "AgentCore でメモリ・セッション・identity を管理し、AgentCore Gateway で既存 Lambda / REST API を MCP 互換の tool として公開する",
+      "related": []
     },
     {
       "id": 18,
@@ -1145,8 +1142,9 @@
         "pitfalls": ""
       },
       "category": "4.3",
-      "core": false,
-      "coreOf": 140
+      "core": true,
+      "coreLabel": "呼び出しログとテキスト出力ログを保存し、Guardrails の contextual grounding でハルシネーションをほぼリアルタイムに検出し、トークン使用量の異常検出アラームでコスト異常を早期に知らせる",
+      "related": []
     },
     {
       "id": 20,
@@ -1342,8 +1340,9 @@
         "pitfalls": ""
       },
       "category": "1.2",
-      "core": false,
-      "coreOf": 160
+      "core": true,
+      "coreLabel": "Bedrock のモデル版間のカナリア移行：呼び出し層に重みを持たせ、Step Functions で段階的に切り替え、CloudWatch の判定で自動ロールバックする",
+      "related": []
     },
     {
       "id": 24,
@@ -1442,8 +1441,10 @@
       },
       "category": "3.4",
       "core": true,
-      "coreLabel": "根拠の提示：KB の出典情報と RetrieveAndGenerate 系 API。利用者向けの引用と運用者向けの trace",
+      "coreLabel": "社内・承認済み文書に基づく回答と出典提示は、KB と RetrieveAndGenerate（Stream）のマネージドな引用で行い、自前の引用付与や追跡実装に頼らない",
       "related": [
+        16,
+        42,
         66
       ]
     },
@@ -1701,7 +1702,6 @@
       "core": true,
       "coreLabel": "分散トレーシング：CloudWatch Transaction Search の有効化と ADOT による agent コードの計装、X-Ray",
       "related": [
-        34,
         95
       ]
     },
@@ -1752,7 +1752,7 @@
       },
       "category": "5.2",
       "core": false,
-      "coreOf": 156
+      "coreOf": 38
     },
     {
       "id": 32,
@@ -1907,7 +1907,7 @@
       },
       "category": "4.3",
       "core": false,
-      "coreOf": 30
+      "coreOf": 266
     },
     {
       "id": 35,
@@ -2054,7 +2054,7 @@
       },
       "category": "4.2",
       "core": false,
-      "coreOf": 166
+      "coreOf": 151
     },
     {
       "id": 38,
@@ -2110,8 +2110,13 @@
         "pitfalls": ""
       },
       "category": "5.1",
-      "core": false,
-      "coreOf": 90
+      "core": true,
+      "coreLabel": "Bedrock の自動モデル評価ジョブ：独自データセットを S3 に置き、評価ジョブ（LLM-as-a-judge や fmeval を含む）で候補を定量比較し、低スコアや重要なケースだけ人手レビュー（A2I など）に回す",
+      "related": [
+        13,
+        31,
+        59
+      ]
     },
     {
       "id": 39,
@@ -2160,11 +2165,8 @@
       },
       "category": "2.1",
       "core": true,
-      "coreLabel": "Step Functions によるオーケストレーション：.waitForTaskToken の人手承認、Retry / Catch、会話状態の保持",
-      "related": [
-        48,
-        57
-      ]
+      "coreLabel": "人の承認を Step Functions の .waitForTaskToken で待ち、承認後に SendTaskSuccess で再開して、レビュー判断を DynamoDB に監査用に保存する",
+      "related": []
     },
     {
       "id": 40,
@@ -2228,8 +2230,9 @@
         "pitfalls": ""
       },
       "category": "1.3",
-      "core": false,
-      "coreOf": 52
+      "core": true,
+      "coreLabel": "スキャン文書の審査パイプライン：Textract と A2I で抽出と人手レビュー、リージョン内の S3 保存、Step Functions で PII マスク・推論・監査記録",
+      "related": []
     },
     {
       "id": 41,
@@ -2327,12 +2330,8 @@
         "pitfalls": ""
       },
       "category": "3.1",
-      "core": true,
-      "coreLabel": "承認済み文書に基づく回答と出典提示：Knowledge Bases + RetrieveAndGenerate",
-      "related": [
-        16,
-        261
-      ]
+      "core": false,
+      "coreOf": 25
     },
     {
       "id": 43,
@@ -2429,8 +2428,9 @@
         "pitfalls": ""
       },
       "category": "3.1",
-      "core": false,
-      "coreOf": 172
+      "core": true,
+      "coreLabel": "テキストと画像の不適切コンテンツ、生成物の PII を Guardrails の multimodal content filters と sensitive information filters で制御し、既存の S3 ワークフローに組み込む",
+      "related": []
     },
     {
       "id": 45,
@@ -2625,9 +2625,10 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.1",
-      "core": false,
-      "coreOf": 39
+      "category": "1.6",
+      "core": true,
+      "coreLabel": "会話コンテキストの維持と曖昧な問い合わせの明確化：Step Functions Standard のコールバック待機で明確化フローを回し、会話履歴を DynamoDB に暗号化して保存する",
+      "related": []
     },
     {
       "id": 49,
@@ -2825,9 +2826,7 @@
       "category": "1.3",
       "core": true,
       "coreLabel": "大容量データの前処理パイプライン：Step Functions 分散処理 + PII マスク + 埋め込み生成",
-      "related": [
-        40
-      ]
+      "related": []
     },
     {
       "id": 53,
@@ -3071,8 +3070,9 @@
         "pitfalls": ""
       },
       "category": "2.1",
-      "core": false,
-      "coreOf": 39
+      "core": true,
+      "coreLabel": "複数のエージェントと Lambda を Step Functions の個別 Task として直列に並べ、ステップごとの Retry / Catch でグレースフルデグラデーションする",
+      "related": []
     },
     {
       "id": 58,
@@ -3121,10 +3121,8 @@
       },
       "category": "2.5",
       "core": true,
-      "coreLabel": "Step Functions Express と Standard の使い分け（短時間の変換処理と、人手確認を含む長時間フロー）",
-      "related": [
-        133
-      ]
+      "coreLabel": "取得→抽出→モデル呼び出し→保存という定型処理は、エージェントや Prompt Flows を使わず Step Functions Express のサービス直接統合で組む",
+      "related": []
     },
     {
       "id": 59,
@@ -3173,7 +3171,7 @@
       },
       "category": "5.1",
       "core": false,
-      "coreOf": 90
+      "coreOf": 38
     },
     {
       "id": 60,
@@ -3271,10 +3269,8 @@
       },
       "category": "2.3",
       "core": true,
-      "coreLabel": "環境別 modelId 設定と CI/CD（単一 CDK アプリ、CodePipeline / CodeBuild による昇格とロールバック）",
-      "related": [
-        97
-      ]
+      "coreLabel": "単一 CDK アプリで FM を fromFoundationModelId で参照し、modelId を環境別設定（AppConfig / Parameter Store）に外出しして切り替える",
+      "related": []
     },
     {
       "id": 62,
@@ -3471,7 +3467,7 @@
       },
       "category": "3.2",
       "core": false,
-      "coreOf": 81
+      "coreOf": 15
     },
     {
       "id": 66,
@@ -3672,7 +3668,7 @@
       },
       "category": "1.5",
       "core": false,
-      "coreOf": 201
+      "coreOf": 237
     },
     {
       "id": 70,
@@ -3835,8 +3831,9 @@
         "pitfalls": ""
       },
       "category": "1.1",
-      "core": false,
-      "coreOf": 228
+      "core": true,
+      "coreLabel": "GenAI Lens 準拠の CloudFormation テンプレートを版管理し、CI/CD の CloudFormation Guard でデプロイ前に検証する",
+      "related": []
     },
     {
       "id": 73,
@@ -3885,7 +3882,7 @@
       },
       "category": "5.1",
       "core": false,
-      "coreOf": 90
+      "coreOf": 165
     },
     {
       "id": 74,
@@ -4284,10 +4281,8 @@
       },
       "category": "3.2",
       "core": true,
-      "coreLabel": "データ保護の総合構成：ABAC + VPC エンドポイント + Guardrails + CloudTrail Lake / model invocation logging",
-      "related": [
-        65
-      ]
+      "coreLabel": "FM へのアクセス制御と監査の総合構成：ABAC、VPC エンドポイント、条件キー（GuardrailIdentifier、ModelId・inference profile の限定）、CloudTrail（S3 データイベント・KMS）から CloudTrail Lake へ",
+      "related": []
     },
     {
       "id": 82,
@@ -4336,7 +4331,7 @@
       },
       "category": "5.1",
       "core": false,
-      "coreOf": 165
+      "coreOf": 99
     },
     {
       "id": 83,
@@ -4384,8 +4379,9 @@
         "pitfalls": ""
       },
       "category": "1.3",
-      "core": false,
-      "coreOf": 145
+      "core": true,
+      "coreLabel": "マルチモーダルデータを根拠テキストに前処理して KB に取り込み、Guardrails と Prompt Management で推測に基づく解釈を抑え、CloudTrail と invocation logging で監査証跡を残す",
+      "related": []
     },
     {
       "id": 84,
@@ -4441,8 +4437,9 @@
         "pitfalls": ""
       },
       "category": "3.3",
-      "core": false,
-      "coreOf": 196
+      "core": true,
+      "coreLabel": "組織全体での Guardrail 強制（承認済み version、resource-based policy、Organizations の Guardrails enforcement）と、推論アクションの承認済みモデル ARN への限定",
+      "related": []
     },
     {
       "id": 85,
@@ -4490,8 +4487,9 @@
         "pitfalls": ""
       },
       "category": "2.5",
-      "core": false,
-      "coreOf": 11
+      "core": true,
+      "coreLabel": "API Gateway REST API のレスポンスストリーミングと Lambda response streaming で返し、トークン制限と再試行（指数バックオフ・冪等性）は Lambda / SDK 側に実装する",
+      "related": []
     },
     {
       "id": 86,
@@ -4588,8 +4586,9 @@
         "pitfalls": ""
       },
       "category": "5.2",
-      "core": false,
-      "coreOf": 156
+      "core": true,
+      "coreLabel": "プロンプトチェーンの複合不具合：version と低 temperature / topP の固定で再現性、metadata filter と reranking で取得精度、Guardrails で根拠性、PT / CRI でレイテンシを改善する",
+      "related": []
     },
     {
       "id": 88,
@@ -4637,8 +4636,9 @@
         "pitfalls": ""
       },
       "category": "3.3",
-      "core": false,
-      "coreOf": 161
+      "core": true,
+      "coreLabel": "データレジデンシー（大陸内での処理と保存）と、Object Lock による保持、Macie による分類、invocation logging による入出力の記録、CloudTrail による API 監査",
+      "related": []
     },
     {
       "id": 89,
@@ -4736,12 +4736,8 @@
       },
       "category": "5.1",
       "core": true,
-      "coreLabel": "Bedrock model evaluation job：generator と evaluator が同一リージョンで使える必要がある。独自データセットは S3 に置く",
-      "related": [
-        38,
-        59,
-        73
-      ]
+      "coreLabel": "LLM-as-a-judge 評価ジョブの実行前提：generator と evaluator の両モデルが使える同一リージョンでジョブを作る",
+      "related": []
     },
     {
       "id": 91,
@@ -5090,8 +5086,9 @@
         "pitfalls": ""
       },
       "category": "2.3",
-      "core": false,
-      "coreOf": 61
+      "core": true,
+      "coreLabel": "GenAI コンポーネント（Prompt / Flow / Guardrail / API Gateway 設定）の CI/CD：CodePipeline と CodeBuild で静的解析・自動テスト・カナリア・自動ロールバックを行い、段階的に昇格させる",
+      "related": []
     },
     {
       "id": 98,
@@ -5190,9 +5187,10 @@
       },
       "category": "5.1",
       "core": true,
-      "coreLabel": "RAG 評価を retrieve-only と retrieve-and-generate に分け、検索側と生成側の原因を切り分ける",
+      "coreLabel": "RAG 評価を retrieve-only と retrieve-and-generate に分け（同じ golden dataset を使う）、評価タイプに合うメトリクスで検索側と生成側の原因を切り分ける",
       "related": [
-        13
+        82,
+        193
       ]
     },
     {
@@ -5540,9 +5538,8 @@
         "pitfalls": ""
       },
       "category": "3.1",
-      "core": true,
-      "coreLabel": "ApplyGuardrail を source=OUTPUT で呼び、組み立て後の最終出力を審査する",
-      "related": []
+      "core": false,
+      "coreOf": 172
     },
     {
       "id": 107,
@@ -5689,8 +5686,11 @@
         "pitfalls": ""
       },
       "category": "3.3",
-      "core": false,
-      "coreOf": 196
+      "core": true,
+      "coreLabel": "承認済み Guardrail の強制：bedrock:GuardrailIdentifier 条件キーを IAM / permission boundary / SCP で使う",
+      "related": [
+        196
+      ]
     },
     {
       "id": 110,
@@ -6094,10 +6094,8 @@
       },
       "category": "2.3",
       "core": true,
-      "coreLabel": "Bedrock の IAM 権限の落とし穴：API 名から権限名を推測しない。Prompt Flows は service role が実行主体",
-      "related": [
-        118
-      ]
+      "coreLabel": "StartAsyncInvoke のジョブ開始にも bedrock:InvokeModel が必要（API 名から IAM アクション名を推測しない）",
+      "related": []
     },
     {
       "id": 118,
@@ -6145,8 +6143,9 @@
         "pitfalls": ""
       },
       "category": "2.3",
-      "core": false,
-      "coreOf": 117
+      "core": true,
+      "coreLabel": "Prompt Flows の実行主体は Flow の service role。各ノードが使うリソースへの最小権限をそのロールに付与する",
+      "related": []
     },
     {
       "id": 119,
@@ -6244,7 +6243,7 @@
       },
       "category": "1.5",
       "core": false,
-      "coreOf": 201
+      "coreOf": 200
     },
     {
       "id": 121,
@@ -6300,8 +6299,9 @@
         "pitfalls": ""
       },
       "category": "2.1",
-      "core": false,
-      "coreOf": 17
+      "core": true,
+      "coreLabel": "MCP サーバーの実行基盤：軽量で stateless な tool は Lambda、依存が多く重い tool 群は ECS に置く",
+      "related": []
     },
     {
       "id": 122,
@@ -6397,7 +6397,7 @@
         ],
         "pitfalls": ""
       },
-      "category": "2.5",
+      "category": "2.3",
       "core": false,
       "coreOf": 146
     },
@@ -6656,9 +6656,9 @@
       },
       "category": "3.1",
       "core": true,
-      "coreLabel": "処理段階で分ける多層防御：入力前は Comprehend、実行時は Guardrails、出力後は Lambda の決定論的検証",
+      "coreLabel": "処理段階で分ける多層防御：入力前は Comprehend、実行時は Guardrails、出力後やツール結果は Lambda の決定論的検証、API 境界は API Gateway で守る",
       "related": [
-        260
+        168
       ]
     },
     {
@@ -6906,8 +6906,9 @@
         "pitfalls": ""
       },
       "category": "2.5",
-      "core": false,
-      "coreOf": 58
+      "core": true,
+      "coreLabel": "同期 API のタイムアウトと重複登録を避ける：API Gateway で受け付けて SQS に渡し、Step Functions Standard で長時間の文書処理・再試行・人手確認を管理する",
+      "related": []
     },
     {
       "id": 134,
@@ -7262,7 +7263,6 @@
       "core": true,
       "coreLabel": "model invocation logging：requestMetadata を付けてアプリ別・リクエスト別に深掘りし、Logs Insights で分析する",
       "related": [
-        19,
         70
       ]
     },
@@ -7515,9 +7515,7 @@
       "category": "1.3",
       "core": true,
       "coreLabel": "マルチモーダル抽出は Bedrock Data Automation に寄せ、分岐と人手レビューは Step Functions で管理",
-      "related": [
-        83
-      ]
+      "related": []
     },
     {
       "id": 146,
@@ -7719,8 +7717,9 @@
         "pitfalls": ""
       },
       "category": "3.2",
-      "core": false,
-      "coreOf": 265
+      "core": true,
+      "coreLabel": "sensitive information filters の設定：定型の社内 ID は custom regex で BLOCK、カード番号などの PII は ANONYMIZE（入力と出力の両方）",
+      "related": []
     },
     {
       "id": 150,
@@ -7818,8 +7817,9 @@
       },
       "category": "4.1",
       "core": true,
-      "coreLabel": "容量設計：Provisioned Throughput でベースを支え、バーストは cross-Region inference の on-demand へ逃がす",
+      "coreLabel": "容量設計：ピークやバーストのスロットリングは cross-Region inference（on-demand）で分散し、Provisioned Throughput は予測できる継続的なベース負荷に限る",
       "related": [
+        37,
         54,
         78
       ]
@@ -7929,8 +7929,7 @@
       "coreLabel": "geographic profile と global profile の使い分け（データレジデンシー制約の有無で決まる）",
       "related": [
         75,
-        188,
-        267
+        188
       ]
     },
     {
@@ -8080,11 +8079,8 @@
       },
       "category": "5.2",
       "core": true,
-      "coreLabel": "プロンプト起因の不具合診断：version compare と同一テスト変数での Run prompt、評価ジョブ / fmeval での定量比較",
-      "related": [
-        31,
-        87
-      ]
+      "coreLabel": "Prompt Management の version compare で JSON 定義の差分を並べ、同じ Test variables で Run prompt して出力差から回帰原因を特定する",
+      "related": []
     },
     {
       "id": 157,
@@ -8293,7 +8289,6 @@
       "coreLabel": "AppConfig による再デプロイ不要のモデル/設定の動的切替。canary・linear 配信とアラーム連動ロールバック",
       "related": [
         5,
-        23,
         53,
         63,
         122,
@@ -8355,11 +8350,9 @@
       },
       "category": "3.3",
       "core": true,
-      "coreLabel": "ガバナンスの証跡：Model Cards / Glue Data Catalog + タグ / CloudTrail + CloudWatch Logs、保持と分類（Object Lock, Macie）",
+      "coreLabel": "監査証跡の役割分担：Model Cards（モデルの用途・制約・評価）、Glue Data Catalog とメタデータタグ（根拠データの出所）、CloudTrail と CloudWatch Logs（アクセスと判断のログ）",
       "related": [
-        20,
-        88,
-        257
+        20
       ]
     },
     {
@@ -8567,9 +8560,9 @@
       },
       "category": "5.1",
       "core": true,
-      "coreLabel": "CI/CD の品質ゲート：固定評価データセット + 本番カナリア + CodePipeline で未達モデルを昇格させない",
+      "coreLabel": "GenAI の変更を CI/CD の品質ゲートで昇格させる：固定の評価データセットによる評価ジョブ（並列実行）と本番カナリアで、基準未達のモデルやリリースを止める",
       "related": [
-        82
+        73
       ]
     },
     {
@@ -8619,9 +8612,8 @@
       },
       "category": "4.1",
       "core": true,
-      "coreLabel": "prompt caching：長い接頭辞を前方に固定して cache checkpoint を置き、TTL と latency optimized を併用する",
+      "coreLabel": "prompt caching：共通の長いコンテキストを接頭辞の前方に固定して末尾に cache checkpoint を置き、再利用間隔に合わせて TTL（5分 / 1時間）を選ぶ",
       "related": [
-        37,
         46
       ]
     },
@@ -8733,7 +8725,7 @@
       },
       "category": "3.1",
       "core": false,
-      "coreOf": 173
+      "coreOf": 128
     },
     {
       "id": 169,
@@ -8931,9 +8923,9 @@
       },
       "category": "3.1",
       "core": true,
-      "coreLabel": "ApplyGuardrail API を独立して呼ぶ（Bedrock 外モデル、RAG 前段の source=INPUT）",
+      "coreLabel": "ApplyGuardrail を推論呼び出しから独立して呼ぶ：source=INPUT で retrieval や推論の前に、source=OUTPUT で組み立て後の出力を審査する（Bedrock 外のモデルやモデル以外の処理にも使える）",
       "related": [
-        44,
+        106,
         134
       ]
     },
@@ -8993,9 +8985,7 @@
       "category": "3.1",
       "core": true,
       "coreLabel": "多層防御の組み立て：Cognito（認証）+ WAF（入口）+ Guardrails（モデル入出力）",
-      "related": [
-        168
-      ]
+      "related": []
     },
     {
       "id": 174,
@@ -9557,7 +9547,7 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5",
+      "category": "1.3",
       "core": true,
       "coreLabel": "RetrieveAndGenerate の推論パラメータの置き場所（additionalModelRequestFields と textInferenceConfig）",
       "related": []
@@ -9659,10 +9649,8 @@
       },
       "category": "1.2",
       "core": true,
-      "coreLabel": "承認済みモデルのバージョン統制（SageMaker Model Registry + CodePipeline）と再トレーニングの自動化",
-      "related": [
-        256
-      ]
+      "coreLabel": "承認済みモデルのバージョン統制：SageMaker Model Registry の承認状態と CodePipeline による段階昇格・ロールバック",
+      "related": []
     },
     {
       "id": 187,
@@ -9969,10 +9957,9 @@
       },
       "category": "2.1",
       "core": true,
-      "coreLabel": "Strands Agents SDK：@tool / inputSchema による tool 定義、agent-as-tool、hooks / plugins",
+      "coreLabel": "Strands Agents SDK：@tool / tool() と inputSchema で tool を定義し、agent も tools や as_tool で tool として渡せる。model-first な agent 実装基盤として選ぶ",
       "related": [
         127,
-        246,
         251
       ]
     },
@@ -10022,9 +10009,8 @@
         "pitfalls": ""
       },
       "category": "5.1",
-      "core": true,
-      "coreLabel": "golden dataset（期待根拠 + 期待回答）で RAG の改善候補を比較する",
-      "related": []
+      "core": false,
+      "coreOf": 99
     },
     {
       "id": 194,
@@ -10071,7 +10057,7 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5",
+      "category": "1.3",
       "core": false,
       "coreOf": 216
     },
@@ -10174,12 +10160,8 @@
         "pitfalls": ""
       },
       "category": "3.3",
-      "core": true,
-      "coreLabel": "承認済み Guardrail の強制：bedrock:GuardrailIdentifier 条件キーを IAM / permission boundary / SCP で使う",
-      "related": [
-        84,
-        109
-      ]
+      "core": false,
+      "coreOf": 109
     },
     {
       "id": 197,
@@ -10275,7 +10257,7 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5",
+      "category": "1.3",
       "core": true,
       "coreLabel": "foundation model parser + custom parsing prompt で複雑 PDF の解析方針を制御する",
       "related": []
@@ -10327,7 +10309,7 @@
       },
       "category": "1.5",
       "core": false,
-      "coreOf": 201
+      "coreOf": 237
     },
     {
       "id": 200,
@@ -10383,8 +10365,12 @@
         "pitfalls": ""
       },
       "category": "1.5",
-      "core": false,
-      "coreOf": 201
+      "core": true,
+      "coreLabel": "startsWith / stringContains による文字列の前フィルタ：OpenSearch Serverless 構成で使える（S3 Vectors では不可）。HYBRID 検索と併用する",
+      "related": [
+        120,
+        232
+      ]
     },
     {
       "id": 201,
@@ -10432,17 +10418,8 @@
         "pitfalls": ""
       },
       "category": "1.5",
-      "core": true,
-      "coreLabel": "ハイブリッド検索と filterable text field：型番の厳密一致と意味検索の両立、startsWith / stringContains を前フィルタに使う条件",
-      "related": [
-        8,
-        69,
-        120,
-        199,
-        200,
-        222,
-        232
-      ]
+      "core": false,
+      "coreOf": 237
     },
     {
       "id": 202,
@@ -10761,7 +10738,8 @@
       "core": true,
       "coreLabel": "geographic inference profile に必要な IAM 権限（profile 本体 + source/destination 双方のモデル ARN）と SCP の宛先リージョン制約",
       "related": [
-        14
+        14,
+        267
       ]
     },
     {
@@ -11223,7 +11201,7 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5",
+      "category": "1.3",
       "core": true,
       "coreLabel": "Bedrock Data Automation を parser に指定し、表・図・音声・動画を検索可能なテキストにする",
       "related": [
@@ -11388,7 +11366,9 @@
       "category": "1.6",
       "core": true,
       "coreLabel": "Converse の modelId に prompt version ARN を指定し、promptVariables で値を渡す",
-      "related": []
+      "related": [
+        230
+      ]
     },
     {
       "id": 220,
@@ -11555,7 +11535,7 @@
       },
       "category": "1.5",
       "core": false,
-      "coreOf": 201
+      "coreOf": 237
     },
     {
       "id": 223,
@@ -11868,10 +11848,8 @@
       },
       "category": "1.1",
       "core": true,
-      "coreLabel": "GenAI ワークロードの標準化：Well-Architected Generative AI Lens レビューと承認済みパターンの配布（Service Catalog / IaC / CloudFormation Guard）",
-      "related": [
-        72
-      ]
+      "coreLabel": "GenAI ワークロードの標準化：WA Tool の Generative AI Lens による定期レビューと、承認済みパターンの Service Catalog / IaC による配布",
+      "related": []
     },
     {
       "id": 229,
@@ -11969,7 +11947,7 @@
       },
       "category": "1.6",
       "core": false,
-      "coreOf": 10
+      "coreOf": 219
     },
     {
       "id": 231,
@@ -12067,7 +12045,7 @@
       },
       "category": "1.5",
       "core": false,
-      "coreOf": 201
+      "coreOf": 200
     },
     {
       "id": 233,
@@ -12332,9 +12310,13 @@
       },
       "category": "1.5",
       "core": true,
-      "coreLabel": "reranker による再順位付け（HYBRID + metadata filter + reranker の組み合わせ）",
+      "coreLabel": "ハイブリッド検索：OpenSearch Serverless の filterable text field で HYBRID を有効にし（S3 Vectors では不可）、型番などの厳密一致と意味検索を両立する。metadata filter と reranker を組み合わせる",
       "related": [
-        259
+        8,
+        69,
+        199,
+        201,
+        222
       ]
     },
     {
@@ -12652,8 +12634,9 @@
         "pitfalls": ""
       },
       "category": "1.3",
-      "core": false,
-      "coreOf": 264
+      "core": true,
+      "coreLabel": "媒体別の抽出（スキャン PDF は Textract、音声は Transcribe）と、共通スキーマの text / metadata への正規化・S3 保存を経た KB 取り込み",
+      "related": []
     },
     {
       "id": 244,
@@ -12803,8 +12786,9 @@
         "pitfalls": ""
       },
       "category": "2.1",
-      "core": false,
-      "coreOf": 192
+      "core": true,
+      "coreLabel": "Strands Agents SDK の hooks / plugins で、agent loop に横断処理（logging・validation・follow-up invocation）を差し込む",
+      "related": []
     },
     {
       "id": 247,
@@ -12963,9 +12947,7 @@
       "category": "1.4",
       "core": true,
       "coreLabel": "Aurora PostgreSQL + pgvector：customMetadataField に対応する JSONB 列とインデックス",
-      "related": [
-        263
-      ]
+      "related": []
     },
     {
       "id": 250,
@@ -13012,7 +12994,7 @@
         ],
         "pitfalls": ""
       },
-      "category": "1.5",
+      "category": "1.3",
       "core": true,
       "coreLabel": "画像由来の根拠：マルチモーダル parser と supplemental data storage（KB の作り直しが要る）",
       "related": []
@@ -13314,8 +13296,9 @@
         "pitfalls": "- ML の再トレーニング/再デプロイは長時間処理のため Step Functions「Standard」（Express ではない）。\n- リアルタイム推論エンドポイントは「予測」用であり、再トレーニング自動化の役割ではない。\n- Pipelines は適切だが、Webhook/EventBridge バスの追加は不要な複雑性を生む（Bの罠）。"
       },
       "category": "1.2",
-      "core": false,
-      "coreOf": 186
+      "core": true,
+      "coreLabel": "S3 へのアップロードを起点に、Step Functions Standard から SageMaker Pipelines を実行して再学習・再デプロイを自動化する",
+      "related": []
     },
     {
       "id": 257,
@@ -13363,8 +13346,9 @@
         "pitfalls": "- AWS WAF は Web アプリ保護であり、生成 AI 出力の安全性制御には使わない（guardrails が担当）。\n- ⚠️ 注記: Amazon Bedrock Model Evaluation はデプロイ前の非同期バッチ評価ジョブで、200ms のリアルタイム hallucination 検出には使えない。リアルタイム検出は Guardrails の contextual grounding check（grounding/relevance スコアで推論時にブロック）が担う。出題意図上の正答は A だが、選択肢に grounding check が無く Model Evaluation でのリアルタイム検出という記述は現行仕様と乖離がある。\n- 低レイテンシー（200ms）かつ TTL 付き保存には DynamoDB が適する。"
       },
       "category": "3.3",
-      "core": false,
-      "coreOf": 161
+      "core": true,
+      "coreLabel": "ハルシネーション検出・安全制御・ドリフト監視・監査証跡を低い運用負荷でそろえる（Guardrails、Model Evaluation、DynamoDB TTL、CloudWatch カスタムメトリクスで既存ダッシュボードに統合）",
+      "related": []
     },
     {
       "id": 258,
@@ -13465,8 +13449,9 @@
         "pitfalls": "- C（Rerank API + 独自検索パイプライン）と D（KB 内 reranking 設定）の違いに注意。既存の RetrieveAndGenerateStream を活かせる D が低運用負荷。\n- 独自ランキングモデルの SageMaker ホスティングは運用負荷が高い。\n- 「意味的に近いが文脈的に無関係」な文書は reranking で順位を下げる。"
       },
       "category": "1.5",
-      "core": false,
-      "coreOf": 237
+      "core": true,
+      "coreLabel": "Knowledge Bases の reranking 設定で Bedrock reranker を使う（Retrieve と Rerank API の自前パイプラインや SageMaker より運用が軽い）",
+      "related": []
     },
     {
       "id": 260,
@@ -13514,8 +13499,9 @@
         "pitfalls": "- PII は「検出」だけでなく「エンティティ編集（redaction）」まで行わないとプライバシー保護にならない。\n- 逐次処理はレイテンシーを増やす。並列処理が応答時間維持に有効。\n- 「安全なプロンプトにのみ toxicity 検出」は不快コンテンツ検出の網羅性を下げる。"
       },
       "category": "3.1",
-      "core": false,
-      "coreOf": 128
+      "core": true,
+      "coreLabel": "Comprehend の toxicity detection・prompt safety classification・PII 検出（redaction 付き）を FM に届く前に並列で実行し、応答時間を守る",
+      "related": []
     },
     {
       "id": 261,
@@ -13563,8 +13549,9 @@
         "pitfalls": "- 構造化データ（RDS）の正確な取得はベクトル/セマンティック検索より text-to-SQL が適する。\n- B と D はどちらも text-to-SQL。違いは hallucination 低減手段（B: Step Functions/Lambda 検証 / D: 信頼スコアリング+類似検索）。要件に合うのは D。\n- guardrails はレスポンスのフィルタリングを担う。"
       },
       "category": "3.1",
-      "core": false,
-      "coreOf": 42
+      "core": true,
+      "coreLabel": "構造化データ（RDS）は SQL 検証付きの text-to-SQL で決定論的に取得し、ハルシネーションは confidence scoring と semantic similarity で抑える",
+      "related": []
     },
     {
       "id": 262,
@@ -13612,8 +13599,9 @@
         "pitfalls": "- データレジデンシー（同一リージョン処理）要件下ではクロスリージョン guardrail は不可。各リージョンへコピー展開する。\n- detect モードは検出のみでマスク/ブロックしない（ガードレール有効性の評価用途）。実際にマスク結果を確認しながら評価するなら mask、本番適用は block。\n- PII 検出は「機密情報フィルター」。単語フィルター単独では不十分。"
       },
       "category": "3.2",
-      "core": false,
-      "coreOf": 265
+      "core": true,
+      "coreLabel": "データレジデンシー下の PII 保護：cross-Region guardrail を使わずリージョンごとに guardrail を置き、sensitive information filters を評価段階から本番の設定に切り替える",
+      "related": []
     },
     {
       "id": 263,
@@ -13661,8 +13649,9 @@
         "pitfalls": "- 意味的類似検索は埋め込みベクトル検索が必要。トピック抽出（Comprehend）では代替できない。\n- 埋め込みモデルはマネージドの Titan Embeddings を使う方が SageMaker 自前ホストより低運用負荷。\n- 100 万未満の規模なら Aurora PostgreSQL Serverless + pgvector が管理負荷を抑えやすい（D は Serverless 指定）。"
       },
       "category": "1.5",
-      "core": false,
-      "coreOf": 249
+      "core": true,
+      "coreLabel": "意味検索には埋め込みが要る（Comprehend のトピック抽出では代替できない）。100 万件未満で運用負荷を抑えるなら Titan Embeddings と Aurora Serverless の pgvector",
+      "related": []
     },
     {
       "id": 264,
@@ -13719,10 +13708,8 @@
       },
       "category": "1.3",
       "core": true,
-      "coreLabel": "音声・スキャン PDF の取り込み（Transcribe / Textract）と Step Functions からの Bedrock 直接呼び出し",
-      "related": [
-        243
-      ]
+      "coreLabel": "S3 起点のイベント駆動処理：EventBridge ルールで Step Functions を起動し、Transcribe の後に Bedrock を Lambda なしで直接呼ぶ",
+      "related": []
     },
     {
       "id": 265,
@@ -13771,11 +13758,8 @@
       },
       "category": "3.2",
       "core": true,
-      "coreLabel": "PII の扱い分け：custom regex は BLOCK、PII は ANONYMIZE。環境別の mask / block、ロール別の出力制御",
-      "related": [
-        149,
-        262
-      ]
+      "coreLabel": "ロール別の PII 出力制御：元データは編集せず、Cognito グループに対応する guardrail を ApplyGuardrail で応答に適用する（参照期間は S3 Lifecycle で制限）",
+      "related": []
     },
     {
       "id": 266,
@@ -13824,8 +13808,9 @@
       },
       "category": "4.3",
       "core": true,
-      "coreLabel": "CloudWatch の異常検出アラームと複合アラームによる劣化検出・自動通知",
+      "coreLabel": "CloudWatch の異常検出アラーム（動的ベースライン）でトークン急増や品質劣化を検出し、複合アラームや SNS で通知する",
       "related": [
+        34,
         74
       ]
     },
@@ -13876,7 +13861,7 @@
       },
       "category": "1.2",
       "core": false,
-      "coreOf": 153
+      "coreOf": 207
     },
     {
       "id": 268,

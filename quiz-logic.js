@@ -153,13 +153,16 @@
     return [...selected].sort();
   }
 
-  function getNextQuestionState(currentIndex, totalQuestions) {
+  // returnQuestionId は同系問へ飛ぶ前にいた問題の ID。あれば最後の問題の先は
+  // スタート画面でなく、その問題へ戻る。
+  function getNextQuestionState(currentIndex, totalQuestions, returnQuestionId = null) {
     const isLast = totalQuestions > 0 && currentIndex === totalQuestions - 1;
 
-    return {
-      isLast,
-      label: isLast ? 'スタートに戻る' : '次の問題 →',
-    };
+    let label = '次の問題 →';
+    if (isLast) {
+      label = returnQuestionId == null ? 'スタートに戻る' : `↩ #${returnQuestionId} に戻る`;
+    }
+    return { isLast, label };
   }
 
   function getProgressMeta(progressEntry) {

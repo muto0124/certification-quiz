@@ -1,7 +1,7 @@
 {
   "title": "AWS Certified GenAI Developer Professional (AIP-C01) 問題集 268問",
   "total": 268,
-  "version": "20260913132956",
+  "version": "20260913133028",
   "categories": {
     "examGuide": {
       "code": "AIP-C01",
@@ -1058,7 +1058,7 @@
       },
       "answer": "A",
       "explanation": {
-        "focus": "この問題の焦点は、金融商品、市場セクター、規制環境のような密接に関連したエンティティを、 GraphRAG と Amazon Neptune Analytics でマルチホップに(cid:7735)ることです。単なる近傍ベクトル検索では、間接的な関係や複数段の関係性を十分に表現しにくい場面があります。",
+        "focus": "この問題の焦点は、金融商品、市場セクター、規制環境のような密接に関連したエンティティを、 GraphRAG と Amazon Neptune Analytics でマルチホップに辿ることです。単なる近傍ベクトル検索では、間接的な関係や複数段の関係性を十分に表現しにくい場面があります。",
         "keyInsight": "金融エンティティの間接的なつながりを含む回答には、Bedrock Knowledge Bases、GraphRAG、 Neptune Analyticsを組み合わせるAが適切です。",
         "analysis": [
           {
@@ -1073,7 +1073,7 @@
             "summary": "Amazon Bedrock ナレッジベースと Amazon OpenSearc…",
             "correct": false,
             "type": "trap",
-            "reason": "BはOpenSearch Serviceのベクトルストアを使い、Lambdaで複数のベクトル埋め込みへ順次クエリを実行するカスタム関係識別ロジックを実装します。ベクトル検索は意味的に近い文書を探す用途には向いていますが、金融エンティティ間のマルチホップ関係を体系的に(cid:7735)るには、関係抽出や結合ロジックを自作する必要があります。3秒未満の応答条件でも、順次クエリは遅延要因になりやすいです。"
+            "reason": "BはOpenSearch Serviceのベクトルストアを使い、Lambdaで複数のベクトル埋め込みへ順次クエリを実行するカスタム関係識別ロジックを実装します。ベクトル検索は意味的に近い文書を探す用途には向いていますが、金融エンティティ間のマルチホップ関係を体系的に辿るには、関係抽出や結合ロジックを自作する必要があります。3秒未満の応答条件でも、順次クエリは遅延要因になりやすいです。"
           },
           {
             "choice": "C",
@@ -4542,12 +4542,12 @@
     },
     {
       "id": 87,
-      "question": "あるスペシャルティコーヒー会社は、Amazon Bedrock と 3 段階のプロンプトチェーンを活用して、パーソナライズされたコーヒーの焙(cid:7718)プロファイルを生成するモバイルアプリを提供しています。このプロンプトチェーンは、ユーザー入力を構造化されたメタデータに変換し、コーヒーの焙(cid:7718)に関する関連ログを取得したうえで、顧客ごとにパーソナライズされた焙(cid:7718)の推奨事項を生成します。複数の AWS リージョンのユーザーからは、同一の入力に対して焙(cid:7718)の推奨が一貫しないこと、取得ステップで関係の薄いログが混入すること、レイテンシーが高いことが報告されています。同社は、出力の再現性を高め、取得精度を改善し、安全で根拠の薄い推奨を抑制し、通常条件下での応答レイテンシーを下げたいと考えています。これらの要件を満たす最も適切なソリューションはどれですか？",
+      "question": "あるスペシャルティコーヒー会社は、Amazon Bedrock と 3 段階のプロンプトチェーンを活用して、パーソナライズされたコーヒーの焙煎プロファイルを生成するモバイルアプリを提供しています。このプロンプトチェーンは、ユーザー入力を構造化されたメタデータに変換し、コーヒーの焙煎に関する関連ログを取得したうえで、顧客ごとにパーソナライズされた焙煎の推奨事項を生成します。複数の AWS リージョンのユーザーからは、同一の入力に対して焙煎の推奨が一貫しないこと、取得ステップで関係の薄いログが混入すること、レイテンシーが高いことが報告されています。同社は、出力の再現性を高め、取得精度を改善し、安全で根拠の薄い推奨を抑制し、通常条件下での応答レイテンシーを下げたいと考えています。これらの要件を満たす最も適切なソリューションはどれですか？",
       "choices": {
         "A": "Prompt Management で version/variant と低 temperature/topP/max tokens を固定し、 Knowledge Bases/OpenSearch の chunking、metadata filter、reranking/cache を調整します。 Guardrails と Provisioned Throughput/cross-Region inference で根拠性とレイテンシーを管理します。",
         "B": "Amazon Bedrock Agents を使用してチェーン処理を管理します。モデルの入力と出力を Amazon CloudWatch Logs に記録します。Amazon CloudWatch Logs に記録したログを使用して、プロンプトバージョンの A/B テストを実施します。監視項目とアラーム評価は、この運用メトリクス経路で継続して扱う。モデル差分やリージョン差もログ分析で確認する。",
         "C": "Amazon ElastiCache にプロンプト結果をキャッシュし、AWS Lambda 関数でメタデータを前処理します。AWS X-Ray でエンドツーエンドのレイテンシとボトルネックを追跡し、同じ経路の中で是正ポイントを判断します。索引構造と検索条件、必要な絞り込みは、この検索基盤側で管理する。変換処理や補助ロジックは、この関数単位の実装に寄せて扱う。評価結果と安全性判定も同じ経路で扱う。",
-        "D": "Amazon Kendra を使用して、焙(cid:7718)ログの検索精度を向上させます。正規化されたプロンプトのメタデータを Amazon DynamoDB に保存します。AWS Step Functions を使用して、複数ステップのプロンプトをオーケストレーションします。索引構造と検索条件、必要な絞り込みは、この検索基盤側で管理する。項目単位の保持と更新は、この DynamoDB テーブルへ寄せて扱う。リージョン差や推論パラメータはワークフロー内で調整する。"
+        "D": "Amazon Kendra を使用して、焙煎ログの検索精度を向上させます。正規化されたプロンプトのメタデータを Amazon DynamoDB に保存します。AWS Step Functions を使用して、複数ステップのプロンプトをオーケストレーションします。索引構造と検索条件、必要な絞り込みは、この検索基盤側で管理する。項目単位の保持と更新は、この DynamoDB テーブルへ寄せて扱う。リージョン差や推論パラメータはワークフロー内で調整する。"
       },
       "answer": "A",
       "explanation": {
@@ -4559,7 +4559,7 @@
             "summary": "Prompt Management で version/variant と低 t…",
             "correct": true,
             "type": "key",
-            "reason": "Prompt Managementでプロンプトのversionとvariantを管理し、低いtemperature、topP、max tokensを固定すれば、同一入力に対する出力のばらつきを抑えやすくなります。Knowledge Basesや OpenSearchのchunking、metadata filter、reranking、cacheを調整すると、焙(cid:7718)ログの取得精度を高め、関係の薄いログの混入を減らせます。Guardrailsは根拠の薄い推奨や安全性に問題のある応答の抑制に役立ちます。Provisioned Throughputやcross-Region inferenceを使えば、通常条件下の応答レイテンシーも管理しやすくなります。"
+            "reason": "Prompt Managementでプロンプトのversionとvariantを管理し、低いtemperature、topP、max tokensを固定すれば、同一入力に対する出力のばらつきを抑えやすくなります。Knowledge Basesや OpenSearchのchunking、metadata filter、reranking、cacheを調整すると、焙煎ログの取得精度を高め、関係の薄いログの混入を減らせます。Guardrailsは根拠の薄い推奨や安全性に問題のある応答の抑制に役立ちます。Provisioned Throughputやcross-Region inferenceを使えば、通常条件下の応答レイテンシーも管理しやすくなります。"
           },
           {
             "choice": "B",
@@ -4577,7 +4577,7 @@
           },
           {
             "choice": "D",
-            "summary": "Amazon Kendra を使用して、焙(cid:7718)ログの検索精度を向…",
+            "summary": "Amazon Kendra を使用して、焙煎ログの検索精度を向…",
             "correct": false,
             "type": "trap",
             "reason": "Kendra、DynamoDB、Step Functionsは検索、状態管理、ワークフロー化に役立つ場合がありますが、出力の再現性を左右する推論パラメータやプロンプトvariantの固定が弱くなります。リージョン差や低レイテンシーもワークフロー内調整だけでは十分に管理しにくくなります。"
@@ -4797,7 +4797,7 @@
       "choices": {
         "A": "`RetrieveAndGenerate` を直接呼び出し、返ってきた自然言語回答の本文から SQL を逆算して承認する。監査やアクセス制御はこの経路を中心に扱い、周辺サービスへ役割を寄せる。アプリケーション側の設定やデータも、この経路に合わせて同じ側へ寄せて扱う。",
         "B": "`GenerateQuery` を使って自然言語から SQL を先に生成し、その SQL を承認フローでレビューしたあと、必要に応じて後続の Retrieve や RetrieveAndGenerate へ接続する。",
-        "C": "CountTokens を使って入力質問の token 数を測り、複雑な質問を DBA レビューへ回す。SQL 変換自体は従来どおり `RetrieveAndGenerate` の内部処理へ隠(cid:7789)し、レビュー対象は token 数の大きい質問に限定する。",
+        "C": "CountTokens を使って入力質問の token 数を測り、複雑な質問を DBA レビューへ回す。SQL 変換自体は従来どおり `RetrieveAndGenerate` の内部処理へ隠蔽し、レビュー対象は token 数の大きい質問に限定する。",
         "D": "Prompt Management で SQL 生成用 prompt を version 管理し、実行時はその prompt を `InvokeModel` で呼び出して文字列として SQL を出す。"
       },
       "answer": "B",
@@ -5877,7 +5877,7 @@
             "summary": "Account A の Knowledge Base サービスロールに `s3:…",
             "correct": true,
             "type": "key",
-            "reason": "Account AのKnowledge Baseサービスロールにs3:ListBucket、s3:GetObject、必要に応じて kms:Decryptを付与したうえで、Account BのS3 bucket policyでもそのロールARNをPrincipalとして明示的に許可します。KMS暗号化されたオブジェクトを扱う場合は、KMS key policyでも同じロールに復号を許可する必要があります。クロスアカウントでは、呼び出し元のアイデンティティポリシーと、リソース所有側のポリシーの両方が(cid:7975)って初めて同期できます。Account B側でどのロールへ読み取りを許すかを明示したいという管理方針にも合います。"
+            "reason": "Account AのKnowledge Baseサービスロールにs3:ListBucket、s3:GetObject、必要に応じて kms:Decryptを付与したうえで、Account BのS3 bucket policyでもそのロールARNをPrincipalとして明示的に許可します。KMS暗号化されたオブジェクトを扱う場合は、KMS key policyでも同じロールに復号を許可する必要があります。クロスアカウントでは、呼び出し元のアイデンティティポリシーと、リソース所有側のポリシーの両方が揃って初めて同期できます。Account B側でどのロールへ読み取りを許すかを明示したいという管理方針にも合います。"
           },
           {
             "choice": "D",
@@ -5927,7 +5927,7 @@
             "summary": "Amazon Kendra GenAI index を追加し、semantic …",
             "correct": false,
             "type": "trap",
-            "reason": "Amazon Kendra GenAI indexによるsemantic retrievalは、関連文書の発見を強化する選択肢です。ただし、品質保証レポートと是正履歴の関係をグラフとして(cid:7735)る機能そのものではありません。意味的に近い文書集合を広めに回収しても、multi-hopの関係性をretrieval時点で明示的に扱う要件には届きにくくなります。"
+            "reason": "Amazon Kendra GenAI indexによるsemantic retrievalは、関連文書の発見を強化する選択肢です。ただし、品質保証レポートと是正履歴の関係をグラフとして辿る機能そのものではありません。意味的に近い文書集合を広めに回収しても、multi-hopの関係性をretrieval時点で明示的に扱う要件には届きにくくなります。"
           },
           {
             "choice": "D",
@@ -7775,14 +7775,14 @@
       "question": "通信事業者は、通話要約アプリケーションを Amazon Bedrock 上で本番運用しています。平日日中は予測可能な高トラフィックが継続し、通信障害や災害時には短時間で数倍のリクエストが流入します。要件は、通常時の p95 レイテンシを安定化させること、突発バースト時に処理落ちしにくいこと、そして APAC の地理的境界内でデータ処理を完結させることです。対象モデルは Provisioned Throughput と on- demand の両方が利用可能ですが、設計チームは cross-Region inference を使えば Provisioned Throughput も自動的に束ねられると誤解しています。加えて、容量設計は平常時と非常時を分けて説明できることが、運用レビューで求められています。これらの条件を踏まえた最も適切な本番設計はどれですか？",
       "choices": {
         "A": "すべての呼び出しを APAC geography の cross-Region inference profile に統一し、通常時のベース負荷も突発バーストも同じ on-demand ルーティングへ集約する。Provisioned Throughput は使わず、容量説明も 1 本化する。",
-        "B": "通常時の安定したベース負荷は Provisioned Throughput で処理し、(cid:7635)れたリクエストやフォールバックは APAC geography の cross-Region inference 経由の on-demand 呼び出しへルーティングする。",
+        "B": "通常時の安定したベース負荷は Provisioned Throughput で処理し、溢れたリクエストやフォールバックは APAC geography の cross-Region inference 経由の on-demand 呼び出しへルーティングする。",
         "C": "通常時も災害時も Provisioned Throughput を中心に構成し、突発バースト時も同じスループット設定で吸収する。APAC 内の固定容量で本番負荷の全ケースに対応し、on-demand 側への逃がし経路は持たない。",
         "D": "global cross-Region inference に統一し、最も高いスループットを優先して各リクエストを処理する。地理境界内の処理完結より、世界全体の利用可能容量を優先する設計を採る。"
       },
       "answer": "B",
       "explanation": {
         "focus": "この設計では、Provisioned Throughput、APAC geography の cross-Region inference、on-demand フォールバック、p95 レイテンシを分けて考える必要があります。予測可能な平常時負荷と、災害時の短時間バーストは性質が異なるため、同じ容量モデルだけで説明しようとすると、安定性か拡張性のどちらかが弱くなります。",
-        "keyInsight": "平常時の安定したベース負荷は Provisioned Throughput で支え、(cid:7635)れた分や非常時のバーストは APAC geography の cross-Region inference による on-demand 呼び出しへ逃がす構成が最も適しています。",
+        "keyInsight": "平常時の安定したベース負荷は Provisioned Throughput で支え、溢れた分や非常時のバーストは APAC geography の cross-Region inference による on-demand 呼び出しへ逃がす構成が最も適しています。",
         "analysis": [
           {
             "choice": "A",
@@ -7796,7 +7796,7 @@
             "summary": "通常時の安定したベース負荷は Provisioned Throughput で処…",
             "correct": true,
             "type": "key",
-            "reason": "通常時の安定したベース負荷を Provisioned Throughput に載せると、あらかじめ確保した処理能力で p95 レイテンシを安定させやすくなります。一方、通信障害や災害時のように短時間で数倍に増えるリクエストは、固定容量だけで吸収しようとするより、APAC geography の cross-Region inference を使った on-demand 呼び出しへ逃がす方が現実的です。これにより、処理先は APAC の地理的境界内に保ちながら、複数リージョンのオンデマンド容量を利用できます。また、Provisioned Throughput は平常時の基礎容量、cross-Region inference は(cid:7635)れた分や非常時の吸収経路として説明できるため、運用レビューで求められる容量設計の分離にも合います。cross-Region inference が Provisioned Throughput を自動的に束ねるわけではない点も、この構成なら明確に扱えます。"
+            "reason": "通常時の安定したベース負荷を Provisioned Throughput に載せると、あらかじめ確保した処理能力で p95 レイテンシを安定させやすくなります。一方、通信障害や災害時のように短時間で数倍に増えるリクエストは、固定容量だけで吸収しようとするより、APAC geography の cross-Region inference を使った on-demand 呼び出しへ逃がす方が現実的です。これにより、処理先は APAC の地理的境界内に保ちながら、複数リージョンのオンデマンド容量を利用できます。また、Provisioned Throughput は平常時の基礎容量、cross-Region inference は溢れた分や非常時の吸収経路として説明できるため、運用レビューで求められる容量設計の分離にも合います。cross-Region inference が Provisioned Throughput を自動的に束ねるわけではない点も、この構成なら明確に扱えます。"
           },
           {
             "choice": "C",
@@ -8134,7 +8134,7 @@
     },
     {
       "id": 158,
-      "question": "教育コンテンツ企業は、学習者向け解説文の品質改善を進める中で、同じユースケースに対して複数のプロンプト候補、異なるモデル、異なる推論パラメータを比較したいと考えています。各チームがコード内に散在させている prompt template をそのまま比較する運用では、同じテスト変数を入れても条件が(cid:7975)わず、どの prompt が採用版なのかも曖昧です。チームは、変数付きの prompt を共通管理し、最大 3 つ程度の候補を同じテスト変数で比較し、その場で採用候補を選び、必要なら version 化して後から本番へ出せるようにしたいと考えています。prompt の内容だけでなく、モデルや inference configuration を含めた比較を同じ管理面で行うことが求められます。開発者は、比較のたびにアプリケーションコードを書き換えたり、独自の A/B テスト UI を作ったりしたくありません。最も適切な方法はどれですか？",
+      "question": "教育コンテンツ企業は、学習者向け解説文の品質改善を進める中で、同じユースケースに対して複数のプロンプト候補、異なるモデル、異なる推論パラメータを比較したいと考えています。各チームがコード内に散在させている prompt template をそのまま比較する運用では、同じテスト変数を入れても条件が揃わず、どの prompt が採用版なのかも曖昧です。チームは、変数付きの prompt を共通管理し、最大 3 つ程度の候補を同じテスト変数で比較し、その場で採用候補を選び、必要なら version 化して後から本番へ出せるようにしたいと考えています。prompt の内容だけでなく、モデルや inference configuration を含めた比較を同じ管理面で行うことが求められます。開発者は、比較のたびにアプリケーションコードを書き換えたり、独自の A/B テスト UI を作ったりしたくありません。最も適切な方法はどれですか？",
       "choices": {
         "A": "Prompt Management で variants を作成し、同じ Test variables で比較する。採用版は version 化し、 model や inference configuration も variant に含める。",
         "B": "各チームが Git リポジトリ上の文字列差分で prompt を比較し、必要時はローカルスクリプトで同じ入力を投げて結果を見比べる。採用版の固定や version 化も、コードレビューと運用で管理する。",
@@ -8143,7 +8143,7 @@
       },
       "answer": "A",
       "explanation": {
-        "focus": "ここでは、Prompt Management の variants、Test variables、model、inference configuration、 version 化を使い、複数の prompt 候補を同じ条件で比較することが中心です。コード内に散在したテンプレートでは、比較条件と採用版の管理が(cid:7975)いません。",
+        "focus": "ここでは、Prompt Management の variants、Test variables、model、inference configuration、 version 化を使い、複数の prompt 候補を同じ条件で比較することが中心です。コード内に散在したテンプレートでは、比較条件と採用版の管理が揃いません。",
         "keyInsight": "複数の prompt 候補を同じテスト変数で比較し、model や inference configuration を含めて採用版を version 化するには、Prompt Management の variants を使う方法が最も適しています。",
         "analysis": [
           {
@@ -8151,7 +8151,7 @@
             "summary": "Prompt Management で variants を作成し、同じ Tes…",
             "correct": true,
             "type": "key",
-            "reason": "Prompt Management で variants を作成すると、同じユースケースに対する複数の prompt 候補を管理面で扱えます。各 variant には prompt の内容だけでなく、model や inference configuration も含められるため、単なる文字列差分ではなく、実際の生成条件を含めて比較できます。同じ Test variables を使って候補を試せば、入力条件を(cid:7975)えたうえで応答の品質や形式を確認できます。採用候補が決まった後は version 化できるため、後から本番へ出す版を固定しやすくなります。アプリケーションコードを書き換えたり、独自の比較 UI を作ったりせずに、prompt 候補の比較、採用判断、版管理を進められる点が要件に合います。"
+            "reason": "Prompt Management で variants を作成すると、同じユースケースに対する複数の prompt 候補を管理面で扱えます。各 variant には prompt の内容だけでなく、model や inference configuration も含められるため、単なる文字列差分ではなく、実際の生成条件を含めて比較できます。同じ Test variables を使って候補を試せば、入力条件を揃えたうえで応答の品質や形式を確認できます。採用候補が決まった後は version 化できるため、後から本番へ出す版を固定しやすくなります。アプリケーションコードを書き換えたり、独自の比較 UI を作ったりせずに、prompt 候補の比較、採用判断、版管理を進められる点が要件に合います。"
           },
           {
             "choice": "B",
@@ -8395,7 +8395,7 @@
             "summary": "`StartAsyncInvoke` を商品レコードごとに何百万回も呼び出し、各…",
             "correct": false,
             "type": "trap",
-            "reason": "StartAsyncInvoke を商品レコードごとに何百万回も呼ぶと、個別ジョブの管理数が膨大になります。非同期ではあっても、夜間処理全体の入力、進(cid:7743)、失敗、再実行、出力集約をアプリケーション側でまとめる負担が大きくなります。大規模な S3 入力をまとめて処理する目的では、Batch inference の単位で管理する方が適しています。"
+            "reason": "StartAsyncInvoke を商品レコードごとに何百万回も呼ぶと、個別ジョブの管理数が膨大になります。非同期ではあっても、夜間処理全体の入力、進捗、失敗、再実行、出力集約をアプリケーション側でまとめる負担が大きくなります。大規模な S3 入力をまとめて処理する目的では、Batch inference の単位で管理する方が適しています。"
           }
         ],
         "pitfalls": ""
@@ -10014,7 +10014,7 @@
     },
     {
       "id": 194,
-      "question": "ある重工業メーカーは、保守マニュアル、配管図付き PDF、点検写真、現場教育の動画、故障調査の音声メモを Amazon Bedrock Knowledge Bases に取り込み、保守技術者が自然言語で質問できるようにしたいと考えています。要件は、画像内の表や図表、動画や音声に含まれる内容も検索対象に含めること、取得結果には元ソースを引用できること、そして画像から画像を探す visual similarity search ではなく、あくまでテキスト質問から横断検索できることです。チームは OCR や媒体別の別系統 ETL を大量に組むのは避けたいと考えています。媒体ごとの個別 ETL を増やすと、抽出品質、引用、再取り込みの運用が分散します。 Knowledge Base への取り込み段階で横断検索に使える表現へ(cid:7975)えられるかが重要です。PDF、画像、音声、動画を 1 つの Knowledge Base の retrieval and response generation で実用的に扱う前提で、最も適切な取り込み設計はどれですか？",
+      "question": "ある重工業メーカーは、保守マニュアル、配管図付き PDF、点検写真、現場教育の動画、故障調査の音声メモを Amazon Bedrock Knowledge Bases に取り込み、保守技術者が自然言語で質問できるようにしたいと考えています。要件は、画像内の表や図表、動画や音声に含まれる内容も検索対象に含めること、取得結果には元ソースを引用できること、そして画像から画像を探す visual similarity search ではなく、あくまでテキスト質問から横断検索できることです。チームは OCR や媒体別の別系統 ETL を大量に組むのは避けたいと考えています。媒体ごとの個別 ETL を増やすと、抽出品質、引用、再取り込みの運用が分散します。 Knowledge Base への取り込み段階で横断検索に使える表現へ揃えられるかが重要です。PDF、画像、音声、動画を 1 つの Knowledge Base の retrieval and response generation で実用的に扱う前提で、最も適切な取り込み設計はどれですか？",
       "choices": {
         "A": "Amazon Bedrock default parser と通常の text embedding だけで、音声、動画、画像付き PDF をそのまま取り込む。媒体ごとの抽出や BDA parser は使わず、同じ埋め込み経路で text query から検索できると考える。",
         "B": "foundation model parser を使い、画像を含む PDF の図表解析と同じ要領で音声、動画まで処理する。 BDA parser は使わず、共通の FM parser 設定で multimodal retrieval and response generation を運用する。",
@@ -10023,7 +10023,7 @@
       },
       "answer": "C",
       "explanation": {
-        "focus": "この問題では、Bedrock Data Automation、Knowledge Bases の parser、検索可能な text representations、retrieval and response generation における元ソース参照が焦点です。画像、音声、動画、画像付きPDFを、テキスト質問から横断検索できる形へ取り込み時に(cid:7975)える必要があります。",
+        "focus": "この問題では、Bedrock Data Automation、Knowledge Bases の parser、検索可能な text representations、retrieval and response generation における元ソース参照が焦点です。画像、音声、動画、画像付きPDFを、テキスト質問から横断検索できる形へ取り込み時に揃える必要があります。",
         "keyInsight": "PDF、画像、音声、動画を1つの Knowledge Base でテキスト質問から横断検索し、元ソース参照を保持するには、Bedrock Data Automation を parser として使い、検索可能なテキスト表現へ変換する方法が最も適切です。",
         "analysis": [
           {
@@ -11813,7 +11813,7 @@
             "summary": "AWS Well-Architected Tool と Generative A…",
             "correct": true,
             "type": "key",
-            "reason": "AWS Well-Architected ToolとGenerative AI Lensを使うと、生成AIアプリケーションを共通の設計原則に基づいて定期レビューできます。レビュー回答、改善項目、マイルストーンを管理できるため、部門ごとの状況を比較し、改善の進(cid:7743)も継続的に追跡できます。"
+            "reason": "AWS Well-Architected ToolとGenerative AI Lensを使うと、生成AIアプリケーションを共通の設計原則に基づいて定期レビューできます。レビュー回答、改善項目、マイルストーンを管理できるため、部門ごとの状況を比較し、改善の進捗も継続的に追跡できます。"
           },
           {
             "choice": "B",

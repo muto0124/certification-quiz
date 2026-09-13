@@ -28,7 +28,7 @@
   // 知識点ごとの代表問（core: true）だけに絞る。
   // 判定は「core キーを持つか」で行う。「core: true が1つ以上あるか」で判定すると、
   // 範囲内にたまたま代表問が無いときにも絞り込みを諦めてしまい、コアのみを指定した
-  // はずが同系問題まで出てしまう。代表問が無い場合は空を返し、呼び出し側でメッセージを出す。
+  // はずが同系問まで出てしまう。代表問が無い場合は空を返し、呼び出し側でメッセージを出す。
   function filterCoreOnly(questions, enabled) {
     if (!enabled) return questions;
     const hasCoreData = questions.some((question) => typeof question.core === 'boolean');
